@@ -76,64 +76,72 @@
   .marketing-block h3{font-size:15px; margin:0 0 10px; color:#333;}
   .marketing-block p{font-size:13px; line-height:1.6; color:#222;}
   .marketing-block{color:#111;}
+
+  #lang-switcher{position:fixed; top:16px; right:16px; z-index:50;}
+  #lang-switcher select{font-size:13px; padding:6px 10px; border-radius:8px; cursor:pointer;
+    background:var(--panel); color:var(--text); border:1px solid var(--border-strong);}
+  @media print{ #lang-switcher{display:none !important;} }
 </style>
 </head>
 <body>
+<div id="lang-switcher" class="no-print">
+  <select id="lang-select" aria-label="Language"></select>
+</div>
 <div class="wrap">
   <div class="brand-title">ECS/CemScanner™</div>
   <div class="row" style="max-width:460px; margin:0 auto 16px;">
-    <input type="text" id="customer-name" placeholder="Placement study for:" style="width:100%;">
+    <input type="text" id="customer-name" placeholder="Placement study for:" data-i18n-placeholder="placeholderCustomerName" style="width:100%;">
   </div>
 
   <div class="print-only marketing-block">
-    <h1>ECS/CemScanner™ kiln shell monitoring system</h1>
-    <h3>Protect your kiln with our ECS/CemScanner™ kiln shell monitoring system</h3>
-    <p>Our kiln shell monitoring system, ECS/CemScanner™, is the product of 40-years worth of development and refining. It’s a technologically advanced system that will allow your operators to better protect your kiln and extend the life of your plant.</p>
-    <p id="print-placement-line" style="display:none;"><strong>Placement study for: <span id="print-customer-name"></span></strong></p>
+    <h1 data-i18n="marketingTitle">ECS/CemScanner™ kiln shell monitoring system</h1>
+    <h3 data-i18n="marketingSubtitle">Protect your kiln with our ECS/CemScanner™ kiln shell monitoring system</h3>
+    <p data-i18n="marketingParagraph">Our kiln shell monitoring system, ECS/CemScanner™, is the product of 40-years worth of development and refining. It’s a technologically advanced system that will allow your operators to better protect your kiln and extend the life of your plant.</p>
+    <p id="print-placement-line" style="display:none;"><strong><span data-i18n="placementStudyForLabel">Placement study for:</span> <span id="print-customer-name"></span></strong></p>
   </div>
 
-  <h1>Scanner FOV 120° coverage &amp; shadow model</h1>
-  <p class="sub">The scan cone angle is always fixed at 120°. Cooler is the coordinate origin (x=0).</p>
+  <h1 data-i18n="pageTitle">Scanner FOV 120° coverage &amp; shadow model</h1>
+  <p class="sub" data-i18n="pageSub">The scan cone angle is always fixed at 120°. Cooler is the coordinate origin (x=0).</p>
 
   <div class="two-col">
     <div class="panel">
-      <h3 style="color:var(--accent);">Scanner 1 (always on)</h3>
-      <div class="row"><label for="s1-d">Distance from kiln (m)</label>
+      <h3 style="color:var(--accent);" data-i18n="scanner1Title">Scanner 1 (always on)</h3>
+      <div class="row"><label for="s1-d" data-i18n="labelDistanceFromKiln">Distance from kiln (m)</label>
         <input type="range" id="s1-d" min="0" max="50" step="0.1" value="5">
         <input type="number" id="s1-d-num" min="0" max="50" step="0.1" value="5"></div>
-      <div class="row"><label for="s1-theta">Rotation θ (°)</label>
+      <div class="row"><label for="s1-theta" data-i18n="labelRotation">Rotation θ (°)</label>
         <input type="range" id="s1-theta" min="-60" max="60" step="0.5" value="0">
         <input type="number" id="s1-theta-num" min="-60" max="60" step="0.5" value="0"></div>
-      <div class="row"><label for="s1-x0">Distance from cooler (m)</label>
+      <div class="row"><label for="s1-x0" data-i18n="labelDistanceFromCooler">Distance from cooler (m)</label>
         <input type="range" id="s1-x0" min="-20" max="140" step="0.1" value="10">
         <input type="number" id="s1-x0-num" min="-20" max="140" step="0.1" value="10"></div>
-      <div class="row"><label for="s1-head">Head model</label>
+      <div class="row"><label for="s1-head" data-i18n="labelHeadModel">Head model</label>
         <select id="s1-head"><option value="TMC5HT">TMC5HT</option><option value="TMC8HT">TMC8HT</option></select></div>
     </div>
 
     <div class="panel">
-      <h3 style="color:var(--s2);"><input type="checkbox" id="s2-enabled"> Scanner 2</h3>
-      <div class="row"><label for="s2-d">Distance from kiln (m)</label>
+      <h3 style="color:var(--s2);"><input type="checkbox" id="s2-enabled"> <span data-i18n="scanner2Title">Scanner 2</span></h3>
+      <div class="row"><label for="s2-d" data-i18n="labelDistanceFromKiln">Distance from kiln (m)</label>
         <input type="range" id="s2-d" min="0" max="50" step="0.1" value="5">
         <input type="number" id="s2-d-num" min="0" max="50" step="0.1" value="5"></div>
-      <div class="row"><label for="s2-theta">Rotation θ (°)</label>
+      <div class="row"><label for="s2-theta" data-i18n="labelRotation">Rotation θ (°)</label>
         <input type="range" id="s2-theta" min="-60" max="60" step="0.5" value="0">
         <input type="number" id="s2-theta-num" min="-60" max="60" step="0.5" value="0"></div>
-      <div class="row"><label for="s2-x0">Distance from cooler (m)</label>
+      <div class="row"><label for="s2-x0" data-i18n="labelDistanceFromCooler">Distance from cooler (m)</label>
         <input type="range" id="s2-x0" min="-20" max="140" step="0.1" value="50">
         <input type="number" id="s2-x0-num" min="-20" max="140" step="0.1" value="50"></div>
-      <div class="row"><label for="s2-head">Head model</label>
+      <div class="row"><label for="s2-head" data-i18n="labelHeadModel">Head model</label>
         <select id="s2-head"><option value="TMC5HT">TMC5HT</option><option value="TMC8HT" selected>TMC8HT</option></select></div>
     </div>
   </div>
 
   <div class="btn-row" style="margin:4px 0 20px;">
-    <button class="btn" id="btn-combine">Combine scanners (S1 starts 2m before kiln, S2 ends 2m after)</button>
+    <button class="btn" id="btn-combine" data-i18n="btnCombine">Combine scanners (S1 starts 2m before kiln, S2 ends 2m after)</button>
   </div>
 
   <div class="panel">
-    <h2 style="margin-top:0;">Kiln</h2>
-    <div class="row"><label for="pec">Kiln length (m)</label>
+    <h2 style="margin-top:0;" data-i18n="kilnSectionTitle">Kiln</h2>
+    <div class="row"><label for="pec" data-i18n="labelKilnLength">Kiln length (m)</label>
       <input type="range" id="pec" min="0" max="120" step="1" value="60">
       <input type="number" id="pec-num" min="0" max="120" step="1" value="60"></div>
   </div>
@@ -142,17 +150,17 @@
 
   <svg id="svg" viewBox="0 0 800 460"></svg>
 
-  <p class="note">
+  <p class="note" data-i18n-html="noteHtml">
     Dark-red bands = shadow not seen by <em>any</em> active scanner. Green marks and value = whole kiln length covered by the FOV(s). Scanner 2 is shown in pink; its own shadow can eliminate Scanner 1's shadow where the two viewpoints differ. This placement tool is about aiming/targeting, so wherever both scanners can see the same spot, the one giving the <strong>smaller spot size</strong> is shown here (finer aiming resolution). For actual temperature measurement — handled by separate software — the <strong>higher measured temperature</strong> is what counts; this tool does not read temperature.
   </p>
 
   <div class="results">
     <div class="card" id="card-fov">
-      <div class="label">Covered (whole kiln in FOV)</div>
+      <div class="label" data-i18n="cardCoveredFov">Covered (whole kiln in FOV)</div>
       <div class="num" id="fov-covered-out">60.0 / 60 m</div>
     </div>
     <div class="card" id="card-pec">
-      <div class="label">Covered without shadows</div>
+      <div class="label" data-i18n="cardCoveredNoShadow">Covered without shadows</div>
       <div class="num" id="pec-covered-out">60.0 / 60 m</div>
       <div class="sub2" id="pec-shadow-out"></div>
     </div>
@@ -164,13 +172,13 @@
   <div class="page-break"></div>
 
   <div class="panel">
-    <h2 style="margin-top:0;">Tyres (T) &amp; Gear (G)</h2>
+    <h2 style="margin-top:0;" data-i18n="tyresGearTitle">Tyres (T) &amp; Gear (G)</h2>
     <div class="row">
-      <label for="kilnDiameter">Kiln diameter (m)</label>
+      <label for="kilnDiameter" data-i18n="labelKilnDiameter">Kiln diameter (m)</label>
       <input type="number" id="kilnDiameter" min="0.5" max="10" step="0.1" value="5">
     </div>
     <div class="row">
-      <label for="tyreCount">Number of tyres</label>
+      <label for="tyreCount" data-i18n="labelTyreCount">Number of tyres</label>
       <select id="tyreCount">
         <option value="0">0</option>
         <option value="2">2</option>
@@ -181,52 +189,315 @@
     </div>
     <div class="table-wrap" style="max-height:none;">
       <table>
-        <thead><tr><th>Object</th><th>Position (m)</th><th>Thickness (m)</th><th>Outside diameter (m)</th></tr></thead>
+        <thead><tr><th data-i18n="thObject">Object</th><th data-i18n="thPosition">Position (m)</th><th data-i18n="thThickness">Thickness (m)</th><th data-i18n="thOD">Outside diameter (m)</th></tr></thead>
         <tbody id="ringsBody"></tbody>
       </table>
     </div>
   </div>
 
   <div class="panel">
-    <h2 style="margin-top:0;">Obstacles (beams, poles, trees…) between scanner and kiln</h2>
+    <h2 style="margin-top:0;" data-i18n="obstaclesTitle">Obstacles (beams, poles, trees…) between scanner and kiln</h2>
     <div class="table-wrap" style="max-height:none;">
       <table>
-        <thead><tr><th>Label</th><th style="text-align:center;">On</th><th>x (m)</th><th>y (m)</th><th>diameter (m)</th></tr></thead>
+        <thead><tr><th data-i18n="thLabel">Label</th><th style="text-align:center;" data-i18n="thOn">On</th><th data-i18n="thX">x (m)</th><th data-i18n="thY">y (m)</th><th data-i18n="thDiameter">diameter (m)</th></tr></thead>
         <tbody id="obstaclesList"></tbody>
       </table>
     </div>
   </div>
 
-  <h2>Shadow lengths per object</h2>
+  <h2 data-i18n="shadowLengthsTitle">Shadow lengths per object</h2>
   <div class="table-wrap">
     <table>
-      <thead><tr><th>Object</th><th>Shadow length (m)</th></tr></thead>
+      <thead><tr><th data-i18n="thObject">Object</th><th data-i18n="thShadowLength">Shadow length (m)</th></tr></thead>
       <tbody id="shadow-body"></tbody>
     </table>
   </div>
 
   <div class="page-break"></div>
 
-  <h2>Spot sizes along the kiln</h2>
+  <h2 data-i18n="spotSizesTitle">Spot sizes along the kiln</h2>
   <div class="table-wrap">
     <table>
-      <thead><tr><th>Kiln (m)</th><th>Slant range (m)</th><th>Grazing angle (°)</th><th>Spot size (mm)</th><th>Scanner</th></tr></thead>
+      <thead><tr><th data-i18n="thKiln">Kiln (m)</th><th data-i18n="thSlantRange">Slant range (m)</th><th data-i18n="thGrazingAngle">Grazing angle (°)</th><th data-i18n="thSpotSize">Spot size (mm)</th><th data-i18n="thScanner">Scanner</th></tr></thead>
       <tbody id="spot-body"></tbody>
     </table>
   </div>
 
   <div class="panel no-print">
-    <h2 style="margin-top:0;">Scanner head resolution</h2>
-    <div class="row"><label for="res-tmc5">TMC5HT (mrad)</label><input type="number" id="res-tmc5" step="0.1" value="5"></div>
-    <div class="row"><label for="res-tmc8">TMC8HT (mrad)</label><input type="number" id="res-tmc8" step="0.1" value="2"></div>
+    <h2 style="margin-top:0;" data-i18n="resolutionTitle">Scanner head resolution</h2>
+    <div class="row"><label for="res-tmc5" data-i18n="labelTmc5">TMC5HT (mrad)</label><input type="number" id="res-tmc5" step="0.1" value="5"></div>
+    <div class="row"><label for="res-tmc8" data-i18n="labelTmc8">TMC8HT (mrad)</label><input type="number" id="res-tmc8" step="0.1" value="2"></div>
   </div>
 
   <div id="print-btn-wrap" style="text-align:center; margin-top:24px;">
-    <button class="btn" id="btn-print" style="padding:12px 24px; font-size:14px;">Print / Save as PDF</button>
+    <button class="btn" id="btn-print" style="padding:12px 24px; font-size:14px;" data-i18n="btnPrint">Print / Save as PDF</button>
   </div>
 </div>
 
 <script>
+/* ---------- i18n ---------- */
+const LANGS = [
+  {code:'en', name:'English', flag:'🇬🇧'},
+  {code:'es', name:'Español', flag:'🇪🇸'},
+  {code:'fr', name:'Français', flag:'🇫🇷'},
+  {code:'pt', name:'Português', flag:'🇵🇹'},
+  {code:'ar', name:'العربية', flag:'🇸🇦'}
+];
+const I18N = {
+en:{
+  placeholderCustomerName:"Placement study for:",
+  marketingTitle:"ECS/CemScanner™ kiln shell monitoring system",
+  marketingSubtitle:"Protect your kiln with our ECS/CemScanner™ kiln shell monitoring system",
+  marketingParagraph:"Our kiln shell monitoring system, ECS/CemScanner™, is the product of 40-years worth of development and refining. It's a technologically advanced system that will allow your operators to better protect your kiln and extend the life of your plant.",
+  placementStudyForLabel:"Placement study for:",
+  pageTitle:"Scanner FOV 120° coverage & shadow model",
+  pageSub:"The scan cone angle is always fixed at 120°. Cooler is the coordinate origin (x=0).",
+  scanner1Title:"Scanner 1 (always on)",
+  scanner2Title:"Scanner 2",
+  labelDistanceFromKiln:"Distance from kiln (m)",
+  labelRotation:"Rotation θ (°)",
+  labelDistanceFromCooler:"Distance from cooler (m)",
+  labelHeadModel:"Head model",
+  btnCombine:"Combine scanners (S1 starts 2m before kiln, S2 ends 2m after)",
+  kilnSectionTitle:"Kiln",
+  labelKilnLength:"Kiln length (m)",
+  noteHtml:'Dark-red bands = shadow not seen by <em>any</em> active scanner. Green marks and value = whole kiln length covered by the FOV(s). Scanner 2 is shown in pink; its own shadow can eliminate Scanner 1\'s shadow where the two viewpoints differ. This placement tool is about aiming/targeting, so wherever both scanners can see the same spot, the one giving the <strong>smaller spot size</strong> is shown here (finer aiming resolution). For actual temperature measurement — handled by separate software — the <strong>higher measured temperature</strong> is what counts; this tool does not read temperature.',
+  cardCoveredFov:"Covered (whole kiln in FOV)",
+  cardCoveredNoShadow:"Covered without shadows",
+  lostToShadow:"{n} m lost to shadow",
+  bannerRedPrefix:"Very shallow angle at kiln (≤ 15°) — strongly elongated spot: ",
+  bannerYellowPrefix:"Shallow angle at kiln (≤ 30°) — elongated spot: ",
+  edgeLeft:"left edge", edgeRight:"right edge",
+  tyresGearTitle:"Tyres (T) & Gear (G)",
+  labelKilnDiameter:"Kiln diameter (m)",
+  labelTyreCount:"Number of tyres",
+  thObject:"Object", thPosition:"Position (m)", thThickness:"Thickness (m)", thOD:"Outside diameter (m)",
+  obstaclesTitle:"Obstacles (beams, poles, trees…) between scanner and kiln",
+  thLabel:"Label", thOn:"On", thX:"x (m)", thY:"y (m)", thDiameter:"diameter (m)",
+  shadowLengthsTitle:"Shadow lengths per object",
+  thShadowLength:"Shadow length (m)",
+  spotSizesTitle:"Spot sizes along the kiln",
+  thKiln:"Kiln (m)", thSlantRange:"Slant range (m)", thGrazingAngle:"Grazing angle (°)", thSpotSize:"Spot size (mm)", thScanner:"Scanner",
+  resolutionTitle:"Scanner head resolution",
+  labelTmc5:"TMC5HT (mrad)", labelTmc8:"TMC8HT (mrad)",
+  btnPrint:"Print / Save as PDF",
+  notSeen:"not seen",
+  noCoverage:"No unobstructed coverage on kiln",
+  svgKiln:"Kiln ({n} m)", svgCooler:"Cooler (0 m)",
+  svgDistFromCooler:"{label} distance from cooler: {val} m",
+  svgCovered:"Covered: {n} m",
+  combineAlert:"Scanner 1 now starts 2 m before the kiln and Scanner 2 ends 2 m after it, as requested. Their overlap is only {overlap} m (less than 5 m) at the current distance/position — consider moving them closer together or adjusting distance from kiln if more overlap is needed. The 15° grazing warning was ignored on purpose to keep the full margin."
+},
+es:{
+  placeholderCustomerName:"Estudio de ubicación para:",
+  marketingTitle:"Sistema de monitorización de carcasa de horno ECS/CemScanner™",
+  marketingSubtitle:"Proteja su horno con nuestro sistema de monitorización de carcasa ECS/CemScanner™",
+  marketingParagraph:"Nuestro sistema de monitorización de la carcasa del horno, ECS/CemScanner™, es el resultado de 40 años de desarrollo y perfeccionamiento. Es un sistema tecnológicamente avanzado que permitirá a sus operadores proteger mejor el horno y prolongar la vida útil de la planta.",
+  placementStudyForLabel:"Estudio de ubicación para:",
+  pageTitle:"Cobertura del FOV de 120° del escáner y modelo de sombras",
+  pageSub:"El ángulo del cono de escaneo siempre es fijo en 120°. El enfriador es el origen de coordenadas (x=0).",
+  scanner1Title:"Escáner 1 (siempre activo)",
+  scanner2Title:"Escáner 2",
+  labelDistanceFromKiln:"Distancia al horno (m)",
+  labelRotation:"Rotación θ (°)",
+  labelDistanceFromCooler:"Distancia al enfriador (m)",
+  labelHeadModel:"Modelo de cabezal",
+  btnCombine:"Combinar escáneres (E1 empieza 2 m antes del horno, E2 termina 2 m después)",
+  kilnSectionTitle:"Horno",
+  labelKilnLength:"Longitud del horno (m)",
+  noteHtml:'Las bandas rojo oscuro = sombra no vista por <em>ningún</em> escáner activo. Las marcas y el valor en verde = longitud total del horno cubierta por el/los FOV. El Escáner 2 se muestra en rosa; su propia sombra puede eliminar la sombra del Escáner 1 donde los dos puntos de vista difieren. Esta herramienta de ubicación trata sobre puntería/objetivo, así que donde ambos escáneres ven el mismo punto, aquí se muestra el que da el <strong>spot más pequeño</strong> (mayor resolución de puntería). Para la medición real de temperatura —realizada por otro software— lo que cuenta es la <strong>temperatura medida más alta</strong>; esta herramienta no mide temperatura.',
+  cardCoveredFov:"Cubierto (horno completo en FOV)",
+  cardCoveredNoShadow:"Cubierto sin sombras",
+  lostToShadow:"{n} m perdidos por sombra",
+  bannerRedPrefix:"Ángulo muy rasante en el horno (≤ 15°) — spot muy alargado: ",
+  bannerYellowPrefix:"Ángulo rasante en el horno (≤ 30°) — spot alargado: ",
+  edgeLeft:"borde izquierdo", edgeRight:"borde derecho",
+  tyresGearTitle:"Llantas (T) y Corona (G)",
+  labelKilnDiameter:"Diámetro del horno (m)",
+  labelTyreCount:"Número de llantas",
+  thObject:"Objeto", thPosition:"Posición (m)", thThickness:"Espesor (m)", thOD:"Diámetro exterior (m)",
+  obstaclesTitle:"Obstáculos (vigas, postes, árboles…) entre el escáner y el horno",
+  thLabel:"Etiqueta", thOn:"Activo", thX:"x (m)", thY:"y (m)", thDiameter:"diámetro (m)",
+  shadowLengthsTitle:"Longitud de sombra por objeto",
+  thShadowLength:"Longitud de sombra (m)",
+  spotSizesTitle:"Tamaño del spot a lo largo del horno",
+  thKiln:"Horno (m)", thSlantRange:"Distancia oblicua (m)", thGrazingAngle:"Ángulo rasante (°)", thSpotSize:"Tamaño del spot (mm)", thScanner:"Escáner",
+  resolutionTitle:"Resolución del cabezal del escáner",
+  labelTmc5:"TMC5HT (mrad)", labelTmc8:"TMC8HT (mrad)",
+  btnPrint:"Imprimir / Guardar como PDF",
+  notSeen:"no visible",
+  noCoverage:"Sin cobertura despejada en el horno",
+  svgKiln:"Horno ({n} m)", svgCooler:"Enfriador (0 m)",
+  svgDistFromCooler:"{label} distancia al enfriador: {val} m",
+  svgCovered:"Cubierto: {n} m",
+  combineAlert:"El Escáner 1 ahora empieza 2 m antes del horno y el Escáner 2 termina 2 m después, como se solicitó. Su solape es de solo {overlap} m (menos de 5 m) con la distancia/posición actual — considere acercarlos o ajustar la distancia al horno si necesita más solape. La advertencia de ángulo rasante de 15° se ignoró a propósito para mantener el margen completo."
+},
+fr:{
+  placeholderCustomerName:"Étude d'implantation pour :",
+  marketingTitle:"Système de surveillance de la virole de four ECS/CemScanner™",
+  marketingSubtitle:"Protégez votre four avec notre système de surveillance de virole ECS/CemScanner™",
+  marketingParagraph:"Notre système de surveillance de la virole de four, ECS/CemScanner™, est le fruit de 40 ans de développement et de perfectionnement. C'est un système technologiquement avancé qui permettra à vos opérateurs de mieux protéger votre four et de prolonger la durée de vie de votre installation.",
+  placementStudyForLabel:"Étude d'implantation pour :",
+  pageTitle:"Couverture FOV 120° du scanner et modèle d'ombres",
+  pageSub:"L'angle du cône de balayage est toujours fixé à 120°. Le refroidisseur est l'origine des coordonnées (x=0).",
+  scanner1Title:"Scanner 1 (toujours actif)",
+  scanner2Title:"Scanner 2",
+  labelDistanceFromKiln:"Distance au four (m)",
+  labelRotation:"Rotation θ (°)",
+  labelDistanceFromCooler:"Distance au refroidisseur (m)",
+  labelHeadModel:"Modèle de tête",
+  btnCombine:"Combiner les scanners (S1 démarre 2 m avant le four, S2 finit 2 m après)",
+  kilnSectionTitle:"Four",
+  labelKilnLength:"Longueur du four (m)",
+  noteHtml:'Bandes rouge foncé = ombre non vue par <em>aucun</em> scanner actif. Repères et valeur en vert = longueur totale du four couverte par le(s) FOV. Le Scanner 2 est affiché en rose ; sa propre ombre peut éliminer l\'ombre du Scanner 1 là où les deux points de vue diffèrent. Cet outil d\'implantation concerne le pointage/visée, donc lorsque les deux scanners voient le même point, celui affiché ici est celui donnant le <strong>plus petit spot</strong> (résolution de visée plus fine). Pour la mesure réelle de température — effectuée par un autre logiciel — c\'est la <strong>température mesurée la plus élevée</strong> qui compte ; cet outil ne mesure pas la température.',
+  cardCoveredFov:"Couvert (four entier dans le FOV)",
+  cardCoveredNoShadow:"Couvert sans ombres",
+  lostToShadow:"{n} m perdus à cause de l'ombre",
+  bannerRedPrefix:"Angle très rasant sur le four (≤ 15°) — spot fortement allongé : ",
+  bannerYellowPrefix:"Angle rasant sur le four (≤ 30°) — spot allongé : ",
+  edgeLeft:"bord gauche", edgeRight:"bord droit",
+  tyresGearTitle:"Bandages (T) et Couronne (G)",
+  labelKilnDiameter:"Diamètre du four (m)",
+  labelTyreCount:"Nombre de bandages",
+  thObject:"Objet", thPosition:"Position (m)", thThickness:"Épaisseur (m)", thOD:"Diamètre extérieur (m)",
+  obstaclesTitle:"Obstacles (poutres, poteaux, arbres…) entre le scanner et le four",
+  thLabel:"Repère", thOn:"Actif", thX:"x (m)", thY:"y (m)", thDiameter:"diamètre (m)",
+  shadowLengthsTitle:"Longueur d'ombre par objet",
+  thShadowLength:"Longueur d'ombre (m)",
+  spotSizesTitle:"Taille du spot le long du four",
+  thKiln:"Four (m)", thSlantRange:"Distance oblique (m)", thGrazingAngle:"Angle rasant (°)", thSpotSize:"Taille du spot (mm)", thScanner:"Scanner",
+  resolutionTitle:"Résolution de la tête du scanner",
+  labelTmc5:"TMC5HT (mrad)", labelTmc8:"TMC8HT (mrad)",
+  btnPrint:"Imprimer / Enregistrer en PDF",
+  notSeen:"non vu",
+  noCoverage:"Aucune couverture dégagée sur le four",
+  svgKiln:"Four ({n} m)", svgCooler:"Refroidisseur (0 m)",
+  svgDistFromCooler:"{label} distance au refroidisseur : {val} m",
+  svgCovered:"Couvert : {n} m",
+  combineAlert:"Le Scanner 1 démarre désormais 2 m avant le four et le Scanner 2 finit 2 m après, comme demandé. Leur chevauchement n'est que de {overlap} m (moins de 5 m) à la distance/position actuelle — envisagez de les rapprocher ou d'ajuster la distance au four si un chevauchement plus important est nécessaire. L'avertissement d'angle rasant de 15° a été volontairement ignoré pour conserver la marge complète."
+},
+pt:{
+  placeholderCustomerName:"Estudo de posicionamento para:",
+  marketingTitle:"Sistema de monitorização de carcaça de forno ECS/CemScanner™",
+  marketingSubtitle:"Proteja o seu forno com o nosso sistema de monitorização de carcaça ECS/CemScanner™",
+  marketingParagraph:"O nosso sistema de monitorização da carcaça do forno, ECS/CemScanner™, é o resultado de 40 anos de desenvolvimento e aperfeiçoamento. É um sistema tecnologicamente avançado que permitirá aos seus operadores proteger melhor o forno e prolongar a vida útil da fábrica.",
+  placementStudyForLabel:"Estudo de posicionamento para:",
+  pageTitle:"Cobertura de FOV de 120° do scanner e modelo de sombras",
+  pageSub:"O ângulo do cone de varrimento é sempre fixo em 120°. O arrefecedor é a origem das coordenadas (x=0).",
+  scanner1Title:"Scanner 1 (sempre ligado)",
+  scanner2Title:"Scanner 2",
+  labelDistanceFromKiln:"Distância ao forno (m)",
+  labelRotation:"Rotação θ (°)",
+  labelDistanceFromCooler:"Distância ao arrefecedor (m)",
+  labelHeadModel:"Modelo da cabeça",
+  btnCombine:"Combinar scanners (S1 começa 2 m antes do forno, S2 termina 2 m depois)",
+  kilnSectionTitle:"Forno",
+  labelKilnLength:"Comprimento do forno (m)",
+  noteHtml:'Faixas vermelho-escuro = sombra não vista por <em>nenhum</em> scanner ativo. Marcas e valor em verde = comprimento total do forno coberto pelo(s) FOV. O Scanner 2 é apresentado a rosa; a sua própria sombra pode eliminar a sombra do Scanner 1 onde os dois pontos de vista diferem. Esta ferramenta de posicionamento é sobre pontaria/mira, por isso, onde ambos os scanners veem o mesmo ponto, é mostrado aqui o que dá o <strong>spot mais pequeno</strong> (resolução de mira mais fina). Para a medição real de temperatura — feita por outro software — o que conta é a <strong>temperatura medida mais alta</strong>; esta ferramenta não lê temperatura.',
+  cardCoveredFov:"Coberto (forno inteiro no FOV)",
+  cardCoveredNoShadow:"Coberto sem sombras",
+  lostToShadow:"{n} m perdidos por sombra",
+  bannerRedPrefix:"Ângulo muito rasante no forno (≤ 15°) — spot fortemente alongado: ",
+  bannerYellowPrefix:"Ângulo rasante no forno (≤ 30°) — spot alongado: ",
+  edgeLeft:"extremidade esquerda", edgeRight:"extremidade direita",
+  tyresGearTitle:"Rodas de apoio (T) e Coroa (G)",
+  labelKilnDiameter:"Diâmetro do forno (m)",
+  labelTyreCount:"Número de rodas de apoio",
+  thObject:"Objeto", thPosition:"Posição (m)", thThickness:"Espessura (m)", thOD:"Diâmetro exterior (m)",
+  obstaclesTitle:"Obstáculos (vigas, postes, árvores…) entre o scanner e o forno",
+  thLabel:"Etiqueta", thOn:"Ativo", thX:"x (m)", thY:"y (m)", thDiameter:"diâmetro (m)",
+  shadowLengthsTitle:"Comprimento de sombra por objeto",
+  thShadowLength:"Comprimento de sombra (m)",
+  spotSizesTitle:"Tamanho do spot ao longo do forno",
+  thKiln:"Forno (m)", thSlantRange:"Distância oblíqua (m)", thGrazingAngle:"Ângulo rasante (°)", thSpotSize:"Tamanho do spot (mm)", thScanner:"Scanner",
+  resolutionTitle:"Resolução da cabeça do scanner",
+  labelTmc5:"TMC5HT (mrad)", labelTmc8:"TMC8HT (mrad)",
+  btnPrint:"Imprimir / Guardar como PDF",
+  notSeen:"não visível",
+  noCoverage:"Sem cobertura desimpedida no forno",
+  svgKiln:"Forno ({n} m)", svgCooler:"Arrefecedor (0 m)",
+  svgDistFromCooler:"{label} distância ao arrefecedor: {val} m",
+  svgCovered:"Coberto: {n} m",
+  combineAlert:"O Scanner 1 agora começa 2 m antes do forno e o Scanner 2 termina 2 m depois, conforme solicitado. A sobreposição é de apenas {overlap} m (menos de 5 m) na distância/posição atual — considere aproximá-los ou ajustar a distância ao forno se precisar de mais sobreposição. O aviso de ângulo rasante de 15° foi ignorado propositadamente para manter a margem completa."
+},
+ar:{
+  placeholderCustomerName:"دراسة التموضع لـ:",
+  marketingTitle:"نظام ECS/CemScanner™ لمراقبة غلاف الفرن الدوار",
+  marketingSubtitle:"احمِ فرنك الدوار بنظام ECS/CemScanner™ لمراقبة الغلاف",
+  marketingParagraph:"نظامنا لمراقبة غلاف الفرن الدوار، ECS/CemScanner™، هو ثمرة 40 عامًا من التطوير والتحسين. إنه نظام متطور تقنيًا يتيح لمشغّليكم حماية الفرن بشكل أفضل وإطالة عمر المصنع.",
+  placementStudyForLabel:"دراسة التموضع لـ:",
+  pageTitle:"تغطية مجال رؤية الماسح 120° ونموذج الظل",
+  pageSub:"زاوية مخروط المسح ثابتة دائمًا عند 120°. المبرّد هو نقطة الأصل للإحداثيات (x=0).",
+  scanner1Title:"الماسح 1 (يعمل دائمًا)",
+  scanner2Title:"الماسح 2",
+  labelDistanceFromKiln:"المسافة عن الفرن (م)",
+  labelRotation:"الدوران θ (°)",
+  labelDistanceFromCooler:"المسافة عن المبرّد (م)",
+  labelHeadModel:"طراز الرأس",
+  btnCombine:"دمج الماسحين (الماسح 1 يبدأ قبل الفرن بمترين، الماسح 2 ينتهي بعد الفرن بمترين)",
+  kilnSectionTitle:"الفرن",
+  labelKilnLength:"طول الفرن (م)",
+  noteHtml:'الأشرطة الحمراء الداكنة = ظل لا يراه <em>أي</em> ماسح نشط. العلامات والقيمة الخضراء = إجمالي طول الفرن المغطى بمجال (مجالات) الرؤية. يظهر الماسح 2 باللون الوردي؛ يمكن لظله أن يزيل ظل الماسح 1 حيث تختلف زاويتا الرؤية. تُعنى أداة التموضع هذه بالتصويب/التسديد، لذا حيثما يرى الماسحان النقطة نفسها، يُعرض هنا الماسح الذي يمنح <strong>البقعة الأصغر</strong> (دقة تصويب أعلى). أما القياس الفعلي لدرجة الحرارة — الذي يتم في برنامج منفصل — فتُعتمد فيه <strong>درجة الحرارة الأعلى المقاسة</strong>؛ هذه الأداة لا تقيس درجة الحرارة.',
+  cardCoveredFov:"مغطى (الفرن بالكامل ضمن مجال الرؤية)",
+  cardCoveredNoShadow:"مغطى بدون ظلال",
+  lostToShadow:"{n} م فُقدت بسبب الظل",
+  bannerRedPrefix:"زاوية حادة جدًا عند الفرن (≤ 15°) — بقعة ممدودة بشدة: ",
+  bannerYellowPrefix:"زاوية حادة عند الفرن (≤ 30°) — بقعة ممدودة: ",
+  edgeLeft:"الحافة اليسرى", edgeRight:"الحافة اليمنى",
+  tyresGearTitle:"الإطارات (T) والترس (G)",
+  labelKilnDiameter:"قطر الفرن (م)",
+  labelTyreCount:"عدد الإطارات",
+  thObject:"العنصر", thPosition:"الموضع (م)", thThickness:"السماكة (م)", thOD:"القطر الخارجي (م)",
+  obstaclesTitle:"العوائق (عوارض، أعمدة، أشجار…) بين الماسح والفرن",
+  thLabel:"الرمز", thOn:"مُفعّل", thX:"x (م)", thY:"y (م)", thDiameter:"القطر (م)",
+  shadowLengthsTitle:"أطوال الظل لكل عنصر",
+  thShadowLength:"طول الظل (م)",
+  spotSizesTitle:"حجم البقعة على طول الفرن",
+  thKiln:"الفرن (م)", thSlantRange:"المسافة المائلة (م)", thGrazingAngle:"زاوية السقوط (°)", thSpotSize:"حجم البقعة (مم)", thScanner:"الماسح",
+  resolutionTitle:"دقة رأس الماسح",
+  labelTmc5:"TMC5HT (مليراديان)", labelTmc8:"TMC8HT (مليراديان)",
+  btnPrint:"طباعة / حفظ كملف PDF",
+  notSeen:"غير مرئي",
+  noCoverage:"لا توجد تغطية غير معاقة على الفرن",
+  svgKiln:"الفرن ({n} م)", svgCooler:"المبرّد (0 م)",
+  svgDistFromCooler:"{label} المسافة عن المبرّد: {val} م",
+  svgCovered:"مغطى: {n} م",
+  combineAlert:"يبدأ الماسح 1 الآن قبل الفرن بمترين وينتهي الماسح 2 بعد الفرن بمترين، كما هو مطلوب. التداخل بينهما {overlap} م فقط (أقل من 5 م) عند المسافة/الموضع الحاليين — ينبغي تقريبهما من بعضهما أو تعديل المسافة عن الفرن إذا لزم مزيد من التداخل. تم تجاهل تحذير زاوية السقوط 15° عمدًا للحفاظ على الهامش الكامل."
+}
+};
+let currentLang = localStorage.getItem('cemscanner-lang') || 'en';
+if (!I18N[currentLang]) currentLang = 'en';
+function t(key, vars){
+  let str = (I18N[currentLang] && I18N[currentLang][key]) || I18N.en[key] || key;
+  if (vars) Object.keys(vars).forEach(k => { str = str.split('{'+k+'}').join(vars[k]); });
+  return str;
+}
+function applyStaticI18n(){
+  document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.getAttribute('data-i18n')); });
+  document.querySelectorAll('[data-i18n-html]').forEach(el => { el.innerHTML = t(el.getAttribute('data-i18n-html')); });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => { el.placeholder = t(el.getAttribute('data-i18n-placeholder')); });
+  document.title = t('pageTitle');
+}
+function setLanguage(code){
+  currentLang = code;
+  localStorage.setItem('cemscanner-lang', code);
+  document.documentElement.lang = code;
+  document.documentElement.dir = code === 'ar' ? 'rtl' : 'ltr';
+  applyStaticI18n();
+  render();
+}
+const langSelectEl = document.getElementById('lang-select');
+LANGS.forEach(l => {
+  const opt = document.createElement('option');
+  opt.value = l.code; opt.textContent = l.flag + ' ' + l.name;
+  langSelectEl.appendChild(opt);
+});
+langSelectEl.value = currentLang;
+langSelectEl.addEventListener('change', () => setLanguage(langSelectEl.value));
+document.documentElement.lang = currentLang;
+document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+applyStaticI18n();
+
 /* ---------- scanners ---------- */
 function makeScanner(prefix, label, color, hasEnable){
   return {
@@ -501,7 +772,7 @@ document.getElementById('btn-combine').addEventListener('click', () => {
     const c2 = computeScannerCoverageBounds({...sp2base, theta:theta2}, -SAFETY_MARGIN, bound);
     const overlapLen = lenOf(intersectIntervalLists(c1.visibleSegs, c2.visibleSegs));
     if (overlapLen < MIN_OVERLAP - 1e-6){
-      alert('Scanner 1 now starts 2 m before the kiln and Scanner 2 ends 2 m after it, as requested. Their overlap is only '+overlapLen.toFixed(1)+' m (less than 5 m) at the current distance/position — consider moving them closer together or adjusting distance from kiln if more overlap is needed. The 15° grazing warning was ignored on purpose to keep the full margin.');
+      alert(t('combineAlert',{overlap:overlapLen.toFixed(1)}));
     }
   } else {
     // only one scanner active: fall back to maximizing coverage over the kiln + safety margin
@@ -539,7 +810,7 @@ function render(){
   fovCoveredOut.textContent = fmt(baseCovered,1) + ' / ' + Math.round(pecv) + ' m';
   cardFov.classList.toggle('warn', pecv>0 && baseCovered < pecv - 0.05);
   out.pecCovered.textContent = fmt(finalCovered,1) + ' / ' + Math.round(pecv) + ' m';
-  out.pecShadow.textContent = shadowedWithinFov>0.01 ? (fmt(shadowedWithinFov,1)+' m lost to shadow') : '';
+  out.pecShadow.textContent = shadowedWithinFov>0.01 ? t('lostToShadow',{n:fmt(shadowedWithinFov,1)}) : '';
   cardPec.classList.toggle('warn', pecv>0 && finalCovered < pecv - 0.05);
 
   // per-object shadow lengths: a point stays shadowed only if blocked from EVERY active scanner
@@ -563,15 +834,15 @@ function render(){
       const hits = isFinite(e.x) && e.x>=-1e-6 && e.x<=pecv+1e-6 && pecv>0;
       if (hits){
         const grazing = 90-Math.abs(e.phi);
-        const tag = c.sp.label+' '+e.name+' edge: '+fmt(grazing,1)+'\u00b0';
+        const tag = c.sp.label+' '+t(e.name==='left'?'edgeLeft':'edgeRight')+': '+fmt(grazing,1)+'\u00b0';
         if (grazing<=15) redMsgs.push(tag); else if (grazing<=30) yellowMsgs.push(tag);
       }
     });
   });
   bannerRed.classList.toggle('show', redMsgs.length>0); bannerRed.classList.add('red');
-  bannerRed.textContent = 'Very shallow angle at kiln (\u2264 15\u00b0) \u2014 strongly elongated spot: '+redMsgs.join('; ');
+  bannerRed.textContent = t('bannerRedPrefix')+redMsgs.join('; ');
   bannerYellow.classList.toggle('show', yellowMsgs.length>0); bannerYellow.classList.add('yellow');
-  bannerYellow.textContent = 'Shallow angle at kiln (\u2264 30\u00b0) \u2014 elongated spot: '+yellowMsgs.join('; ');
+  bannerYellow.textContent = t('bannerYellowPrefix')+yellowMsgs.join('; ');
 
   drawScene(pecv, coverages, fovMerged, visibleMerged);
   renderSpotTable(coverages, visibleMerged);
@@ -580,7 +851,7 @@ function render(){
 function renderSpotTable(coverages, visibleMerged){
   spotBody.innerHTML = '';
   if (!visibleMerged.length){
-    spotBody.innerHTML = '<tr><td colspan="5" class="dim">No unobstructed coverage on kiln</td></tr>';
+    spotBody.innerHTML = '<tr><td colspan="5" class="dim">'+t('noCoverage')+'</td></tr>';
     return;
   }
   let rows = [];
@@ -613,7 +884,7 @@ function renderSpotTable(coverages, visibleMerged){
       tr.innerHTML = '<td>'+fmt(x,1)+'</td><td>'+fmt(best.R,2)+'</td><td>'+fmt(best.grazing,1)+
         '</td><td>'+(isFinite(best.spot)?fmt(best.spot,0):'\u221e')+'</td><td>'+best.label+'</td>';
     } else {
-      tr.innerHTML = '<td>'+fmt(x,1)+'</td><td class="dim" colspan="4">not seen</td>';
+      tr.innerHTML = '<td>'+fmt(x,1)+'</td><td class="dim" colspan="4">'+t('notSeen')+'</td>';
     }
     spotBody.appendChild(tr);
   });
@@ -642,10 +913,10 @@ function drawScene(pecv, coverages, fovMerged, visibleMerged){
   parts.push('<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>');
   parts.push(`<line x1="10" y1="${lineY}" x2="${viewW-10}" y2="${lineY}" stroke="#3a3d41" stroke-width="1" stroke-dasharray="4 4"/>`);
   parts.push(`<rect x="${kilnLeftPx}" y="${lineY}" width="${kilnRightPx-kilnLeftPx}" height="${kilnDepthPx}" fill="#33363a" stroke="#e8e8e6" stroke-width="1.5" rx="3"/>`);
-  parts.push(`<text x="${(kilnLeftPx+kilnRightPx)/2}" y="${lineY+kilnDepthPx+22}" fill="#a3a6ab" font-size="12" text-anchor="middle">Kiln (${Math.round(pecv)} m)</text>`);
+  parts.push(`<text x="${(kilnLeftPx+kilnRightPx)/2}" y="${lineY+kilnDepthPx+22}" fill="#a3a6ab" font-size="12" text-anchor="middle">${t('svgKiln',{n:Math.round(pecv)})}</text>`);
   parts.push(`<line x1="${kilnLeftPx}" y1="${axisY}" x2="${kilnRightPx}" y2="${axisY}" stroke="#8a8d92" stroke-width="1" stroke-dasharray="10 4 2 4"/>`);
   parts.push(`<circle cx="${kilnLeftPx}" cy="${lineY}" r="4" fill="#f2a623"/>`);
-  parts.push(`<text x="${kilnLeftPx-6}" y="${lineY-8}" fill="#f2a623" font-size="12" text-anchor="end">Cooler (0 m)</text>`);
+  parts.push(`<text x="${kilnLeftPx-6}" y="${lineY-8}" fill="#f2a623" font-size="12" text-anchor="end">${t('svgCooler')}</text>`);
 
   // per-scanner cones, apex, cooler-distance dimension, and distance-from-kiln indicator (pinned to screen edges, out of the way)
   coverages.forEach((c,idx)=>{
@@ -672,7 +943,7 @@ function drawScene(pecv, coverages, fovMerged, visibleMerged){
     parts.push(`<line x1="${kilnLeftPx}" y1="${lineY}" x2="${kilnLeftPx}" y2="${dimY1}" stroke="${sp.color}" stroke-width="0.75" stroke-dasharray="2 2"/>`);
     parts.push(`<line x1="${apexX}" y1="${apexY}" x2="${apexX}" y2="${dimY1}" stroke="${sp.color}" stroke-width="0.75" stroke-dasharray="2 2"/>`);
     parts.push(`<line x1="${kilnLeftPx}" y1="${dimY1}" x2="${apexX}" y2="${dimY1}" stroke="${sp.color}" stroke-width="1.5" marker-start="url(#arrow)" marker-end="url(#arrow)"/>`);
-    parts.push(`<text x="${(kilnLeftPx+apexX)/2}" y="${dimY1-8}" fill="${sp.color}" font-size="11" text-anchor="middle">${sp.label} distance from cooler: ${fmt(sp.x0,1)} m</text>`);
+    parts.push(`<text x="${(kilnLeftPx+apexX)/2}" y="${dimY1-8}" fill="${sp.color}" font-size="11" text-anchor="middle">${t('svgDistFromCooler',{label:sp.label, val:fmt(sp.x0,1)})}</text>`);
 
     // distance from kiln — pinned to a fixed screen column (out of the busy cone area), alternating left/right edge
     const colX = idx % 2 === 0 ? 24 : viewW-24;
@@ -698,7 +969,7 @@ function drawScene(pecv, coverages, fovMerged, visibleMerged){
   });
   if (fovMerged.length){
     const mid = fovMerged[0];
-    parts.push(`<text x="${toPx((mid[0]+mid[1])/2)}" y="${belowY+16}" fill="#3ec9a7" font-size="12" text-anchor="middle">Covered: ${fmt(totalFov,1)} m</text>`);
+    parts.push(`<text x="${toPx((mid[0]+mid[1])/2)}" y="${belowY+16}" fill="#3ec9a7" font-size="12" text-anchor="middle">${t('svgCovered',{n:fmt(totalFov,1)})}</text>`);
   }
 
   tyres.forEach(t=>{
