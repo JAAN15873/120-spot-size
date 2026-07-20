@@ -99,65 +99,73 @@
   .marketing-block{color:#111;}
   .ring-label{ fill:#e8e8e6; }
   @media print{ .ring-label{ fill:#1a1a1a; } }
+
+  #lang-switcher{position:fixed; top:16px; right:16px; z-index:50;}
+  #lang-switcher select{font-size:13px; padding:6px 10px; border-radius:8px; cursor:pointer;
+    background:var(--panel); color:var(--text); border:1px solid var(--border-strong);}
+  @media print{ #lang-switcher{display:none !important;} }
 </style>
 </head>
 <body>
+<div id="lang-switcher" class="no-print">
+  <select id="lang-select" aria-label="Language"></select>
+</div>
 <div class="wrap">
   <div class="brand-title">ECS/CemScanner™</div>
   <div class="row" style="max-width:460px; margin:0 auto 16px;">
-    <label style="width:auto; white-space:nowrap; margin-right:4px;">Placement study for:</label>
-    <input type="text" id="customer-name" placeholder="Site name" style="width:100%;">
+    <label style="width:auto; white-space:nowrap; margin-right:4px;" data-i18n="placementStudyForLabel">Placement study for:</label>
+    <input type="text" id="customer-name" placeholder="Site name" data-i18n-placeholder="placeholderSiteName" style="width:100%;">
   </div>
 
   <div class="print-only marketing-block">
-    <h1>ECS/CemScanner™ kiln shell monitoring system</h1>
-    <h3>Protect your kiln with our ECS/CemScanner™ kiln shell monitoring system</h3>
-    <p>Our kiln shell monitoring system, ECS/CemScanner™, is the product of 40-years worth of development and refining. It’s a technologically advanced system that will allow your operators to better protect your kiln and extend the life of your plant.</p>
-    <p id="print-placement-line" style="display:none;"><strong>Placement study for: <span id="print-customer-name"></span></strong></p>
+    <h1 data-i18n="marketingTitle">ECS/CemScanner™ kiln shell monitoring system</h1>
+    <h3 data-i18n="marketingSubtitle">Protect your kiln with our ECS/CemScanner™ kiln shell monitoring system</h3>
+    <p data-i18n="marketingParagraph">Our kiln shell monitoring system, ECS/CemScanner™, is the product of 40-years worth of development and refining. It’s a technologically advanced system that will allow your operators to better protect your kiln and extend the life of your plant.</p>
+    <p id="print-placement-line" style="display:none;"><strong><span data-i18n="placementStudyForLabel">Placement study for:</span> <span id="print-customer-name"></span></strong></p>
   </div>
 
-  <h1>ECS/CemScanner™ coverage &amp; shadow model</h1>
-  <p class="sub">The scan cone angle is always fixed at 120°. Cooler is the coordinate origin (x=0).</p>
+  <h1 data-i18n="pageTitle">ECS/CemScanner™ coverage &amp; shadow model</h1>
+  <p class="sub" data-i18n="pageSub">The scan cone angle is always fixed at 120°. Cooler is the coordinate origin (x=0).</p>
 
   <div class="two-col">
     <div class="panel">
-      <h3 style="color:var(--accent);">Scanner1</h3>
-      <div class="row"><label for="s1-d">Distance from kiln (m)</label>
+      <h3 style="color:var(--accent);" data-i18n="scanner1Title">Scanner1</h3>
+      <div class="row"><label for="s1-d" data-i18n="labelDistanceFromKiln">Distance from kiln (m)</label>
         <input type="range" id="s1-d" min="0" max="50" step="0.1" value="20">
         <input type="number" id="s1-d-num" min="0" max="50" step="0.1" value="20"></div>
-      <div class="row"><label for="s1-theta">Rotation θ (°)</label>
+      <div class="row"><label for="s1-theta" data-i18n="labelRotation">Rotation θ (°)</label>
         <input type="range" id="s1-theta" min="-60" max="60" step="0.5" value="0">
         <input type="number" id="s1-theta-num" min="-60" max="60" step="0.5" value="0"></div>
-      <div class="row"><label for="s1-x0">Distance from cooler (m)</label>
+      <div class="row"><label for="s1-x0" data-i18n="labelDistanceFromCooler">Distance from cooler (m)</label>
         <input type="range" id="s1-x0" min="-20" max="140" step="0.1" value="15">
         <input type="number" id="s1-x0-num" min="-20" max="140" step="0.1" value="15"></div>
-      <div class="row"><label for="s1-head">Head model</label>
+      <div class="row"><label for="s1-head" data-i18n="labelHeadModel">Head model</label>
         <select id="s1-head"><option value="TMC5HT">TMC5HT</option><option value="TMC8HT" selected>TMC8HT</option></select></div>
     </div>
 
     <div class="panel">
-      <h3 style="color:var(--s2);"><input type="checkbox" id="s2-enabled"> Scanner 2</h3>
-      <div class="row"><label for="s2-d">Distance from kiln (m)</label>
+      <h3 style="color:var(--s2);"><input type="checkbox" id="s2-enabled"> <span data-i18n="scanner2Title">Scanner 2</span></h3>
+      <div class="row"><label for="s2-d" data-i18n="labelDistanceFromKiln">Distance from kiln (m)</label>
         <input type="range" id="s2-d" min="0" max="50" step="0.1" value="10">
         <input type="number" id="s2-d-num" min="0" max="50" step="0.1" value="10"></div>
-      <div class="row"><label for="s2-theta">Rotation θ (°)</label>
+      <div class="row"><label for="s2-theta" data-i18n="labelRotation">Rotation θ (°)</label>
         <input type="range" id="s2-theta" min="-60" max="60" step="0.5" value="0">
         <input type="number" id="s2-theta-num" min="-60" max="60" step="0.5" value="0"></div>
-      <div class="row"><label for="s2-x0">Distance from cooler (m)</label>
+      <div class="row"><label for="s2-x0" data-i18n="labelDistanceFromCooler">Distance from cooler (m)</label>
         <input type="range" id="s2-x0" min="-20" max="140" step="0.1" value="50">
         <input type="number" id="s2-x0-num" min="-20" max="140" step="0.1" value="50"></div>
-      <div class="row"><label for="s2-head">Head model</label>
+      <div class="row"><label for="s2-head" data-i18n="labelHeadModel">Head model</label>
         <select id="s2-head"><option value="TMC5HT" selected>TMC5HT</option><option value="TMC8HT">TMC8HT</option></select></div>
     </div>
   </div>
 
   <div class="btn-row" style="margin:4px 0 20px;">
-    <button class="btn" id="btn-combine">Combine scanners (S1 starts 2m before kiln, S2 ends 2m after)</button>
+    <button class="btn" id="btn-combine" data-i18n="btnCombine">Combine scanners (S1 starts 2m before kiln, S2 ends 2m after)</button>
   </div>
 
   <div class="panel">
-    <h2 style="margin-top:0;">Kiln</h2>
-    <div class="row"><label for="pec">Kiln length (m)</label>
+    <h2 style="margin-top:0;" data-i18n="kilnSectionTitle">Kiln</h2>
+    <div class="row"><label for="pec" data-i18n="labelKilnLength">Kiln length (m)</label>
       <input type="range" id="pec" min="0" max="120" step="1" value="60">
       <input type="number" id="pec-num" min="0" max="120" step="1" value="60"></div>
   </div>
@@ -165,29 +173,29 @@
   <div class="page-break"></div>
 
   <div class="zoom-controls no-print">
-    <button class="zoom-btn" id="zoom-in" title="Zoom in">+</button>
-    <button class="zoom-btn" id="zoom-out" title="Zoom out">−</button>
-    <button class="zoom-btn zoom-btn-wide" id="zoom-reset" title="Reset zoom">Reset</button>
-    <span class="zoom-hint">Scroll to zoom, drag to pan</span>
+    <button class="zoom-btn" id="zoom-in" title="Zoom in" data-i18n-title="zoomInTitle">+</button>
+    <button class="zoom-btn" id="zoom-out" title="Zoom out" data-i18n-title="zoomOutTitle">−</button>
+    <button class="zoom-btn zoom-btn-wide" id="zoom-reset" title="Reset zoom" data-i18n-title="zoomResetTitle" data-i18n="zoomResetBtn">Reset</button>
+    <span class="zoom-hint" data-i18n="zoomHint">Scroll to zoom, drag to pan</span>
   </div>
   <svg id="svg" viewBox="0 0 800 460"></svg>
 
-  <p class="note">
-    Dark-red bands = shadow not seen by <em>any</em> active scanner (shown above and below the kiln). Green marks and value = whole kiln length covered by the FOV(s). Scanner 2 is shown in its own color; its own shadow can eliminate Scanner 1's shadow where the two viewpoints differ, and wherever both scanners can see the same spot the higher measured temperature counts.
+  <p class="note" data-i18n-html="noteHtml">
+    Dark-red bands = shadow not seen by <em>any</em> active scanner (shown above and below the kiln). Green marks and value = whole kiln length covered by the FOV(s). Scanner 2 is shown in its own color; its own shadow can eliminate Scanner 1's shadow where the two viewpoints differ. This placement tool is about aiming/targeting, so wherever both scanners can see the same spot, the one giving the <strong>smaller spot size</strong> is shown here (finer aiming resolution). For actual temperature measurement — handled by separate software — the <strong>higher measured temperature</strong> is what counts; this tool does not read temperature.
   </p>
 
   <div class="results">
     <div class="card" id="card-fov">
-      <div class="label">Covered (whole kiln in FOV)</div>
+      <div class="label" data-i18n="cardCoveredFov">Covered (whole kiln in FOV)</div>
       <div class="num" id="fov-covered-out">60.0 / 60 m</div>
     </div>
     <div class="card" id="card-pec">
-      <div class="label">Covered without shadows</div>
+      <div class="label" data-i18n="cardCoveredNoShadow">Covered without shadows</div>
       <div class="num" id="pec-covered-out">60.0 / 60 m</div>
       <div class="sub2" id="pec-shadow-out"></div>
     </div>
     <div class="card" id="card-brick">
-      <div class="label">Measured with spot smaller than Brick!</div>
+      <div class="label" data-i18n="cardBrick">Measured with spot smaller than Brick!</div>
       <div class="num" id="brick-pct-out">0.0 %</div>
       <div class="sub2" id="brick-sub-out"></div>
     </div>
@@ -201,13 +209,13 @@
   <div class="page-break"></div>
 
   <div class="panel">
-    <h2 style="margin-top:0;">Tyres (T) &amp; Gear (G)</h2>
+    <h2 style="margin-top:0;" data-i18n="tyresGearTitle">Tyres (T) &amp; Gear (G)</h2>
     <div class="row">
-      <label for="kilnDiameter">Kiln diameter (m)</label>
+      <label for="kilnDiameter" data-i18n="labelKilnDiameter">Kiln diameter (m)</label>
       <input type="number" id="kilnDiameter" min="0.5" max="10" step="0.1" value="5">
     </div>
     <div class="row">
-      <label for="tyreCount">Number of tyres</label>
+      <label for="tyreCount" data-i18n="labelTyreCount">Number of tyres</label>
       <select id="tyreCount">
         <option value="0">0</option>
         <option value="2">2</option>
@@ -219,44 +227,44 @@
     <div class="table-wrap" style="max-height:none;">
       <table class="aligned-table">
         <colgroup><col style="width:60px"><col style="width:44px"><col style="width:170px"><col style="width:225px"><col style="width:225px"></colgroup>
-        <thead><tr><th>Object</th><th style="text-align:center;">On</th><th>Distance from cooler (m)</th><th>Thickness (m)</th><th>Outside diameter (m)</th></tr></thead>
+        <thead><tr><th data-i18n="thObject">Object</th><th style="text-align:center;" data-i18n="thOn">On</th><th data-i18n="labelDistanceFromCooler">Distance from cooler (m)</th><th data-i18n="thThickness">Thickness (m)</th><th data-i18n="thOD">Outside diameter (m)</th></tr></thead>
         <tbody id="ringsBody"></tbody>
       </table>
     </div>
   </div>
 
   <div class="panel">
-    <h2 style="margin-top:0;">Pyrometers (bottom of kiln, FOV ratio 1:15)</h2>
-    <p class="note" style="margin-top:0;">Enter distance from kiln and position (distance from cooler); spot size is calculated automatically. Rotation 90° = pointing straight at the kiln. Spot size above 50 cm is highlighted.</p>
+    <h2 style="margin-top:0;" data-i18n="pyroSectionTitle">Pyrometers (bottom of kiln, FOV ratio 1:15)</h2>
+    <p class="note" style="margin-top:0;" data-i18n="pyroSectionNote">Enter distance from kiln and position (distance from cooler); spot size is calculated automatically. Rotation 90° = pointing straight at the kiln. Spot size above 50 cm is highlighted.</p>
     <div class="btn-row">
-      <button class="btn" id="btn-pyro-auto">Place automatically (30 cm spots on shadow zones)</button>
+      <button class="btn" id="btn-pyro-auto" data-i18n="btnPyroAuto">Place automatically (30 cm spots on shadow zones)</button>
     </div>
     <div class="table-wrap" style="max-height:none;">
       <table class="aligned-table">
         <colgroup><col style="width:60px"><col style="width:44px"><col style="width:170px"><col style="width:170px"><col style="width:140px"><col style="width:140px"></colgroup>
-        <thead><tr><th>Label</th><th style="text-align:center;">On</th><th>Distance from cooler (m)</th><th>Distance from kiln (m)</th><th>Rotation (°)</th><th>Spot size (cm)</th></tr></thead>
+        <thead><tr><th data-i18n="thLabel">Label</th><th style="text-align:center;" data-i18n="thOn">On</th><th data-i18n="labelDistanceFromCooler">Distance from cooler (m)</th><th data-i18n="labelDistanceFromKiln">Distance from kiln (m)</th><th data-i18n="thRotation">Rotation (°)</th><th data-i18n="thSpotSizeCm">Spot size (cm)</th></tr></thead>
         <tbody id="pyrosBody"></tbody>
       </table>
     </div>
   </div>
 
   <div class="panel">
-    <h2 style="margin-top:0;">Obstacles (beams, poles, trees…) between scanner and kiln</h2>
+    <h2 style="margin-top:0;" data-i18n="obstaclesTitle">Obstacles (beams, poles, trees…) between scanner and kiln</h2>
     <div class="table-wrap" style="max-height:none;">
       <table class="aligned-table">
         <colgroup><col style="width:60px"><col style="width:44px"><col style="width:170px"><col style="width:170px"><col style="width:280px"></colgroup>
-        <thead><tr><th>Label</th><th style="text-align:center;">On</th><th>Distance from cooler (m)</th><th>Distance from kiln (m)</th><th>Diameter (m)</th></tr></thead>
+        <thead><tr><th data-i18n="thLabel">Label</th><th style="text-align:center;" data-i18n="thOn">On</th><th data-i18n="labelDistanceFromCooler">Distance from cooler (m)</th><th data-i18n="labelDistanceFromKiln">Distance from kiln (m)</th><th data-i18n="thDiameter">Diameter (m)</th></tr></thead>
         <tbody id="obstaclesList"></tbody>
       </table>
     </div>
   </div>
 
-  <h2>Shadow lengths per object</h2>
+  <h2 data-i18n="shadowLengthsTitle">Shadow lengths per object</h2>
   <div class="table-wrap">
     <table>
       <thead>
-        <tr class="print-caption-row"><th colspan="5">Shadow lengths per object</th></tr>
-        <tr><th>Object</th><th>Shadow length (m)</th><th>Start (m)</th><th>End (m)</th><th>Suggested pyrometers (30cm spot)</th></tr>
+        <tr class="print-caption-row"><th colspan="5" data-i18n="shadowLengthsTitle">Shadow lengths per object</th></tr>
+        <tr><th data-i18n="thObject">Object</th><th data-i18n="thShadowLength">Shadow length (m)</th><th data-i18n="thStart">Start (m)</th><th data-i18n="thEnd">End (m)</th><th data-i18n="thSuggestedPyros">Suggested pyrometers (30cm spot)</th></tr>
       </thead>
       <tbody id="shadow-body"></tbody>
     </table>
@@ -264,34 +272,353 @@
 
   <div class="page-break"></div>
 
-  <h2>Spot sizes along the kiln</h2>
+  <h2 data-i18n="spotSizesTitle">Spot sizes along the kiln</h2>
   <div class="table-wrap">
     <table>
       <thead>
-        <tr class="print-caption-row"><th colspan="5">Spot sizes along the kiln</th></tr>
-        <tr><th>Kiln (m)</th><th>Slant range (m)</th><th>Grazing angle (°)</th><th>Spot size (mm)</th><th>Scanner</th></tr>
+        <tr class="print-caption-row"><th colspan="5" data-i18n="spotSizesTitle">Spot sizes along the kiln</th></tr>
+        <tr><th data-i18n="thKiln">Kiln (m)</th><th data-i18n="thSlantRange">Slant range (m)</th><th data-i18n="thGrazingAngle">Grazing angle (°)</th><th data-i18n="thSpotSize">Spot size (mm)</th><th data-i18n="thScanner">Scanner</th></tr>
       </thead>
       <tbody id="spot-body"></tbody>
     </table>
   </div>
 
   <div class="panel no-print">
-    <h2 style="margin-top:0;">Scanner &amp; measurement settings</h2>
-    <div class="row"><label for="res-tmc5">TMC5HT (mrad)</label><input type="number" id="res-tmc5" step="0.1" value="5"></div>
-    <div class="row"><label for="res-tmc8">TMC8HT (mrad)</label><input type="number" id="res-tmc8" step="0.1" value="2"></div>
-    <div class="row"><label for="brickSize">Brick size / max spot (mm)</label>
+    <h2 style="margin-top:0;" data-i18n="settingsTitle">Scanner &amp; measurement settings</h2>
+    <div class="row"><label for="res-tmc5" data-i18n="labelTmc5">TMC5HT (mrad)</label><input type="number" id="res-tmc5" step="0.1" value="5"></div>
+    <div class="row"><label for="res-tmc8" data-i18n="labelTmc8">TMC8HT (mrad)</label><input type="number" id="res-tmc8" step="0.1" value="2"></div>
+    <div class="row"><label for="brickSize" data-i18n="labelBrickSize">Brick size / max spot (mm)</label>
       <input type="number" id="brickSize" min="1" step="1" value="200"></div>
-    <div class="row"><label for="pyroRatio">Pyrometer resolution (distance:spot, 1:X)</label>
+    <div class="row"><label for="pyroRatio" data-i18n="labelPyroRatio">Pyrometer resolution (distance:spot, 1:X)</label>
       <input type="number" id="pyroRatio" min="1" step="0.5" value="15"></div>
-    <p class="note" style="margin-bottom:0;">At the default 1:15 ratio and the 4.5 m distance used by "Place automatically", each pyrometer measures a spot of about 300 mm (30 cm). A finer ratio — e.g. changing the pyrometers to achieve a 20 cm spot — would let more of the measured surface fall under the Brick threshold, potentially pushing the "smaller than Brick" percentage toward 100%.</p>
+    <p class="note" style="margin-bottom:0;" data-i18n="pyroRatioNote">At the default 1:15 ratio and the 4.5 m distance used by "Place automatically", each pyrometer measures a spot of about 300 mm (30 cm). A finer ratio — e.g. changing the pyrometers to achieve a 20 cm spot — would let more of the measured surface fall under the Brick threshold, potentially pushing the "smaller than Brick" percentage toward 100%.</p>
   </div>
 
   <div id="print-btn-wrap" style="text-align:center; margin-top:24px;">
-    <button class="btn" id="btn-print" style="padding:12px 24px; font-size:14px;">Print / Save as PDF</button>
+    <button class="btn" id="btn-print" style="padding:12px 24px; font-size:14px;" data-i18n="btnPrint">Print / Save as PDF</button>
   </div>
 </div>
 
 <script>
+/* ---------- i18n ---------- */
+const LANGS = [
+  {code:'en', name:'English', flag:'🇬🇧'},
+  {code:'es', name:'Español', flag:'🇪🇸'},
+  {code:'fr', name:'Français', flag:'🇫🇷'},
+  {code:'pt', name:'Português', flag:'🇵🇹'},
+  {code:'ar', name:'العربية', flag:'🇸🇦'}
+];
+const I18N = {
+en:{
+  placeholderSiteName:"Site name",
+  pageTitle:"ECS/CemScanner™ coverage & shadow model",
+  pageSub:"The scan cone angle is always fixed at 120°. Cooler is the coordinate origin (x=0).",
+  scanner1Title:"Scanner1", scanner2Title:"Scanner 2",
+  labelDistanceFromKiln:"Distance from kiln (m)", labelRotation:"Rotation θ (°)",
+  labelDistanceFromCooler:"Distance from cooler (m)", labelHeadModel:"Head model",
+  btnCombine:"Combine scanners (S1 starts 2m before kiln, S2 ends 2m after)",
+  kilnSectionTitle:"Kiln", labelKilnLength:"Kiln length (m)",
+  zoomInTitle:"Zoom in", zoomOutTitle:"Zoom out", zoomResetTitle:"Reset zoom", zoomResetBtn:"Reset",
+  zoomHint:"Scroll to zoom, drag to pan",
+  noteHtml:'Dark-red bands = shadow not seen by <em>any</em> active scanner (shown above and below the kiln). Green marks and value = whole kiln length covered by the FOV(s). Scanner 2 is shown in its own color; its own shadow can eliminate Scanner 1\'s shadow where the two viewpoints differ. This placement tool is about aiming/targeting, so wherever both scanners can see the same spot, the one giving the <strong>smaller spot size</strong> is shown here (finer aiming resolution). For actual temperature measurement — handled by separate software — the <strong>higher measured temperature</strong> is what counts; this tool does not read temperature.',
+  cardCoveredFov:"Covered (whole kiln in FOV)", cardCoveredNoShadow:"Covered without shadows",
+  cardBrick:"Measured with spot smaller than Brick!",
+  lostToShadow:"{n} m lost to shadow",
+  pyroEliminatedSuffix:" ({m} m eliminated by pyrometers)",
+  allShadowEliminated:"All shadow eliminated by pyrometers",
+  brickSubLabel:"Brick: {mm} mm",
+  brickBannerText:"{pct}% of the measured surface has spot smaller than {mm} mm brick!",
+  pyroIncludesNote:" (includes pyrometer measurement points)",
+  bannerRedPrefix:"Very shallow angle at kiln (≤ 15°) — strongly elongated spot: ",
+  bannerYellowPrefix:"Shallow angle at kiln (≤ 30°) — elongated spot: ",
+  edgeLeft:"left edge", edgeRight:"right edge",
+  tyresGearTitle:"Tyres (T) & Gear (G)", labelKilnDiameter:"Kiln diameter (m)", labelTyreCount:"Number of tyres",
+  thObject:"Object", thOn:"On", thThickness:"Thickness (m)", thOD:"Outside diameter (m)",
+  pyroSectionTitle:"Pyrometers (bottom of kiln, FOV ratio 1:15)",
+  pyroSectionNote:"Enter distance from kiln and position (distance from cooler); spot size is calculated automatically. Rotation 90° = pointing straight at the kiln. Spot size above 50 cm is highlighted.",
+  btnPyroAuto:"Place automatically (30 cm spots on shadow zones)",
+  thLabel:"Label", thRotation:"Rotation (°)", thSpotSizeCm:"Spot size (cm)",
+  obstaclesTitle:"Obstacles (beams, poles, trees…) between scanner and kiln",
+  thDiameter:"Diameter (m)",
+  shadowLengthsTitle:"Shadow lengths per object",
+  thShadowLength:"Shadow length (m)", thStart:"Start (m)", thEnd:"End (m)",
+  thSuggestedPyros:"Suggested pyrometers (30cm spot)",
+  spotSizesTitle:"Spot sizes along the kiln",
+  thKiln:"Kiln (m)", thSlantRange:"Slant range (m)", thGrazingAngle:"Grazing angle (°)", thSpotSize:"Spot size (mm)", thScanner:"Scanner",
+  settingsTitle:"Scanner & measurement settings",
+  labelTmc5:"TMC5HT (mrad)", labelTmc8:"TMC8HT (mrad)",
+  labelBrickSize:"Brick size / max spot (mm)",
+  labelPyroRatio:"Pyrometer resolution (distance:spot, 1:X)",
+  pyroRatioNote:'At the default 1:15 ratio and the 4.5 m distance used by "Place automatically", each pyrometer measures a spot of about 300 mm (30 cm). A finer ratio — e.g. changing the pyrometers to achieve a 20 cm spot — would let more of the measured surface fall under the Brick threshold, potentially pushing the "smaller than Brick" percentage toward 100%.',
+  btnPrint:"Print / Save as PDF",
+  notSeen:"not seen", noCoverage:"No unobstructed coverage on kiln",
+  svgKiln:"Kiln ({n} m)", svgCooler:"Cooler (0 m)",
+  svgDistFromCooler:"{label} distance from cooler: {val} m",
+  svgCovered:"Covered: {n} m",
+  svgTotalCovered:"Total covered (sum of all sections): {n} m",
+  combineAlert:"Scanner 1 now starts 2 m before the kiln and Scanner 2 ends 2 m after it, as requested. Their overlap is only {overlap} m (less than 5 m) at the current distance/position — consider moving them closer together or adjusting distance from kiln if more overlap is needed. The 15° grazing warning was ignored on purpose to keep the full margin.",
+  alertPyroNone:"No shadow zones detected on the kiln with the current scanner setup — nothing to place.",
+  alertPyroTooMany:"The shadow zones need {needed} pyrometers at 30 cm spacing, but only {count} are available. Placed the first {count} (left to right, from the cooler end) — consider a coarser spacing or reducing shadows.",
+  marketingTitle:"ECS/CemScanner™ kiln shell monitoring system",
+  marketingSubtitle:"Protect your kiln with our ECS/CemScanner™ kiln shell monitoring system",
+  marketingParagraph:"Our kiln shell monitoring system, ECS/CemScanner™, is the product of 40-years worth of development and refining. It's a technologically advanced system that will allow your operators to better protect your kiln and extend the life of your plant.",
+  placementStudyForLabel:"Placement study for:"
+},
+es:{
+  placeholderSiteName:"Nombre del sitio",
+  pageTitle:"Cobertura y modelo de sombras ECS/CemScanner™",
+  pageSub:"El ángulo del cono de escaneo siempre es fijo en 120°. El enfriador es el origen de coordenadas (x=0).",
+  scanner1Title:"Escáner1", scanner2Title:"Escáner 2",
+  labelDistanceFromKiln:"Distancia al horno (m)", labelRotation:"Rotación θ (°)",
+  labelDistanceFromCooler:"Distancia al enfriador (m)", labelHeadModel:"Modelo de cabezal",
+  btnCombine:"Combinar escáneres (E1 empieza 2 m antes del horno, E2 termina 2 m después)",
+  kilnSectionTitle:"Horno", labelKilnLength:"Longitud del horno (m)",
+  zoomInTitle:"Acercar", zoomOutTitle:"Alejar", zoomResetTitle:"Restablecer zoom", zoomResetBtn:"Restablecer",
+  zoomHint:"Desplázate para hacer zoom, arrastra para desplazar",
+  noteHtml:'Las bandas rojo oscuro = sombra no vista por <em>ningún</em> escáner activo (se muestran por encima y por debajo del horno). Las marcas y el valor en verde = longitud total del horno cubierta por el/los FOV. El Escáner 2 se muestra en su propio color; su propia sombra puede eliminar la sombra del Escáner 1 donde los dos puntos de vista difieren. Esta herramienta de ubicación trata sobre puntería/objetivo, así que donde ambos escáneres ven el mismo punto, aquí se muestra el que da el <strong>spot más pequeño</strong> (mayor resolución de puntería). Para la medición real de temperatura —realizada por otro software— lo que cuenta es la <strong>temperatura medida más alta</strong>; esta herramienta no mide temperatura.',
+  cardCoveredFov:"Cubierto (horno completo en FOV)", cardCoveredNoShadow:"Cubierto sin sombras",
+  cardBrick:"¡Medido con spot menor que el ladrillo!",
+  lostToShadow:"{n} m perdidos por sombra",
+  pyroEliminatedSuffix:" ({m} m eliminados por pirómetros)",
+  allShadowEliminated:"Toda la sombra eliminada por pirómetros",
+  brickSubLabel:"Ladrillo: {mm} mm",
+  brickBannerText:"¡El {pct}% de la superficie medida tiene un spot menor que el ladrillo de {mm} mm!",
+  pyroIncludesNote:" (incluye puntos de medición de pirómetros)",
+  bannerRedPrefix:"Ángulo muy rasante en el horno (≤ 15°) — spot muy alargado: ",
+  bannerYellowPrefix:"Ángulo rasante en el horno (≤ 30°) — spot alargado: ",
+  edgeLeft:"borde izquierdo", edgeRight:"borde derecho",
+  tyresGearTitle:"Llantas (T) y Corona (G)", labelKilnDiameter:"Diámetro del horno (m)", labelTyreCount:"Número de llantas",
+  thObject:"Objeto", thOn:"Activo", thThickness:"Espesor (m)", thOD:"Diámetro exterior (m)",
+  pyroSectionTitle:"Pirómetros (parte inferior del horno, relación FOV 1:15)",
+  pyroSectionNote:"Introduzca la distancia al horno y la posición (distancia al enfriador); el tamaño del spot se calcula automáticamente. Rotación 90° = apuntando directamente al horno. El tamaño de spot superior a 50 cm se resalta.",
+  btnPyroAuto:"Colocar automáticamente (spots de 30 cm en zonas de sombra)",
+  thLabel:"Etiqueta", thRotation:"Rotación (°)", thSpotSizeCm:"Tamaño del spot (cm)",
+  obstaclesTitle:"Obstáculos (vigas, postes, árboles…) entre el escáner y el horno",
+  thDiameter:"Diámetro (m)",
+  shadowLengthsTitle:"Longitud de sombra por objeto",
+  thShadowLength:"Longitud de sombra (m)", thStart:"Inicio (m)", thEnd:"Fin (m)",
+  thSuggestedPyros:"Pirómetros sugeridos (spot de 30cm)",
+  spotSizesTitle:"Tamaño del spot a lo largo del horno",
+  thKiln:"Horno (m)", thSlantRange:"Distancia oblicua (m)", thGrazingAngle:"Ángulo rasante (°)", thSpotSize:"Tamaño del spot (mm)", thScanner:"Escáner",
+  settingsTitle:"Ajustes de escáner y medición",
+  labelTmc5:"TMC5HT (mrad)", labelTmc8:"TMC8HT (mrad)",
+  labelBrickSize:"Tamaño de ladrillo / spot máximo (mm)",
+  labelPyroRatio:"Resolución de pirómetro (distancia:spot, 1:X)",
+  pyroRatioNote:'Con la relación predeterminada 1:15 y la distancia de 4,5 m usada por "Colocar automáticamente", cada pirómetro mide un spot de unos 300 mm (30 cm). Una relación más fina —p. ej. ajustar los pirómetros para lograr un spot de 20 cm— permitiría que más superficie medida quede por debajo del umbral del ladrillo, acercando potencialmente el porcentaje "menor que el ladrillo" al 100%.',
+  btnPrint:"Imprimir / Guardar como PDF",
+  notSeen:"no visible", noCoverage:"Sin cobertura despejada en el horno",
+  svgKiln:"Horno ({n} m)", svgCooler:"Enfriador (0 m)",
+  svgDistFromCooler:"{label} distancia al enfriador: {val} m",
+  svgCovered:"Cubierto: {n} m",
+  svgTotalCovered:"Total cubierto (suma de todas las secciones): {n} m",
+  combineAlert:"El Escáner 1 ahora empieza 2 m antes del horno y el Escáner 2 termina 2 m después, como se solicitó. Su solape es de solo {overlap} m (menos de 5 m) con la distancia/posición actual — considere acercarlos o ajustar la distancia al horno si necesita más solape. La advertencia de ángulo rasante de 15° se ignoró a propósito para mantener el margen completo.",
+  alertPyroNone:"No se detectaron zonas de sombra en el horno con la configuración actual de escáneres — nada que colocar.",
+  alertPyroTooMany:"Las zonas de sombra necesitan {needed} pirómetros con espaciado de 30 cm, pero solo hay {count} disponibles. Se colocaron los primeros {count} (de izquierda a derecha, desde el extremo del enfriador) — considere un espaciado más amplio o reducir las sombras.",
+  marketingTitle:"Sistema de monitorización de carcasa de horno ECS/CemScanner™",
+  marketingSubtitle:"Proteja su horno con nuestro sistema de monitorización de carcasa ECS/CemScanner™",
+  marketingParagraph:"Nuestro sistema de monitorización de la carcasa del horno, ECS/CemScanner™, es el resultado de 40 años de desarrollo y perfeccionamiento. Es un sistema tecnológicamente avanzado que permitirá a sus operadores proteger mejor el horno y prolongar la vida útil de la planta.",
+  placementStudyForLabel:"Estudio de ubicación para:"
+},
+fr:{
+  placeholderSiteName:"Nom du site",
+  pageTitle:"Couverture et modèle d'ombres ECS/CemScanner™",
+  pageSub:"L'angle du cône de balayage est toujours fixé à 120°. Le refroidisseur est l'origine des coordonnées (x=0).",
+  scanner1Title:"Scanner1", scanner2Title:"Scanner 2",
+  labelDistanceFromKiln:"Distance au four (m)", labelRotation:"Rotation θ (°)",
+  labelDistanceFromCooler:"Distance au refroidisseur (m)", labelHeadModel:"Modèle de tête",
+  btnCombine:"Combiner les scanners (S1 démarre 2 m avant le four, S2 finit 2 m après)",
+  kilnSectionTitle:"Four", labelKilnLength:"Longueur du four (m)",
+  zoomInTitle:"Zoomer", zoomOutTitle:"Dézoomer", zoomResetTitle:"Réinitialiser le zoom", zoomResetBtn:"Réinitialiser",
+  zoomHint:"Molette pour zoomer, glisser pour déplacer",
+  noteHtml:'Bandes rouge foncé = ombre non vue par <em>aucun</em> scanner actif (affichées au-dessus et en dessous du four). Repères et valeur en vert = longueur totale du four couverte par le(s) FOV. Le Scanner 2 est affiché dans sa propre couleur ; sa propre ombre peut éliminer l\'ombre du Scanner 1 là où les deux points de vue diffèrent. Cet outil d\'implantation concerne le pointage/visée, donc lorsque les deux scanners voient le même point, celui affiché ici est celui donnant le <strong>plus petit spot</strong> (résolution de visée plus fine). Pour la mesure réelle de température — effectuée par un autre logiciel — c\'est la <strong>température mesurée la plus élevée</strong> qui compte ; cet outil ne mesure pas la température.',
+  cardCoveredFov:"Couvert (four entier dans le FOV)", cardCoveredNoShadow:"Couvert sans ombres",
+  cardBrick:"Mesuré avec un spot plus petit que la brique !",
+  lostToShadow:"{n} m perdus à cause de l'ombre",
+  pyroEliminatedSuffix:" ({m} m éliminés par les pyromètres)",
+  allShadowEliminated:"Toute l'ombre éliminée par les pyromètres",
+  brickSubLabel:"Brique : {mm} mm",
+  brickBannerText:"{pct}% de la surface mesurée a un spot plus petit que la brique de {mm} mm !",
+  pyroIncludesNote:" (inclut les points de mesure des pyromètres)",
+  bannerRedPrefix:"Angle très rasant sur le four (≤ 15°) — spot fortement allongé : ",
+  bannerYellowPrefix:"Angle rasant sur le four (≤ 30°) — spot allongé : ",
+  edgeLeft:"bord gauche", edgeRight:"bord droit",
+  tyresGearTitle:"Bandages (T) et Couronne (G)", labelKilnDiameter:"Diamètre du four (m)", labelTyreCount:"Nombre de bandages",
+  thObject:"Objet", thOn:"Actif", thThickness:"Épaisseur (m)", thOD:"Diamètre extérieur (m)",
+  pyroSectionTitle:"Pyromètres (bas du four, rapport FOV 1:15)",
+  pyroSectionNote:"Saisissez la distance au four et la position (distance au refroidisseur) ; la taille du spot est calculée automatiquement. Rotation 90° = pointant directement vers le four. Une taille de spot supérieure à 50 cm est mise en évidence.",
+  btnPyroAuto:"Placer automatiquement (spots de 30 cm sur les zones d'ombre)",
+  thLabel:"Repère", thRotation:"Rotation (°)", thSpotSizeCm:"Taille du spot (cm)",
+  obstaclesTitle:"Obstacles (poutres, poteaux, arbres…) entre le scanner et le four",
+  thDiameter:"Diamètre (m)",
+  shadowLengthsTitle:"Longueur d'ombre par objet",
+  thShadowLength:"Longueur d'ombre (m)", thStart:"Début (m)", thEnd:"Fin (m)",
+  thSuggestedPyros:"Pyromètres suggérés (spot 30cm)",
+  spotSizesTitle:"Taille du spot le long du four",
+  thKiln:"Four (m)", thSlantRange:"Distance oblique (m)", thGrazingAngle:"Angle rasant (°)", thSpotSize:"Taille du spot (mm)", thScanner:"Scanner",
+  settingsTitle:"Réglages scanner et mesure",
+  labelTmc5:"TMC5HT (mrad)", labelTmc8:"TMC8HT (mrad)",
+  labelBrickSize:"Taille de brique / spot max (mm)",
+  labelPyroRatio:"Résolution du pyromètre (distance:spot, 1:X)",
+  pyroRatioNote:'Avec le rapport par défaut 1:15 et la distance de 4,5 m utilisée par « Placer automatiquement », chaque pyromètre mesure un spot d\'environ 300 mm (30 cm). Un rapport plus fin — par ex. régler les pyromètres pour obtenir un spot de 20 cm — permettrait à davantage de la surface mesurée de passer sous le seuil de la brique, rapprochant potentiellement le pourcentage « plus petit que la brique » de 100%.',
+  btnPrint:"Imprimer / Enregistrer en PDF",
+  notSeen:"non vu", noCoverage:"Aucune couverture dégagée sur le four",
+  svgKiln:"Four ({n} m)", svgCooler:"Refroidisseur (0 m)",
+  svgDistFromCooler:"{label} distance au refroidisseur : {val} m",
+  svgCovered:"Couvert : {n} m",
+  svgTotalCovered:"Total couvert (somme de toutes les sections) : {n} m",
+  combineAlert:"Le Scanner 1 démarre désormais 2 m avant le four et le Scanner 2 finit 2 m après, comme demandé. Leur chevauchement n'est que de {overlap} m (moins de 5 m) à la distance/position actuelle — envisagez de les rapprocher ou d'ajuster la distance au four si un chevauchement plus important est nécessaire. L'avertissement d'angle rasant de 15° a été volontairement ignoré pour conserver la marge complète.",
+  alertPyroNone:"Aucune zone d'ombre détectée sur le four avec la configuration actuelle des scanners — rien à placer.",
+  alertPyroTooMany:"Les zones d'ombre nécessitent {needed} pyromètres avec un espacement de 30 cm, mais seulement {count} sont disponibles. Les {count} premiers ont été placés (de gauche à droite, depuis l'extrémité du refroidisseur) — envisagez un espacement plus large ou de réduire les ombres.",
+  marketingTitle:"Système de surveillance de la virole de four ECS/CemScanner™",
+  marketingSubtitle:"Protégez votre four avec notre système de surveillance de virole ECS/CemScanner™",
+  marketingParagraph:"Notre système de surveillance de la virole de four, ECS/CemScanner™, est le fruit de 40 ans de développement et de perfectionnement. C'est un système technologiquement avancé qui permettra à vos opérateurs de mieux protéger votre four et de prolonger la durée de vie de votre installation.",
+  placementStudyForLabel:"Étude d'implantation pour :"
+},
+pt:{
+  placeholderSiteName:"Nome do local",
+  pageTitle:"Cobertura e modelo de sombras ECS/CemScanner™",
+  pageSub:"O ângulo do cone de varrimento é sempre fixo em 120°. O arrefecedor é a origem das coordenadas (x=0).",
+  scanner1Title:"Scanner1", scanner2Title:"Scanner 2",
+  labelDistanceFromKiln:"Distância ao forno (m)", labelRotation:"Rotação θ (°)",
+  labelDistanceFromCooler:"Distância ao arrefecedor (m)", labelHeadModel:"Modelo da cabeça",
+  btnCombine:"Combinar scanners (S1 começa 2 m antes do forno, S2 termina 2 m depois)",
+  kilnSectionTitle:"Forno", labelKilnLength:"Comprimento do forno (m)",
+  zoomInTitle:"Ampliar", zoomOutTitle:"Reduzir", zoomResetTitle:"Repor zoom", zoomResetBtn:"Repor",
+  zoomHint:"Deslize para ampliar, arraste para deslocar",
+  noteHtml:'Faixas vermelho-escuro = sombra não vista por <em>nenhum</em> scanner ativo (mostradas acima e abaixo do forno). Marcas e valor em verde = comprimento total do forno coberto pelo(s) FOV. O Scanner 2 é apresentado na sua própria cor; a sua própria sombra pode eliminar a sombra do Scanner 1 onde os dois pontos de vista diferem. Esta ferramenta de posicionamento é sobre pontaria/mira, por isso, onde ambos os scanners veem o mesmo ponto, é mostrado aqui o que dá o <strong>spot mais pequeno</strong> (resolução de mira mais fina). Para a medição real de temperatura — feita por outro software — o que conta é a <strong>temperatura medida mais alta</strong>; esta ferramenta não lê temperatura.',
+  cardCoveredFov:"Coberto (forno inteiro no FOV)", cardCoveredNoShadow:"Coberto sem sombras",
+  cardBrick:"Medido com spot menor que o tijolo!",
+  lostToShadow:"{n} m perdidos por sombra",
+  pyroEliminatedSuffix:" ({m} m eliminados por pirómetros)",
+  allShadowEliminated:"Toda a sombra eliminada por pirómetros",
+  brickSubLabel:"Tijolo: {mm} mm",
+  brickBannerText:"{pct}% da superfície medida tem spot menor que o tijolo de {mm} mm!",
+  pyroIncludesNote:" (inclui pontos de medição de pirómetros)",
+  bannerRedPrefix:"Ângulo muito rasante no forno (≤ 15°) — spot fortemente alongado: ",
+  bannerYellowPrefix:"Ângulo rasante no forno (≤ 30°) — spot alongado: ",
+  edgeLeft:"extremidade esquerda", edgeRight:"extremidade direita",
+  tyresGearTitle:"Rodas de apoio (T) e Coroa (G)", labelKilnDiameter:"Diâmetro do forno (m)", labelTyreCount:"Número de rodas de apoio",
+  thObject:"Objeto", thOn:"Ativo", thThickness:"Espessura (m)", thOD:"Diâmetro exterior (m)",
+  pyroSectionTitle:"Pirómetros (parte inferior do forno, relação FOV 1:15)",
+  pyroSectionNote:"Introduza a distância ao forno e a posição (distância ao arrefecedor); o tamanho do spot é calculado automaticamente. Rotação 90° = apontando diretamente para o forno. O tamanho de spot acima de 50 cm é destacado.",
+  btnPyroAuto:"Colocar automaticamente (spots de 30 cm nas zonas de sombra)",
+  thLabel:"Etiqueta", thRotation:"Rotação (°)", thSpotSizeCm:"Tamanho do spot (cm)",
+  obstaclesTitle:"Obstáculos (vigas, postes, árvores…) entre o scanner e o forno",
+  thDiameter:"Diâmetro (m)",
+  shadowLengthsTitle:"Comprimento de sombra por objeto",
+  thShadowLength:"Comprimento de sombra (m)", thStart:"Início (m)", thEnd:"Fim (m)",
+  thSuggestedPyros:"Pirómetros sugeridos (spot de 30cm)",
+  spotSizesTitle:"Tamanho do spot ao longo do forno",
+  thKiln:"Forno (m)", thSlantRange:"Distância oblíqua (m)", thGrazingAngle:"Ângulo rasante (°)", thSpotSize:"Tamanho do spot (mm)", thScanner:"Scanner",
+  settingsTitle:"Definições de scanner e medição",
+  labelTmc5:"TMC5HT (mrad)", labelTmc8:"TMC8HT (mrad)",
+  labelBrickSize:"Tamanho do tijolo / spot máximo (mm)",
+  labelPyroRatio:"Resolução do pirómetro (distância:spot, 1:X)",
+  pyroRatioNote:'Com a relação predefinida 1:15 e a distância de 4,5 m usada por "Colocar automaticamente", cada pirómetro mede um spot de cerca de 300 mm (30 cm). Uma relação mais fina — p. ex. ajustar os pirómetros para obter um spot de 20 cm — permitiria que mais superfície medida ficasse abaixo do limite do tijolo, aproximando potencialmente a percentagem "menor que o tijolo" de 100%.',
+  btnPrint:"Imprimir / Guardar como PDF",
+  notSeen:"não visível", noCoverage:"Sem cobertura desimpedida no forno",
+  svgKiln:"Forno ({n} m)", svgCooler:"Arrefecedor (0 m)",
+  svgDistFromCooler:"{label} distância ao arrefecedor: {val} m",
+  svgCovered:"Coberto: {n} m",
+  svgTotalCovered:"Total coberto (soma de todas as secções): {n} m",
+  combineAlert:"O Scanner 1 agora começa 2 m antes do forno e o Scanner 2 termina 2 m depois, conforme solicitado. A sobreposição é de apenas {overlap} m (menos de 5 m) na distância/posição atual — considere aproximá-los ou ajustar a distância ao forno se precisar de mais sobreposição. O aviso de ângulo rasante de 15° foi ignorado propositadamente para manter a margem completa.",
+  alertPyroNone:"Não foram detetadas zonas de sombra no forno com a configuração atual dos scanners — nada a colocar.",
+  alertPyroTooMany:"As zonas de sombra precisam de {needed} pirómetros com espaçamento de 30 cm, mas apenas {count} estão disponíveis. Foram colocados os primeiros {count} (da esquerda para a direita, a partir da extremidade do arrefecedor) — considere um espaçamento maior ou reduzir as sombras.",
+  marketingTitle:"Sistema de monitorização de carcaça de forno ECS/CemScanner™",
+  marketingSubtitle:"Proteja o seu forno com o nosso sistema de monitorização de carcaça ECS/CemScanner™",
+  marketingParagraph:"O nosso sistema de monitorização da carcaça do forno, ECS/CemScanner™, é o resultado de 40 anos de desenvolvimento e aperfeiçoamento. É um sistema tecnologicamente avançado que permitirá aos seus operadores proteger melhor o forno e prolongar a vida útil da fábrica.",
+  placementStudyForLabel:"Estudo de posicionamento para:"
+},
+ar:{
+  placeholderSiteName:"اسم الموقع",
+  pageTitle:"تغطية ونموذج ظل ECS/CemScanner™",
+  pageSub:"زاوية مخروط المسح ثابتة دائمًا عند 120°. المبرّد هو نقطة الأصل للإحداثيات (x=0).",
+  scanner1Title:"الماسح 1", scanner2Title:"الماسح 2",
+  labelDistanceFromKiln:"المسافة عن الفرن (م)", labelRotation:"الدوران θ (°)",
+  labelDistanceFromCooler:"المسافة عن المبرّد (م)", labelHeadModel:"طراز الرأس",
+  btnCombine:"دمج الماسحين (الماسح 1 يبدأ قبل الفرن بمترين، الماسح 2 ينتهي بعد الفرن بمترين)",
+  kilnSectionTitle:"الفرن", labelKilnLength:"طول الفرن (م)",
+  zoomInTitle:"تكبير", zoomOutTitle:"تصغير", zoomResetTitle:"إعادة ضبط التكبير", zoomResetBtn:"إعادة ضبط",
+  zoomHint:"مرّر للتكبير، اسحب للتحريك",
+  noteHtml:'الأشرطة الحمراء الداكنة = ظل لا يراه <em>أي</em> ماسح نشط (تظهر أعلى وأسفل الفرن). العلامات والقيمة الخضراء = إجمالي طول الفرن المغطى بمجال (مجالات) الرؤية. يظهر الماسح 2 بلونه الخاص؛ يمكن لظله أن يزيل ظل الماسح 1 حيث تختلف زاويتا الرؤية. تُعنى أداة التموضع هذه بالتصويب/التسديد، لذا حيثما يرى الماسحان النقطة نفسها، يُعرض هنا الماسح الذي يمنح <strong>البقعة الأصغر</strong> (دقة تصويب أعلى). أما القياس الفعلي لدرجة الحرارة — الذي يتم في برنامج منفصل — فتُعتمد فيه <strong>درجة الحرارة الأعلى المقاسة</strong>؛ هذه الأداة لا تقيس درجة الحرارة.',
+  cardCoveredFov:"مغطى (الفرن بالكامل ضمن مجال الرؤية)", cardCoveredNoShadow:"مغطى بدون ظلال",
+  cardBrick:"تم القياس ببقعة أصغر من الطوبة!",
+  lostToShadow:"{n} م فُقدت بسبب الظل",
+  pyroEliminatedSuffix:" (تم إزالة {m} م بواسطة المقاييس الحرارية)",
+  allShadowEliminated:"تمت إزالة كل الظل بواسطة المقاييس الحرارية",
+  brickSubLabel:"الطوبة: {mm} مم",
+  brickBannerText:"{pct}% من السطح المقاس لديه بقعة أصغر من طوبة {mm} مم!",
+  pyroIncludesNote:" (يشمل نقاط قياس المقاييس الحرارية)",
+  bannerRedPrefix:"زاوية حادة جدًا عند الفرن (≤ 15°) — بقعة ممدودة بشدة: ",
+  bannerYellowPrefix:"زاوية حادة عند الفرن (≤ 30°) — بقعة ممدودة: ",
+  edgeLeft:"الحافة اليسرى", edgeRight:"الحافة اليمنى",
+  tyresGearTitle:"الإطارات (T) والترس (G)", labelKilnDiameter:"قطر الفرن (م)", labelTyreCount:"عدد الإطارات",
+  thObject:"العنصر", thOn:"مُفعّل", thThickness:"السماكة (م)", thOD:"القطر الخارجي (م)",
+  pyroSectionTitle:"المقاييس الحرارية (أسفل الفرن، نسبة مجال الرؤية 1:15)",
+  pyroSectionNote:"أدخل المسافة عن الفرن والموضع (المسافة عن المبرّد)؛ يُحسب حجم البقعة تلقائيًا. الدوران 90° = التوجه مباشرة نحو الفرن. يُبرَز حجم البقعة الأكبر من 50 سم.",
+  btnPyroAuto:"وضع تلقائي (بقع 30 سم في مناطق الظل)",
+  thLabel:"الرمز", thRotation:"الدوران (°)", thSpotSizeCm:"حجم البقعة (سم)",
+  obstaclesTitle:"العوائق (عوارض، أعمدة، أشجار…) بين الماسح والفرن",
+  thDiameter:"القطر (م)",
+  shadowLengthsTitle:"أطوال الظل لكل عنصر",
+  thShadowLength:"طول الظل (م)", thStart:"البداية (م)", thEnd:"النهاية (م)",
+  thSuggestedPyros:"المقاييس الحرارية المقترحة (بقعة 30 سم)",
+  spotSizesTitle:"حجم البقعة على طول الفرن",
+  thKiln:"الفرن (م)", thSlantRange:"المسافة المائلة (م)", thGrazingAngle:"زاوية السقوط (°)", thSpotSize:"حجم البقعة (مم)", thScanner:"الماسح",
+  settingsTitle:"إعدادات الماسح والقياس",
+  labelTmc5:"TMC5HT (مليراديان)", labelTmc8:"TMC8HT (مليراديان)",
+  labelBrickSize:"حجم الطوبة / أقصى بقعة (مم)",
+  labelPyroRatio:"دقة المقياس الحراري (المسافة:البقعة، 1:X)",
+  pyroRatioNote:'عند النسبة الافتراضية 1:15 والمسافة 4.5 م المستخدمة في "الوضع التلقائي"، يقيس كل مقياس حراري بقعة بحجم حوالي 300 مم (30 سم). نسبة أدق — مثل ضبط المقاييس الحرارية للحصول على بقعة 20 سم — قد تجعل جزءًا أكبر من السطح المقاس ضمن حد الطوبة، مما قد يقرّب نسبة "أصغر من الطوبة" من 100%.',
+  btnPrint:"طباعة / حفظ كملف PDF",
+  notSeen:"غير مرئي", noCoverage:"لا توجد تغطية غير معاقة على الفرن",
+  svgKiln:"الفرن ({n} م)", svgCooler:"المبرّد (0 م)",
+  svgDistFromCooler:"{label} المسافة عن المبرّد: {val} م",
+  svgCovered:"مغطى: {n} م",
+  svgTotalCovered:"إجمالي المغطى (مجموع كل الأقسام): {n} م",
+  combineAlert:"يبدأ الماسح 1 الآن قبل الفرن بمترين وينتهي الماسح 2 بعد الفرن بمترين، كما هو مطلوب. التداخل بينهما {overlap} م فقط (أقل من 5 م) عند المسافة/الموضع الحاليين — ينبغي تقريبهما من بعضهما أو تعديل المسافة عن الفرن إذا لزم مزيد من التداخل. تم تجاهل تحذير زاوية السقوط 15° عمدًا للحفاظ على الهامش الكامل.",
+  alertPyroNone:"لم يتم اكتشاف مناطق ظل على الفرن بالإعداد الحالي للماسحات — لا يوجد شيء لوضعه.",
+  alertPyroTooMany:"تحتاج مناطق الظل إلى {needed} مقياسًا حراريًا بتباعد 30 سم، لكن يتوفر {count} فقط. تم وضع أول {count} (من اليسار إلى اليمين، من طرف المبرّد) — ينبغي التفكير في تباعد أوسع أو تقليل الظلال.",
+  marketingTitle:"نظام ECS/CemScanner™ لمراقبة غلاف الفرن الدوار",
+  marketingSubtitle:"احمِ فرنك الدوار بنظام ECS/CemScanner™ لمراقبة الغلاف",
+  marketingParagraph:"نظامنا لمراقبة غلاف الفرن الدوار، ECS/CemScanner™، هو ثمرة 40 عامًا من التطوير والتحسين. إنه نظام متطور تقنيًا يتيح لمشغّليكم حماية الفرن بشكل أفضل وإطالة عمر المصنع.",
+  placementStudyForLabel:"دراسة التموضع لـ:"
+}
+};
+let currentLang = localStorage.getItem('cemscanner-lang') || 'en';
+if (!I18N[currentLang]) currentLang = 'en';
+function t(key, vars){
+  let str = (I18N[currentLang] && I18N[currentLang][key]) || I18N.en[key] || key;
+  if (vars) Object.keys(vars).forEach(k => { str = str.split('{'+k+'}').join(vars[k]); });
+  return str;
+}
+function applyStaticI18n(){
+  document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.getAttribute('data-i18n')); });
+  document.querySelectorAll('[data-i18n-html]').forEach(el => { el.innerHTML = t(el.getAttribute('data-i18n-html')); });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => { el.placeholder = t(el.getAttribute('data-i18n-placeholder')); });
+  document.querySelectorAll('[data-i18n-title]').forEach(el => { el.title = t(el.getAttribute('data-i18n-title')); });
+  document.title = t('pageTitle');
+}
+function setLanguage(code){
+  currentLang = code;
+  localStorage.setItem('cemscanner-lang', code);
+  document.documentElement.lang = code;
+  document.documentElement.dir = code === 'ar' ? 'rtl' : 'ltr';
+  applyStaticI18n();
+  render();
+}
+const langSelectEl = document.getElementById('lang-select');
+LANGS.forEach(l => {
+  const opt = document.createElement('option');
+  opt.value = l.code; opt.textContent = l.flag + ' ' + l.name;
+  langSelectEl.appendChild(opt);
+});
+langSelectEl.value = currentLang;
+langSelectEl.addEventListener('change', () => setLanguage(langSelectEl.value));
+document.documentElement.lang = currentLang;
+document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+applyStaticI18n();
+
 /* ---------- scanners ---------- */
 function makeScanner(prefix, label, color, hasEnable){
   return {
@@ -606,9 +933,9 @@ document.getElementById('btn-pyro-auto').addEventListener('click', () => {
   }
   render();
   if (positions.length===0){
-    alert('No shadow zones detected on the kiln with the current scanner setup — nothing to place.');
+    alert(t('alertPyroNone'));
   } else if (positions.length > PYRO_COUNT){
-    alert('The shadow zones need '+positions.length+' pyrometers at 30 cm spacing, but only '+PYRO_COUNT+' are available. Placed the first '+PYRO_COUNT+' (left to right, from the cooler end) — consider a coarser spacing or reducing shadows.');
+    alert(t('alertPyroTooMany',{needed:positions.length, count:PYRO_COUNT}));
   }
 });
 
@@ -727,7 +1054,7 @@ document.getElementById('btn-combine').addEventListener('click', () => {
     const c2 = computeScannerCoverageBounds({...sp2base, theta:theta2}, -SAFETY_MARGIN, bound);
     const overlapLen = lenOf(intersectIntervalLists(c1.visibleSegs, c2.visibleSegs));
     if (overlapLen < MIN_OVERLAP - 1e-6){
-      alert('Scanner 1 now starts 2 m before the kiln and Scanner 2 ends 2 m after it, as requested. Their overlap is only '+overlapLen.toFixed(1)+' m (less than 5 m) at the current distance/position — consider moving them closer together or adjusting distance from kiln if more overlap is needed. The 15° grazing warning was ignored on purpose to keep the full margin.');
+      alert(t('combineAlert',{overlap:overlapLen.toFixed(1)}));
     }
   } else {
     // only one scanner active: fall back to maximizing coverage over the kiln + safety margin
@@ -807,8 +1134,8 @@ function render(){
   cardFov.classList.toggle('ok', fovFull);
   out.pecCovered.textContent = fmt(finalCovered,1) + ' / ' + Math.round(pecv) + ' m';
   out.pecShadow.textContent = shadowLenCombined>0.01
-    ? (fmt(shadowLenCombined,1)+' m lost to shadow' + (pyroEliminated>0.01 ? ' ('+fmt(pyroEliminated,1)+' m eliminated by pyrometers)' : ''))
-    : (pyroEliminated>0.01 ? 'All shadow eliminated by pyrometers' : '');
+    ? (t('lostToShadow',{n:fmt(shadowLenCombined,1)}) + (pyroEliminated>0.01 ? t('pyroEliminatedSuffix',{m:fmt(pyroEliminated,1)}) : ''))
+    : (pyroEliminated>0.01 ? t('allShadowEliminated') : '');
   const pecFull = pecv>0 && finalCovered >= pecv - 0.05;
   cardPec.classList.toggle('warn', pecv>0 && !pecFull);
   cardPec.classList.toggle('ok', pecFull);
@@ -816,7 +1143,7 @@ function render(){
   const brickMm = parseFloat(brickEl.value) || 0;
   const brickPct = computeBrickCoveragePct(coverages, pyroCoverageList, combinedVisible, finalCovered, brickMm);
   brickPctOut.textContent = fmt(brickPct,1) + ' %';
-  brickSubOut.textContent = brickMm>0 ? ('Brick: '+fmt(brickMm,0)+' mm') : '';
+  brickSubOut.textContent = brickMm>0 ? t('brickSubLabel',{mm:fmt(brickMm,0)}) : '';
   cardBrick.classList.remove('ok','mid','warn');
   brickBanner.classList.remove('green','yellow','red');
   let brickClass;
@@ -824,7 +1151,7 @@ function render(){
   cardBrick.classList.add(brickClass);
   brickBanner.classList.add(brickClass==='ok'?'green':(brickClass==='mid'?'yellow':'red'));
   brickBanner.classList.toggle('show', finalCovered>0);
-  brickBanner.textContent = fmt(brickPct,1)+'% of the measured surface has spot smaller than '+fmt(brickMm,0)+' mm brick!' + (pyroCoverage.length ? ' (includes pyrometer measurement points)' : '');
+  brickBanner.textContent = t('brickBannerText',{pct:fmt(brickPct,1), mm:fmt(brickMm,0)}) + (pyroCoverage.length ? t('pyroIncludesNote') : '');
 
   // per-object shadow lengths: a point stays shadowed only if blocked from EVERY active scanner
   const objects = [...getTyres(), getGear(), ...getObstacles()];
@@ -852,15 +1179,15 @@ function render(){
       const hits = isFinite(e.x) && e.x>=-1e-6 && e.x<=pecv+1e-6 && pecv>0;
       if (hits){
         const grazing = 90-Math.abs(e.phi);
-        const tag = c.sp.label+' '+e.name+' edge: '+fmt(grazing,1)+'\u00b0';
+        const tag = c.sp.label+' '+t(e.name==='left'?'edgeLeft':'edgeRight')+': '+fmt(grazing,1)+'\u00b0';
         if (grazing<=15) redMsgs.push(tag); else if (grazing<=30) yellowMsgs.push(tag);
       }
     });
   });
   bannerRed.classList.toggle('show', redMsgs.length>0); bannerRed.classList.add('red');
-  bannerRed.textContent = 'Very shallow angle at kiln (\u2264 15\u00b0) \u2014 strongly elongated spot: '+redMsgs.join('; ');
+  bannerRed.textContent = t('bannerRedPrefix')+redMsgs.join('; ');
   bannerYellow.classList.toggle('show', yellowMsgs.length>0); bannerYellow.classList.add('yellow');
-  bannerYellow.textContent = 'Shallow angle at kiln (\u2264 30\u00b0) \u2014 elongated spot: '+yellowMsgs.join('; ');
+  bannerYellow.textContent = t('bannerYellowPrefix')+yellowMsgs.join('; ');
 
   drawScene(pecv, coverages, fovMerged, combinedVisible);
   renderSpotTable(coverages, visibleMerged);
@@ -870,7 +1197,7 @@ function render(){
 function renderSpotTable(coverages, visibleMerged){
   spotBody.innerHTML = '';
   if (!visibleMerged.length){
-    spotBody.innerHTML = '<tr><td colspan="5" class="dim">No unobstructed coverage on kiln</td></tr>';
+    spotBody.innerHTML = '<tr><td colspan="5" class="dim">'+t('noCoverage')+'</td></tr>';
     return;
   }
   let rows = [];
@@ -903,7 +1230,7 @@ function renderSpotTable(coverages, visibleMerged){
       tr.innerHTML = '<td>'+fmt(x,1)+'</td><td>'+fmt(best.R,2)+'</td><td>'+fmt(best.grazing,1)+
         '</td><td>'+(isFinite(best.spot)?fmt(best.spot,0):'\u221e')+'</td><td>'+best.label+'</td>';
     } else {
-      tr.innerHTML = '<td>'+fmt(x,1)+'</td><td class="dim" colspan="4">not seen</td>';
+      tr.innerHTML = '<td>'+fmt(x,1)+'</td><td class="dim" colspan="4">'+t('notSeen')+'</td>';
     }
     spotBody.appendChild(tr);
   });
@@ -934,10 +1261,10 @@ function drawScene(pecv, coverages, fovMerged, visibleMerged){
   parts.push('<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>');
   parts.push(`<line x1="10" y1="${lineY}" x2="${viewW-10}" y2="${lineY}" stroke="#3a3d41" stroke-width="1" stroke-dasharray="4 4"/>`);
   parts.push(`<rect x="${kilnLeftPx}" y="${lineY}" width="${kilnRightPx-kilnLeftPx}" height="${kilnDepthPx}" fill="#33363a" stroke="#e8e8e6" stroke-width="1.5" rx="3"/>`);
-  parts.push(`<text x="${(kilnLeftPx+kilnRightPx)/2}" y="${lineY+kilnDepthPx+22}" fill="#a3a6ab" font-size="12" text-anchor="middle">Kiln (${Math.round(pecv)} m)</text>`);
+  parts.push(`<text x="${(kilnLeftPx+kilnRightPx)/2}" y="${lineY+kilnDepthPx+22}" fill="#a3a6ab" font-size="12" text-anchor="middle">${t('svgKiln',{n:Math.round(pecv)})}</text>`);
   parts.push(`<line x1="${kilnLeftPx}" y1="${axisY}" x2="${kilnRightPx}" y2="${axisY}" stroke="#8a8d92" stroke-width="1" stroke-dasharray="10 4 2 4"/>`);
   parts.push(`<circle cx="${kilnLeftPx}" cy="${axisY}" r="4" fill="#f2a623"/>`);
-  parts.push(`<text x="${kilnLeftPx-6}" y="${axisY-8}" fill="#f2a623" font-size="12" text-anchor="end">Cooler (0 m)</text>`);
+  parts.push(`<text x="${kilnLeftPx-6}" y="${axisY-8}" fill="#f2a623" font-size="12" text-anchor="end">${t('svgCooler')}</text>`);
 
   // per-scanner cones, apex, cooler-distance dimension, and distance-from-kiln indicator (pinned to screen edges, out of the way)
   coverages.forEach((c,idx)=>{
@@ -964,7 +1291,7 @@ function drawScene(pecv, coverages, fovMerged, visibleMerged){
     parts.push(`<line x1="${kilnLeftPx}" y1="${lineY}" x2="${kilnLeftPx}" y2="${dimY1}" stroke="${sp.color}" stroke-width="0.75" stroke-dasharray="2 2"/>`);
     parts.push(`<line x1="${apexX}" y1="${apexY}" x2="${apexX}" y2="${dimY1}" stroke="${sp.color}" stroke-width="0.75" stroke-dasharray="2 2"/>`);
     parts.push(`<line x1="${kilnLeftPx}" y1="${dimY1}" x2="${apexX}" y2="${dimY1}" stroke="${sp.color}" stroke-width="1.5" marker-start="url(#arrow)" marker-end="url(#arrow)"/>`);
-    parts.push(`<text x="${(kilnLeftPx+apexX)/2}" y="${dimY1-8}" fill="${sp.color}" font-size="11" text-anchor="middle">${sp.label} distance from cooler: ${fmt(sp.x0,1)} m</text>`);
+    parts.push(`<text x="${(kilnLeftPx+apexX)/2}" y="${dimY1-8}" fill="${sp.color}" font-size="11" text-anchor="middle">${t('svgDistFromCooler',{label:sp.label, val:fmt(sp.x0,1)})}</text>`);
 
     // distance from kiln — pinned to a fixed screen column (out of the busy cone area), alternating left/right edge
     const colX = idx % 2 === 0 ? 24 : viewW-24;
@@ -1025,8 +1352,8 @@ function drawScene(pecv, coverages, fovMerged, visibleMerged){
   });
   if (fovMerged.length){
     const label = fovMerged.length>1
-      ? 'Total covered (sum of all sections): ' + fmt(totalFov,1) + ' m'
-      : 'Covered: ' + fmt(totalFov,1) + ' m';
+      ? t('svgTotalCovered',{n:fmt(totalFov,1)})
+      : t('svgCovered',{n:fmt(totalFov,1)});
     parts.push(`<text x="${viewW/2}" y="${belowY+16}" fill="#3ec9a7" font-size="12" text-anchor="middle">${label}</text>`);
   }
 
