@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Scanner FOV 120° coverage &amp; shadow model</title>
+<style>
+  :root{
+    --bg:#1c1d1f; --panel:#26282b; --border:#3a3d41; --border-strong:#52565c;
+    --text:#e8e8e6; --text-secondary:#a3a6ab; --accent:#7f9cf5; --accent2:#3ec9a7;
+    --danger:#e2635f; --danger-bg:#3a2426; --warn:#e0b23c; --warn-bg:#3a3320; --shadow:#c24a4a;
+    --s2:#e08fd0;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; padding:24px; background:var(--bg); color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    display:flex; justify-content:center;}
+  .wrap{width:100%; max-width:900px;}
+  h1{font-size:19px; font-weight:600; margin:0 0 4px;}
+  h2{font-size:14px; font-weight:600; margin:18px 0 8px; color:var(--text);}
+  p.sub{color:var(--text-secondary); font-size:13px; margin:0 0 20px;}
+  .panel{background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:20px; margin-bottom:16px;}
+  .two-col{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+  @media (max-width:700px){ .two-col{grid-template-columns:1fr;} }
+  .row{display:flex; align-items:center; gap:12px; margin-bottom:14px;}
+  .row:last-child{margin-bottom:0;}
+  label{width:170px; font-size:13px; color:var(--text-secondary); flex-shrink:0;}
+  input[type=range]{flex:1; accent-color:var(--accent);}
+  input[type=number]{width:70px; text-align:right; font-size:13px; font-weight:600; font-variant-numeric:tabular-nums;
+    background:var(--bg); color:var(--text); border:1px solid var(--border-strong); border-radius:6px; padding:4px 6px;}
+  select{background:var(--bg); color:var(--text); border:1px solid var(--border-strong); border-radius:6px; padding:5px 8px; font-size:13px;}
+  .btn-row{display:flex; gap:8px; margin:12px 0 4px; flex-wrap:wrap;}
+  .btn{padding:8px 12px; border-radius:10px; border:1px solid var(--accent); background:#2a2f45;
+    color:var(--text); font-size:12px; cursor:pointer;}
+  .btn:hover{background:#333a56;}
+  .panel h3{font-size:13px; margin:0 0 12px; display:flex; align-items:center; gap:8px;}
+  .results{display:flex; gap:16px; flex-wrap:wrap; margin-bottom:16px;}
+  .card{background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:14px 18px; flex:1; min-width:220px;}
+  .card .label{font-size:12px; color:var(--text-secondary); margin-bottom:4px;}
+  .card .num{font-size:22px; font-weight:600;}
+  .card .sub2{font-size:12px; color:var(--text-secondary); margin-top:2px;}
+  .card.warn{border-color:var(--danger); background:var(--danger-bg);}
+  .card.warn .num{color:var(--danger);}
+  .banner{display:none; border-radius:10px; padding:12px 16px; font-size:13px; margin-bottom:16px; line-height:1.5; border:1px solid;}
+  .banner.show{display:block;}
+  .banner.yellow{background:var(--warn-bg); border-color:var(--warn); color:var(--warn);}
+  .banner.red{background:var(--danger-bg); border-color:var(--danger); color:var(--danger);}
+  svg{width:100%; height:auto; display:block; background:var(--bg); border:1px solid var(--border); border-radius:10px; margin-bottom:16px;}
+  .note{font-size:12px; color:var(--text-secondary); margin-top:-6px; margin-bottom:16px; line-height:1.5;}
+  table{width:100%; border-collapse:collapse; font-size:13px;}
+  th, td{padding:6px 10px; text-align:right; border-bottom:1px solid var(--border);}
+  th:first-child, td:first-child{text-align:left;}
+  th{color:var(--text-secondary); font-weight:500; font-size:12px;}
+  td.dim{color:var(--text-secondary);}
+  .table-wrap{max-height:260px; overflow-y:auto; border:1px solid var(--border); border-radius:10px;}
+  .table-wrap table{margin:0;}
+  .table-wrap thead th{position:sticky; top:0; background:var(--panel);}
+
+  .brand-title{text-align:center; font-size:34px; font-weight:800; color:#4c6fff; letter-spacing:0.5px; margin:0 0 6px;
+    width:100vw; position:relative; left:50%; right:50%; margin-left:-50vw; margin-right:-50vw;}
+  input[type=text]{width:auto; flex:1; text-align:left; font-size:13px; font-weight:600;
+    background:var(--bg); color:var(--text); border:1px solid var(--border-strong); border-radius:6px; padding:6px 8px;}
+  .print-only{display:none;}
+  .page-break{display:none;}
+  @media print{
+    body{background:#fff; color:#111; padding:0;}
+    .panel{background:#fff; border:1px solid #999;}
+    svg{background:#fff; border:1px solid #999;}
+    .btn, .btn-row, #print-btn-wrap{display:none !important;}
+    .table-wrap{max-height:none !important; overflow:visible !important; border:1px solid #999;}
+    .print-only{display:block;}
+    .page-break{display:block; height:0; page-break-before:always;}
+    .brand-title{color:#2a4fd7;}
+    .no-print{display:none !important;}
+  }
+  .marketing-block h1{color:#2a4fd7; font-size:22px; margin:0 0 6px;}
+  .marketing-block h3{font-size:15px; margin:0 0 10px; color:#333;}
+  .marketing-block p{font-size:13px; line-height:1.6; color:#222;}
+  .marketing-block{color:#111;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand-title">ECS/CemScanner™</div>
+  <div class="row" style="max-width:460px; margin:0 auto 16px;">
+    <input type="text" id="customer-name" placeholder="Placement study for:" style="width:100%;">
+  </div>
+
+  <div class="print-only marketing-block">
+    <h1>ECS/CemScanner™ kiln shell monitoring system</h1>
+    <h3>Protect your kiln with our ECS/CemScanner™ kiln shell monitoring system</h3>
+    <p>Our kiln shell monitoring system, ECS/CemScanner™, is the product of 40-years worth of development and refining. It’s a technologically advanced system that will allow your operators to better protect your kiln and extend the life of your plant.</p>
+    <p id="print-placement-line" style="display:none;"><strong>Placement study for: <span id="print-customer-name"></span></strong></p>
+  </div>
+
+  <h1>Scanner FOV 120° coverage &amp; shadow model</h1>
+  <p class="sub">The scan cone angle is always fixed at 120°. Cooler is the coordinate origin (x=0).</p>
+
+  <div class="two-col">
+    <div class="panel">
+      <h3 style="color:var(--accent);">Scanner 1 (always on)</h3>
+      <div class="row"><label for="s1-d">Distance from kiln (m)</label>
+        <input type="range" id="s1-d" min="0" max="50" step="0.1" value="5">
+        <input type="number" id="s1-d-num" min="0" max="50" step="0.1" value="5"></div>
+      <div class="row"><label for="s1-theta">Rotation θ (°)</label>
+        <input type="range" id="s1-theta" min="-60" max="60" step="0.5" value="0">
+        <input type="number" id="s1-theta-num" min="-60" max="60" step="0.5" value="0"></div>
+      <div class="row"><label for="s1-x0">Distance from cooler (m)</label>
+        <input type="range" id="s1-x0" min="-20" max="140" step="0.1" value="10">
+        <input type="number" id="s1-x0-num" min="-20" max="140" step="0.1" value="10"></div>
+      <div class="row"><label for="s1-head">Head model</label>
+        <select id="s1-head"><option value="TMC5HT">TMC5HT</option><option value="TMC8HT">TMC8HT</option></select></div>
+    </div>
+
+    <div class="panel">
+      <h3 style="color:var(--s2);"><input type="checkbox" id="s2-enabled"> Scanner 2</h3>
+      <div class="row"><label for="s2-d">Distance from kiln (m)</label>
+        <input type="range" id="s2-d" min="0" max="50" step="0.1" value="5">
+        <input type="number" id="s2-d-num" min="0" max="50" step="0.1" value="5"></div>
+      <div class="row"><label for="s2-theta">Rotation θ (°)</label>
+        <input type="range" id="s2-theta" min="-60" max="60" step="0.5" value="0">
+        <input type="number" id="s2-theta-num" min="-60" max="60" step="0.5" value="0"></div>
+      <div class="row"><label for="s2-x0">Distance from cooler (m)</label>
+        <input type="range" id="s2-x0" min="-20" max="140" step="0.1" value="50">
+        <input type="number" id="s2-x0-num" min="-20" max="140" step="0.1" value="50"></div>
+      <div class="row"><label for="s2-head">Head model</label>
+        <select id="s2-head"><option value="TMC5HT">TMC5HT</option><option value="TMC8HT" selected>TMC8HT</option></select></div>
+    </div>
+  </div>
+
+  <div class="btn-row" style="margin:4px 0 20px;">
+    <button class="btn" id="btn-combine">Combine scanners (S1 starts 2m before kiln, S2 ends 2m after)</button>
+  </div>
+
+  <div class="panel">
+    <h2 style="margin-top:0;">Kiln</h2>
+    <div class="row"><label for="pec">Kiln length (m)</label>
+      <input type="range" id="pec" min="0" max="120" step="1" value="60">
+      <input type="number" id="pec-num" min="0" max="120" step="1" value="60"></div>
+  </div>
+
+  <div class="page-break"></div>
+
+  <svg id="svg" viewBox="0 0 800 460"></svg>
+
+  <p class="note">
+    Dark-red bands = shadow not seen by <em>any</em> active scanner. Green marks and value = whole kiln length covered by the FOV(s). Scanner 2 is shown in pink; its own shadow can eliminate Scanner 1's shadow where the two viewpoints differ. This placement tool is about aiming/targeting, so wherever both scanners can see the same spot, the one giving the <strong>smaller spot size</strong> is shown here (finer aiming resolution). For actual temperature measurement — handled by separate software — the <strong>higher measured temperature</strong> is what counts; this tool does not read temperature.
+  </p>
+
+  <div class="results">
+    <div class="card" id="card-fov">
+      <div class="label">Covered (whole kiln in FOV)</div>
+      <div class="num" id="fov-covered-out">60.0 / 60 m</div>
+    </div>
+    <div class="card" id="card-pec">
+      <div class="label">Covered without shadows</div>
+      <div class="num" id="pec-covered-out">60.0 / 60 m</div>
+      <div class="sub2" id="pec-shadow-out"></div>
+    </div>
+  </div>
+
+  <div class="banner" id="grazing-banner-yellow"></div>
+  <div class="banner" id="grazing-banner-red"></div>
+
+  <div class="page-break"></div>
+
+  <div class="panel">
+    <h2 style="margin-top:0;">Tyres (T) &amp; Gear (G)</h2>
+    <div class="row">
+      <label for="kilnDiameter">Kiln diameter (m)</label>
+      <input type="number" id="kilnDiameter" min="0.5" max="10" step="0.1" value="5">
+    </div>
+    <div class="row">
+      <label for="tyreCount">Number of tyres</label>
+      <select id="tyreCount">
+        <option value="0">0</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5" selected>5</option>
+      </select>
+    </div>
+    <div class="table-wrap" style="max-height:none;">
+      <table>
+        <thead><tr><th>Object</th><th>Position (m)</th><th>Thickness (m)</th><th>Outside diameter (m)</th></tr></thead>
+        <tbody id="ringsBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2 style="margin-top:0;">Obstacles (beams, poles, trees…) between scanner and kiln</h2>
+    <div class="table-wrap" style="max-height:none;">
+      <table>
+        <thead><tr><th>Label</th><th style="text-align:center;">On</th><th>x (m)</th><th>y (m)</th><th>diameter (m)</th></tr></thead>
+        <tbody id="obstaclesList"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <h2>Shadow lengths per object</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Object</th><th>Shadow length (m)</th></tr></thead>
+      <tbody id="shadow-body"></tbody>
+    </table>
+  </div>
+
+  <div class="page-break"></div>
+
+  <h2>Spot sizes along the kiln</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Kiln (m)</th><th>Slant range (m)</th><th>Grazing angle (°)</th><th>Spot size (mm)</th><th>Scanner</th></tr></thead>
+      <tbody id="spot-body"></tbody>
+    </table>
+  </div>
+
+  <div class="panel no-print">
+    <h2 style="margin-top:0;">Scanner head resolution</h2>
+    <div class="row"><label for="res-tmc5">TMC5HT (mrad)</label><input type="number" id="res-tmc5" step="0.1" value="5"></div>
+    <div class="row"><label for="res-tmc8">TMC8HT (mrad)</label><input type="number" id="res-tmc8" step="0.1" value="2"></div>
+  </div>
+
+  <div id="print-btn-wrap" style="text-align:center; margin-top:24px;">
+    <button class="btn" id="btn-print" style="padding:12px 24px; font-size:14px;">Print / Save as PDF</button>
+  </div>
+</div>
+
+<script>
+/* ---------- scanners ---------- */
+function makeScanner(prefix, label, color, hasEnable){
+  return {
+    label, color,
+    dEl: document.getElementById(prefix+'-d'), dNum: document.getElementById(prefix+'-d-num'),
+    thetaEl: document.getElementById(prefix+'-theta'), thetaNum: document.getElementById(prefix+'-theta-num'),
+    x0El: document.getElementById(prefix+'-x0'), x0Num: document.getElementById(prefix+'-x0-num'),
+    headEl: document.getElementById(prefix+'-head'),
+    enabledEl: hasEnable ? document.getElementById(prefix+'-enabled') : null
+  };
+}
+const scanner1 = makeScanner('s1','S1','#7f9cf5', false);
+const scanner2 = makeScanner('s2','S2','#e08fd0', true);
+const allScanners = [scanner1, scanner2];
+const res5El = document.getElementById('res-tmc5'), res2El = document.getElementById('res-tmc8');
+
+const pecf = { range: document.getElementById('pec'), num: document.getElementById('pec-num') };
+const tyreCountEl = document.getElementById('tyreCount');
+const ringsBodyEl = document.getElementById('ringsBody');
+const obstaclesListEl = document.getElementById('obstaclesList');
+
+const out = { pecCovered: document.getElementById('pec-covered-out'), pecShadow: document.getElementById('pec-shadow-out') };
+const cardPec = document.getElementById('card-pec');
+const cardFov = document.getElementById('card-fov');
+const fovCoveredOut = document.getElementById('fov-covered-out');
+
+/* ---------- customer name -> print block, and print button ---------- */
+const customerNameEl = document.getElementById('customer-name');
+const printCustomerNameEl = document.getElementById('print-customer-name');
+const printPlacementLineEl = document.getElementById('print-placement-line');
+function syncCustomerName(){
+  const v = customerNameEl.value.trim();
+  printCustomerNameEl.textContent = v;
+  printPlacementLineEl.style.display = v ? 'block' : 'none';
+}
+customerNameEl.addEventListener('input', syncCustomerName);
+syncCustomerName();
+document.getElementById('btn-print').addEventListener('click', () => window.print());
+const bannerYellow = document.getElementById('grazing-banner-yellow');
+const bannerRed = document.getElementById('grazing-banner-red');
+const svg = document.getElementById('svg');
+const spotBody = document.getElementById('spot-body');
+const shadowBody = document.getElementById('shadow-body');
+
+const kilnDiameterEl = document.getElementById('kilnDiameter');
+function getKilnDepth(){ return parseFloat(kilnDiameterEl.value) || 5; }
+kilnDiameterEl.addEventListener('input', render);
+function enforceKilnDiameter(){
+  const n = parseInt(tyreCountEl.value);
+  let ods = [ringVal('gear','od')];
+  for (let i=0;i<n;i++) ods.push(ringVal('t'+i,'od'));
+  ods = ods.filter(v=>!isNaN(v));
+  if (!ods.length) return;
+  const minOD = Math.min(...ods);
+  const maxAllowed = Math.max(0.5, minOD - 0.1);
+  kilnDiameterEl.max = maxAllowed.toFixed(1);
+  if (parseFloat(kilnDiameterEl.value) > maxAllowed) kilnDiameterEl.value = maxAllowed.toFixed(1);
+}
+
+function fmt(n, dec=2){ if (!isFinite(n)) return '\u221e';
+  return n.toLocaleString('en-US', {minimumFractionDigits:dec, maximumFractionDigits:dec}); }
+
+function bindPair(rangeEl, numEl, onChange){
+  rangeEl.addEventListener('input', () => { numEl.value = rangeEl.value; onChange(); });
+  numEl.addEventListener('input', () => {
+    let v = parseFloat(numEl.value); if (isNaN(v)) return;
+    const min = parseFloat(rangeEl.min), max = parseFloat(rangeEl.max);
+    v = Math.max(min, Math.min(max, v));
+    rangeEl.value = v; onChange();
+  });
+}
+allScanners.forEach(s=>{
+  bindPair(s.dEl, s.dNum, render);
+  bindPair(s.thetaEl, s.thetaNum, render);
+  bindPair(s.x0El, s.x0Num, render);
+  s.headEl.addEventListener('change', render);
+  if (s.enabledEl) s.enabledEl.addEventListener('change', render);
+});
+res5El.addEventListener('input', render);
+res2El.addEventListener('input', render);
+bindPair(pecf.range, pecf.num, () => { regenerateTyreDefaults(); render(); });
+
+function getHeadMrad(headEl){ return headEl.value==='TMC5HT' ? parseFloat(res5El.value) : parseFloat(res2El.value); }
+function getScannerParams(s){
+  return {
+    d: parseFloat(s.dEl.value), theta: parseFloat(s.thetaEl.value), x0: parseFloat(s.x0El.value),
+    enabled: s.enabledEl ? s.enabledEl.checked : true,
+    mrad: getHeadMrad(s.headEl), label: s.label, color: s.color
+  };
+}
+
+/* ---------- rings table: Gear first, then T1..Tn ---------- */
+function tyreDefaultPositions(n, pec){
+  if (n===0) return [];
+  if (n===2) return [5, pec-5];
+  if (n===3) return [5, pec/2, pec-5];
+  if (n===4) return [5, pec/3, 2*pec/3, pec-5];
+  return [5, pec/3, pec/2, 2*pec/3, pec-5];
+}
+function regenerateTyreDefaults(){
+  const n = parseInt(tyreCountEl.value);
+  const pec = parseFloat(pecf.range.value);
+  const tyreDefaults = tyreDefaultPositions(n, pec);
+  const gearDefaultX = tyreDefaults.length ? tyreDefaults[tyreDefaults.length-1]-8 : pec-13;
+  let rows = [{id:'gear', label:'G', pos:gearDefaultX, thick:1.2, od:8}];
+  tyreDefaults.forEach((v,i) => rows.push({id:'t'+i, label:'T'+(i+1), pos:v, thick:1, od:6.6}));
+  ringsBodyEl.innerHTML = '';
+  rows.forEach(r => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = '<td>'+r.label+'</td>'+
+      '<td><input type="number" step="0.1" value="'+r.pos.toFixed(1)+'" id="ring-'+r.id+'-pos"></td>'+
+      '<td><input type="number" step="0.1" value="'+r.thick.toFixed(1)+'" id="ring-'+r.id+'-thick"></td>'+
+      '<td><input type="number" step="0.1" value="'+r.od.toFixed(1)+'" id="ring-'+r.id+'-od"></td>';
+    ringsBodyEl.appendChild(tr);
+  });
+  ringsBodyEl.querySelectorAll('input').forEach(inp => inp.addEventListener('input', render));
+}
+tyreCountEl.addEventListener('change', () => { regenerateTyreDefaults(); render(); });
+regenerateTyreDefaults();
+
+function ringVal(id, field){ const el = document.getElementById('ring-'+id+'-'+field); return el ? parseFloat(el.value) : NaN; }
+function getTyres(){
+  const n = parseInt(tyreCountEl.value); const list=[];
+  for (let i=0;i<n;i++){
+    const id='t'+i;
+    const pos=ringVal(id,'pos'), thick=ringVal(id,'thick'), od=ringVal(id,'od');
+    list.push({x:pos, thick, h:Math.max(0,(od-getKilnDepth())/2), label:'T'+(i+1)});
+  }
+  return list;
+}
+function getGear(){
+  const pos=ringVal('gear','pos'), thick=ringVal('gear','thick'), od=ringVal('gear','od');
+  return {x:pos, thick, h:Math.max(0,(od-getKilnDepth())/2), label:'G'};
+}
+
+/* ---------- obstacles ---------- */
+const OBSTACLE_COUNT = 5;
+for (let i=0;i<OBSTACLE_COUNT;i++){
+  const row = document.createElement('tr');
+  row.innerHTML =
+    '<td>O'+(i+1)+'</td>' +
+    '<td style="text-align:center;"><input type="checkbox" id="obs-'+i+'-on"></td>' +
+    '<td><input type="number" id="obs-'+i+'-x" step="0.1"></td>' +
+    '<td><input type="number" id="obs-'+i+'-y" step="0.1"></td>' +
+    '<td><input type="number" id="obs-'+i+'-d" step="0.1" value="0.5"></td>';
+  obstaclesListEl.appendChild(row);
+  ['on','x','y','d'].forEach(k => document.getElementById('obs-'+i+'-'+k).addEventListener('input', render));
+}
+function getObstacles(){
+  const list = [];
+  for (let i=0;i<OBSTACLE_COUNT;i++){
+    const on = document.getElementById('obs-'+i+'-on').checked;
+    if (!on) continue;
+    const x = parseFloat(document.getElementById('obs-'+i+'-x').value);
+    const y = parseFloat(document.getElementById('obs-'+i+'-y').value);
+    const dia = parseFloat(document.getElementById('obs-'+i+'-d').value);
+    if (isNaN(x) || isNaN(y) || isNaN(dia)) continue;
+    list.push({x, y, r: dia/2, label:'O'+(i+1)});
+  }
+  return list;
+}
+
+/* ---------- geometry helpers ---------- */
+function rayX(x0v, dv, phiDeg){
+  const phi = phiDeg*Math.PI/180, dx = Math.sin(phi), dy = Math.cos(phi);
+  if (dy > 1e-4) return x0v + dv*dx/dy;
+  return dx > 0 ? Infinity : -Infinity;
+}
+function mergeIntervals(list){
+  if (!list.length) return [];
+  const s = list.slice().sort((a,b)=>a[0]-b[0]);
+  const out = [s[0].slice()];
+  for (let i=1;i<s.length;i++){
+    const last = out[out.length-1];
+    if (s[i][0] <= last[1] + 1e-9) last[1] = Math.max(last[1], s[i][1]);
+    else out.push(s[i].slice());
+  }
+  return out;
+}
+function subtractIntervals(base, blockers){
+  let segs = [base.slice()];
+  blockers.forEach(b => {
+    const next = [];
+    segs.forEach(s => {
+      if (b[1] <= s[0] || b[0] >= s[1]) { next.push(s); return; }
+      if (b[0] > s[0]) next.push([s[0], Math.min(b[0], s[1])]);
+      if (b[1] < s[1]) next.push([Math.max(b[1], s[0]), s[1]]);
+    });
+    segs = next.filter(s => s[1]-s[0] > 1e-6);
+  });
+  return segs;
+}
+function intersectIntervalLists(A, B){
+  const res = [];
+  A.forEach(a => B.forEach(b => {
+    const lo = Math.max(a[0],b[0]), hi = Math.min(a[1],b[1]);
+    if (hi > lo + 1e-9) res.push([lo,hi]);
+  }));
+  return mergeIntervals(res);
+}
+function lenOf(list){ return list.reduce((s,v)=>s+(v[1]-v[0]),0); }
+function rectShadow(x0v, dv, x1, x2, h){
+  const ay = dv, ax = x0v;
+  if (ay <= h) return [];
+  const res = [];
+  const xFarRight = (ay*x2 - h*ax)/(ay-h);
+  if (xFarRight > x2 + 1e-9) res.push([x2, xFarRight]);
+  const xFarLeft = (ay*x1 - h*ax)/(ay-h);
+  if (xFarLeft < x1 - 1e-9) res.push([xFarLeft, x1]);
+  return res;
+}
+function circleShadow(x0v, dv, cx, cy, r){
+  if (cy <= 0 || cy >= dv) return [];
+  const Lx = cx-x0v, Ly = dv-cy;
+  const L = Math.sqrt(Lx*Lx+Ly*Ly);
+  if (L <= r) return [];
+  const beta = Math.asin(r/L)*180/Math.PI;
+  const phiC = Math.atan2(Lx, Ly)*180/Math.PI;
+  const xa = rayX(x0v, dv, phiC-beta), xb = rayX(x0v, dv, phiC+beta);
+  if (!isFinite(xa) || !isFinite(xb)) return [];
+  return [[Math.min(xa,xb), Math.max(xa,xb)]];
+}
+function computeAllShadowsBounds(dv, x0v, leftBound, rightBound){
+  let rects = [];
+  getTyres().forEach(t => { rects = rects.concat(rectShadow(x0v, dv, t.x-t.thick/2, t.x+t.thick/2, t.h)); });
+  const g = getGear();
+  rects = rects.concat(rectShadow(x0v, dv, g.x-g.thick/2, g.x+g.thick/2, g.h));
+  getObstacles().forEach(o => { rects = rects.concat(circleShadow(x0v, dv, o.x, o.y, o.r)); });
+  rects = rects.map(r => [Math.max(leftBound,r[0]), Math.min(rightBound,r[1])]).filter(r => r[1]>r[0]+1e-6);
+  return mergeIntervals(rects);
+}
+function computeAllShadows(dv, x0v, pecv){ return computeAllShadowsBounds(dv, x0v, 0, pecv); }
+function computeObjectShadow(obj, dv, x0v, pecv){
+  let ivs;
+  if (obj.r !== undefined) ivs = circleShadow(x0v, dv, obj.x, obj.y, obj.r);
+  else ivs = rectShadow(x0v, dv, obj.x-obj.thick/2, obj.x+obj.thick/2, obj.h);
+  return ivs.map(r=>[Math.max(0,r[0]),Math.min(pecv,r[1])]).filter(r=>r[1]>r[0]+1e-6);
+}
+function computeScannerCoverageBounds(sp, leftBound, rightBound){
+  const shadows = computeAllShadowsBounds(sp.d, sp.x0, leftBound, rightBound);
+  const phi1 = sp.theta-60, phi2 = sp.theta+60;
+  const x1 = rayX(sp.x0,sp.d,phi1), x2 = rayX(sp.x0,sp.d,phi2);
+  const fovLeft = Math.max(Math.min(x1,x2),leftBound), fovRight = Math.min(Math.max(x1,x2),rightBound);
+  const visibleSegs = fovRight>fovLeft ? subtractIntervals([fovLeft,fovRight], shadows) : [];
+  return {sp, shadows, phi1, phi2, x1, x2, fovLeft, fovRight, visibleSegs};
+}
+function computeScannerCoverage(sp, pecv){ return computeScannerCoverageBounds(sp, 0, pecv); }
+
+/* ---------- combine scanners: S1 rotates so its coverage starts 2 m before the kiln,
+   S2 rotates so its coverage ends 2 m after the kiln (installation safety margin).
+   The 15° grazing warning is intentionally NOT used to restrict rotation here —
+   a large spot at the kiln ends is preferred over not reaching the required margin. ---------- */
+const SAFETY_MARGIN = 5;   // used only for the extended target range shown in coverage cards
+const EDGE_MARGIN = 2;     // exact reach-past-kiln-end requirement for this button
+const MIN_OVERLAP = 5;
+function thetaForLeftEdge(sp, targetX){ return 60 + Math.atan2(targetX - sp.x0, sp.d) * 180/Math.PI; }
+function thetaForRightEdge(sp, targetX){ return -60 + Math.atan2(targetX - sp.x0, sp.d) * 180/Math.PI; }
+
+document.getElementById('btn-combine').addEventListener('click', () => {
+  const pecv = parseFloat(pecf.range.value);
+  const sp1base = getScannerParams(scanner1);
+  const sp2base = getScannerParams(scanner2);
+
+  if (sp2base.enabled){
+    const theta1 = thetaForLeftEdge(sp1base, -EDGE_MARGIN);
+    const theta2 = thetaForRightEdge(sp2base, pecv + EDGE_MARGIN);
+    setTheta(scanner1, theta1);
+    setTheta(scanner2, theta2);
+
+    const bound = pecv + SAFETY_MARGIN;
+    const c1 = computeScannerCoverageBounds({...sp1base, theta:theta1}, -SAFETY_MARGIN, bound);
+    const c2 = computeScannerCoverageBounds({...sp2base, theta:theta2}, -SAFETY_MARGIN, bound);
+    const overlapLen = lenOf(intersectIntervalLists(c1.visibleSegs, c2.visibleSegs));
+    if (overlapLen < MIN_OVERLAP - 1e-6){
+      alert('Scanner 1 now starts 2 m before the kiln and Scanner 2 ends 2 m after it, as requested. Their overlap is only '+overlapLen.toFixed(1)+' m (less than 5 m) at the current distance/position — consider moving them closer together or adjusting distance from kiln if more overlap is needed. The 15° grazing warning was ignored on purpose to keep the full margin.');
+    }
+  } else {
+    // only one scanner active: fall back to maximizing coverage over the kiln + safety margin
+    const leftBound = -SAFETY_MARGIN, rightBound = pecv + SAFETY_MARGIN, step = 1;
+    let best = -Infinity, bestT1 = sp1base.theta;
+    for (let t1=-60; t1<=60; t1+=step){
+      const c1 = computeScannerCoverageBounds({...sp1base, theta:t1}, leftBound, rightBound);
+      const len = lenOf(c1.visibleSegs);
+      if (len > best + 1e-9){ best = len; bestT1 = t1; }
+    }
+    setTheta(scanner1, bestT1);
+  }
+});
+function setTheta(s, t){
+  const min = parseFloat(s.thetaEl.min), max = parseFloat(s.thetaEl.max);
+  t = Math.max(min, Math.min(max, t));
+  s.thetaEl.value = t; s.thetaNum.value = Math.round(t*10)/10;
+  render();
+}
+
+/* ---------- main render ---------- */
+function render(){
+  enforceKilnDiameter();
+  const pecv = parseFloat(pecf.range.value);
+  const sps = allScanners.map(getScannerParams);
+  const active = sps.filter(sp=>sp.enabled);
+  const coverages = active.map(sp=>computeScannerCoverage(sp,pecv));
+
+  const fovMerged = mergeIntervals(coverages.map(c=>[c.fovLeft,c.fovRight]).filter(iv=>iv[1]>iv[0]));
+  const baseCovered = lenOf(fovMerged);
+  const visibleMerged = mergeIntervals(coverages.flatMap(c=>c.visibleSegs));
+  const finalCovered = lenOf(visibleMerged);
+  const shadowedWithinFov = baseCovered - finalCovered;
+
+  fovCoveredOut.textContent = fmt(baseCovered,1) + ' / ' + Math.round(pecv) + ' m';
+  cardFov.classList.toggle('warn', pecv>0 && baseCovered < pecv - 0.05);
+  out.pecCovered.textContent = fmt(finalCovered,1) + ' / ' + Math.round(pecv) + ' m';
+  out.pecShadow.textContent = shadowedWithinFov>0.01 ? (fmt(shadowedWithinFov,1)+' m lost to shadow') : '';
+  cardPec.classList.toggle('warn', pecv>0 && finalCovered < pecv - 0.05);
+
+  // per-object shadow lengths: a point stays shadowed only if blocked from EVERY active scanner
+  const objects = [...getTyres(), getGear(), ...getObstacles()];
+  const perObjRows = objects.map(obj => {
+    if (!active.length) return {label:obj.label, len:0};
+    let shadowIvs = null;
+    active.forEach(sp => {
+      const ivs = computeObjectShadow(obj, sp.d, sp.x0, pecv);
+      shadowIvs = shadowIvs===null ? ivs : intersectIntervalLists(shadowIvs, ivs);
+    });
+    return {label:obj.label, len: lenOf(shadowIvs||[])};
+  });
+  shadowBody.innerHTML = perObjRows.map(r=>'<tr><td>'+r.label+'</td><td>'+(r.len>0.001?fmt(r.len,1):'0.0')+'</td></tr>').join('');
+
+  // grazing banners, per active scanner
+  let yellowMsgs=[], redMsgs=[];
+  coverages.forEach(c=>{
+    const edges = [{phi:c.phi1,x:c.x1,name:'left'},{phi:c.phi2,x:c.x2,name:'right'}];
+    edges.forEach(e=>{
+      const hits = isFinite(e.x) && e.x>=-1e-6 && e.x<=pecv+1e-6 && pecv>0;
+      if (hits){
+        const grazing = 90-Math.abs(e.phi);
+        const tag = c.sp.label+' '+e.name+' edge: '+fmt(grazing,1)+'\u00b0';
+        if (grazing<=15) redMsgs.push(tag); else if (grazing<=30) yellowMsgs.push(tag);
+      }
+    });
+  });
+  bannerRed.classList.toggle('show', redMsgs.length>0); bannerRed.classList.add('red');
+  bannerRed.textContent = 'Very shallow angle at kiln (\u2264 15\u00b0) \u2014 strongly elongated spot: '+redMsgs.join('; ');
+  bannerYellow.classList.toggle('show', yellowMsgs.length>0); bannerYellow.classList.add('yellow');
+  bannerYellow.textContent = 'Shallow angle at kiln (\u2264 30\u00b0) \u2014 elongated spot: '+yellowMsgs.join('; ');
+
+  drawScene(pecv, coverages, fovMerged, visibleMerged);
+  renderSpotTable(coverages, visibleMerged);
+}
+
+function renderSpotTable(coverages, visibleMerged){
+  spotBody.innerHTML = '';
+  if (!visibleMerged.length){
+    spotBody.innerHTML = '<tr><td colspan="5" class="dim">No unobstructed coverage on kiln</td></tr>';
+    return;
+  }
+  let rows = [];
+  visibleMerged.forEach(seg=>{
+    const len = seg[1]-seg[0];
+    let pts;
+    if (len>=1){
+      pts = []; const start = Math.ceil(seg[0]);
+      for (let x=start; x<=seg[1]+1e-6; x+=1) pts.push(Math.min(x,seg[1]));
+      if (!pts.length || pts[0]>seg[0]+1e-6) pts.unshift(seg[0]);
+      if (pts[pts.length-1] < seg[1]-1e-6) pts.push(seg[1]);
+    } else {
+      pts = [seg[0], (seg[0]+seg[1])/2, seg[1]];
+    }
+    pts.forEach(x=>rows.push(x));
+  });
+  rows.forEach(x=>{
+    let best = null;
+    coverages.forEach(c=>{
+      const seen = c.visibleSegs.some(v=>x>=v[0]-1e-6 && x<=v[1]+1e-6);
+      if (!seen) return;
+      const dx = x-c.sp.x0, R = Math.sqrt(dx*dx+c.sp.d*c.sp.d);
+      const phi = Math.atan2(dx,c.sp.d)*180/Math.PI, grazing = 90-Math.abs(phi);
+      const gRad = grazing*Math.PI/180;
+      const spot = grazing<1 ? Infinity : (c.sp.mrad/1000*R/Math.sin(gRad))*1000;
+      if (!best || spot < best.spot) best = {spot, R, grazing, label:c.sp.label};
+    });
+    const tr = document.createElement('tr');
+    if (best){
+      tr.innerHTML = '<td>'+fmt(x,1)+'</td><td>'+fmt(best.R,2)+'</td><td>'+fmt(best.grazing,1)+
+        '</td><td>'+(isFinite(best.spot)?fmt(best.spot,0):'\u221e')+'</td><td>'+best.label+'</td>';
+    } else {
+      tr.innerHTML = '<td>'+fmt(x,1)+'</td><td class="dim" colspan="4">not seen</td>';
+    }
+    spotBody.appendChild(tr);
+  });
+}
+
+function drawScene(pecv, coverages, fovMerged, visibleMerged){
+  const viewW=800, lineY=340;
+  const tyres = getTyres(), gear = getGear(), obstacles = getObstacles();
+
+  const xs = [0, pecv, ...tyres.map(t=>t.x-t.thick), ...tyres.map(t=>t.x+t.thick), gear.x-gear.thick, gear.x+gear.thick,
+    ...obstacles.map(o=>o.x), ...coverages.map(c=>c.sp.x0)];
+  const worldLeft = Math.min(...xs) - 3, worldRight = Math.max(...xs) + 3;
+  const worldWidth = worldRight-worldLeft;
+  const maxHalfOD = Math.max(getKilnDepth()/2, ...tyres.map(t=>t.h+getKilnDepth()/2), gear.h+getKilnDepth()/2);
+  const maxD = Math.max(0.5, ...coverages.map(c=>c.sp.d));
+  const worldHeight = maxD + maxHalfOD*2 + 3;
+  const scale = Math.min(660/worldWidth, 300/worldHeight);
+  const px0 = 60;
+
+  function toPx(xw){ return px0 + (xw-worldLeft)*scale; }
+  const kilnLeftPx = toPx(0), kilnRightPx = toPx(pecv);
+  const kilnDepthPx = getKilnDepth()*scale;
+  const axisY = lineY + kilnDepthPx/2;
+
+  let parts=[];
+  parts.push('<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>');
+  parts.push(`<line x1="10" y1="${lineY}" x2="${viewW-10}" y2="${lineY}" stroke="#3a3d41" stroke-width="1" stroke-dasharray="4 4"/>`);
+  parts.push(`<rect x="${kilnLeftPx}" y="${lineY}" width="${kilnRightPx-kilnLeftPx}" height="${kilnDepthPx}" fill="#33363a" stroke="#e8e8e6" stroke-width="1.5" rx="3"/>`);
+  parts.push(`<text x="${(kilnLeftPx+kilnRightPx)/2}" y="${lineY+kilnDepthPx+22}" fill="#a3a6ab" font-size="12" text-anchor="middle">Kiln (${Math.round(pecv)} m)</text>`);
+  parts.push(`<line x1="${kilnLeftPx}" y1="${axisY}" x2="${kilnRightPx}" y2="${axisY}" stroke="#8a8d92" stroke-width="1" stroke-dasharray="10 4 2 4"/>`);
+  parts.push(`<circle cx="${kilnLeftPx}" cy="${lineY}" r="4" fill="#f2a623"/>`);
+  parts.push(`<text x="${kilnLeftPx-6}" y="${lineY-8}" fill="#f2a623" font-size="12" text-anchor="end">Cooler (0 m)</text>`);
+
+  // per-scanner cones, apex, cooler-distance dimension, and distance-from-kiln indicator (pinned to screen edges, out of the way)
+  coverages.forEach((c,idx)=>{
+    const sp = c.sp;
+    const apexX = toPx(sp.x0), apexY = lineY - sp.d*scale;
+    const rayLen = 240;
+    function rayEndpoint(phiDeg){
+      const phi = phiDeg*Math.PI/180, dx=Math.sin(phi), dy=Math.cos(phi);
+      if (dy>1e-4){ const tHit=(lineY-apexY)/dy; if (tHit>0) return {x:apexX+tHit*dx, y:apexY+tHit*dy, hit:true}; }
+      return {x:apexX+rayLen*dx, y:apexY+rayLen*dy, hit:false};
+    }
+    const e1=rayEndpoint(c.phi1), e2=rayEndpoint(c.phi2);
+    parts.push(`<polygon points="${apexX},${apexY} ${e1.x},${e1.y} ${e2.x},${e2.y}" fill="${sp.color}" opacity="0.10"/>`);
+    parts.push(`<line x1="${apexX}" y1="${apexY}" x2="${e1.x}" y2="${e1.y}" stroke="${sp.color}" stroke-width="1.5" stroke-dasharray="${e1.hit?'0':'3 3'}"/>`);
+    parts.push(`<line x1="${apexX}" y1="${apexY}" x2="${e2.x}" y2="${e2.y}" stroke="${sp.color}" stroke-width="1.5" stroke-dasharray="${e2.hit?'0':'3 3'}"/>`);
+    const r=30, phi1r=c.phi1*Math.PI/180, phi2r=c.phi2*Math.PI/180;
+    const ax1=apexX+r*Math.sin(phi1r), ay1=apexY+r*Math.cos(phi1r), ax2=apexX+r*Math.sin(phi2r), ay2=apexY+r*Math.cos(phi2r);
+    parts.push(`<path d="M ${ax1} ${ay1} A ${r} ${r} 0 0 1 ${ax2} ${ay2}" fill="none" stroke="${sp.color}" stroke-width="1.5"/>`);
+    parts.push(`<circle cx="${apexX}" cy="${apexY}" r="4" fill="${sp.color}"/>`);
+    parts.push(`<text x="${apexX+10}" y="${apexY-8}" fill="${sp.color}" font-size="12">${sp.label}</text>`);
+
+    // distance from cooler dimension (horizontal), stacked per scanner index
+    const dimY1 = Math.min(lineY, apexY) - 26 - idx*34;
+    parts.push(`<line x1="${kilnLeftPx}" y1="${lineY}" x2="${kilnLeftPx}" y2="${dimY1}" stroke="${sp.color}" stroke-width="0.75" stroke-dasharray="2 2"/>`);
+    parts.push(`<line x1="${apexX}" y1="${apexY}" x2="${apexX}" y2="${dimY1}" stroke="${sp.color}" stroke-width="0.75" stroke-dasharray="2 2"/>`);
+    parts.push(`<line x1="${kilnLeftPx}" y1="${dimY1}" x2="${apexX}" y2="${dimY1}" stroke="${sp.color}" stroke-width="1.5" marker-start="url(#arrow)" marker-end="url(#arrow)"/>`);
+    parts.push(`<text x="${(kilnLeftPx+apexX)/2}" y="${dimY1-8}" fill="${sp.color}" font-size="11" text-anchor="middle">${sp.label} distance from cooler: ${fmt(sp.x0,1)} m</text>`);
+
+    // distance from kiln — pinned to a fixed screen column (out of the busy cone area), alternating left/right edge
+    const colX = idx % 2 === 0 ? 24 : viewW-24;
+    parts.push(`<line x1="${colX}" y1="${apexY}" x2="${colX}" y2="${lineY}" stroke="${sp.color}" stroke-width="1.5" marker-start="url(#arrow)" marker-end="url(#arrow)"/>`);
+    parts.push(`<line x1="${apexX}" y1="${apexY}" x2="${colX}" y2="${apexY}" stroke="${sp.color}" stroke-width="0.5" stroke-dasharray="2 2"/>`);
+    parts.push(`<line x1="${kilnLeftPx}" y1="${lineY}" x2="${colX}" y2="${lineY}" stroke="${sp.color}" stroke-width="0.5" stroke-dasharray="2 2" opacity="0.4"/>`);
+    parts.push(`<text x="${colX + (idx%2===0?6:-6)}" y="${(apexY+lineY)/2}" fill="${sp.color}" font-size="11" text-anchor="${idx%2===0?'start':'end'}">${sp.label}: ${fmt(sp.d,1)} m</text>`);
+  });
+
+  // shadow bands = FOV-covered but not seen by any active scanner
+  const trueShadow = fovMerged.flatMap(iv => subtractIntervals(iv, visibleMerged));
+  trueShadow.forEach(sh=>{
+    const spx=toPx(sh[0]), epx=toPx(sh[1]);
+    parts.push(`<rect x="${spx}" y="${lineY-4}" width="${epx-spx}" height="8" fill="#c24a4a" opacity="0.6"/>`);
+  });
+
+  // combined coverage line — placed BELOW the kiln, showing the whole FOV-covered length (before shadow subtraction)
+  let totalFov = lenOf(fovMerged);
+  const belowY = lineY + kilnDepthPx + 44;
+  fovMerged.forEach(iv=>{
+    const spx=toPx(iv[0]), epx=toPx(iv[1]);
+    parts.push(`<line x1="${spx}" y1="${belowY}" x2="${epx}" y2="${belowY}" stroke="#3ec9a7" stroke-width="2.5" marker-start="url(#arrow)" marker-end="url(#arrow)"/>`);
+  });
+  if (fovMerged.length){
+    const mid = fovMerged[0];
+    parts.push(`<text x="${toPx((mid[0]+mid[1])/2)}" y="${belowY+16}" fill="#3ec9a7" font-size="12" text-anchor="middle">Covered: ${fmt(totalFov,1)} m</text>`);
+  }
+
+  tyres.forEach(t=>{
+    const x1p=toPx(t.x-t.thick/2), x2p=toPx(t.x+t.thick/2);
+    const halfOD = t.h + getKilnDepth()/2, yTop = axisY - halfOD*scale, hpx = halfOD*2*scale;
+    parts.push(`<rect x="${x1p}" y="${yTop}" width="${x2p-x1p}" height="${hpx}" fill="#565c66" stroke="#a3a6ab" stroke-width="1" opacity="0.9"/>`);
+    parts.push(`<text x="${(x1p+x2p)/2}" y="${yTop-6}" fill="#e8e8e6" font-size="11" text-anchor="middle">${t.label}</text>`);
+  });
+  {
+    const x1p=toPx(gear.x-gear.thick/2), x2p=toPx(gear.x+gear.thick/2);
+    const halfOD = gear.h + getKilnDepth()/2, yTop = axisY - halfOD*scale, hpx = halfOD*2*scale;
+    parts.push(`<rect x="${x1p}" y="${yTop}" width="${x2p-x1p}" height="${hpx}" fill="#3f4550" stroke="#7f9cf5" stroke-width="1" opacity="0.9"/>`);
+    parts.push(`<text x="${(x1p+x2p)/2}" y="${yTop-6}" fill="#7f9cf5" font-size="11" text-anchor="middle">${gear.label}</text>`);
+  }
+  obstacles.forEach(o=>{
+    const cxp=toPx(o.x), cyp=lineY-o.y*scale, rp=o.r*scale;
+    parts.push(`<circle cx="${cxp}" cy="${cyp}" r="${rp}" fill="#5a4a8a" stroke="#b39ddb" stroke-width="1"/>`);
+    parts.push(`<text x="${cxp}" y="${cyp-rp-6}" fill="#b39ddb" font-size="11" text-anchor="middle">${o.label}</text>`);
+  });
+
+  const viewH = Math.max(460, lineY + Math.max(maxHalfOD*scale, kilnDepthPx+70));
+  svg.setAttribute('viewBox', `0 0 ${viewW} ${viewH}`);
+  svg.innerHTML = parts.join('');
+}
+
+render();
+</script>
+</body>
+</html>
