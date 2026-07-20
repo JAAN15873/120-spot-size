@@ -662,7 +662,16 @@ function syncCustomerName(){
 }
 customerNameEl.addEventListener('input', syncCustomerName);
 syncCustomerName();
-document.getElementById('btn-print').addEventListener('click', () => window.print());
+/* Printing while the page is scrolled down throws off Chrome's page-break math for the
+   print-caption-row table headers (they land mid-page instead of at the top of each printed
+   page). Scrolling to the very top first, and giving the browser a couple of frames to reflow
+   before opening the print dialog, fixes it. */
+function printFromTop(){
+  window.scrollTo(0, 0);
+  requestAnimationFrame(() => requestAnimationFrame(() => window.print()));
+}
+document.getElementById('btn-print').addEventListener('click', printFromTop);
+window.addEventListener('beforeprint', () => window.scrollTo(0, 0));
 const bannerYellow = document.getElementById('grazing-banner-yellow');
 const bannerRed = document.getElementById('grazing-banner-red');
 const svg = document.getElementById('svg');
