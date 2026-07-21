@@ -187,7 +187,7 @@
           <button type="button" class="btn-mini" id="resetLayout">Reset layout</button>
         </div>
       </div>
-      <svg id="schematic" viewBox="0 0 660 780" xmlns="http://www.w3.org/2000/svg"></svg>
+      <svg id="schematic" viewBox="0 0 660 830" xmlns="http://www.w3.org/2000/svg"></svg>
       <p class="edit-hint no-print" id="editHint" hidden>Drag boxes and encoder icons to move them. Drag the small square at a box's bottom-right corner to resize it. Click the ⟳ button on an encoder to rotate it 90°. Changes are saved automatically in this browser.</p>
     </div>
 
@@ -413,12 +413,12 @@
 
   const LAYOUT_KEY = 'kilnEncoderLayout_v1';
   const DEFAULT_LAYOUT = {
-    motor:  {x:115, y:560, w:110, h:90},
+    motor:  {x:125, y:560, w:90,  h:150},
     gear:   {x:90,  y:430, w:380, h:110},
     pinion: {x:310, y:190, w:180, h:100},
-    encA:   {x:400, y:40,  rot:0},
-    encB:   {x:495, y:480, rot:0},
-    encC:   {x:170, y:716, rot:90}
+    encA:   {x:400, y:40,  rot:270},
+    encB:   {x:400, y:610, rot:90},
+    encC:   {x:170, y:764, rot:90}
   };
   let layout = loadLayout();
   let editMode = false;
@@ -553,7 +553,10 @@
   }
 
   // small dotted sliver of the girth gear (meshes with the pinion wheel) and,
-  // behind it, an even smaller dotted sliver of the kiln shell it's welded to
+  // behind it, an even smaller dotted sliver of the kiln shell it's welded to.
+  // The whole sliver is generated bulging left from the mesh point, then the
+  // group is rotated 90° about that same point — the half that swings into
+  // the pinion box is simply hidden behind it (box is drawn afterwards).
   function drawGirthAndKiln(svg, meshX, meshY){
     const toRad = d => d * Math.PI / 180;
     function arcPath(cx, cy, r, aStart, aEnd){
@@ -562,26 +565,29 @@
       return `M ${p1.x.toFixed(1)},${p1.y.toFixed(1)} A ${r},${r} 0 0 1 ${p2.x.toFixed(1)},${p2.y.toFixed(1)}`;
     }
 
+    const g = el('g',{transform:`rotate(90 ${meshX} ${meshY})`});
+
     // kiln shell — larger radius, taller sliver, sits behind the girth gear
     const kR = 320, kA = 20;
     const kCx = meshX - kR, kCy = meshY;
-    svg.appendChild(el('path',{d:arcPath(kCx,kCy,kR,-kA,kA), fill:'none', stroke:'var(--shell)','stroke-width':9,'stroke-dasharray':'2,7','stroke-linecap':'round'}));
+    g.appendChild(el('path',{d:arcPath(kCx,kCy,kR,-kA,kA), fill:'none', stroke:'var(--shell)','stroke-width':9,'stroke-dasharray':'2,7','stroke-linecap':'round'}));
 
     // girth gear ring — smaller radius, teeth ticks, meshes right at the pinion box edge
     const gR = 250, gA = 15;
     const gCx = meshX - gR, gCy = meshY;
-    svg.appendChild(el('path',{d:arcPath(gCx,gCy,gR,-gA,gA), fill:'none', stroke:'var(--brass)','stroke-width':3,'stroke-dasharray':'1,5','stroke-linecap':'round'}));
+    g.appendChild(el('path',{d:arcPath(gCx,gCy,gR,-gA,gA), fill:'none', stroke:'var(--brass)','stroke-width':3,'stroke-dasharray':'1,5','stroke-linecap':'round'}));
     for(let a=-gA; a<=gA+0.01; a += (2*gA)/6){
       const ang = toRad(a);
       const x1 = gCx+(gR-7)*Math.cos(ang), y1 = gCy+(gR-7)*Math.sin(ang);
       const x2 = gCx+(gR+7)*Math.cos(ang), y2 = gCy+(gR+7)*Math.sin(ang);
-      svg.appendChild(el('line',{x1:x1.toFixed(1),y1:y1.toFixed(1),x2:x2.toFixed(1),y2:y2.toFixed(1),stroke:'var(--brass)','stroke-width':2.5}));
+      g.appendChild(el('line',{x1:x1.toFixed(1),y1:y1.toFixed(1),x2:x2.toFixed(1),y2:y2.toFixed(1),stroke:'var(--brass)','stroke-width':2.5}));
     }
+    svg.appendChild(g);
 
-    const lbl = el('text',{x:meshX-95,y:meshY-72,class:'schem-sub','text-anchor':'middle'});
+    const lbl = el('text',{x:meshX-95,y:meshY-40,class:'schem-sub','text-anchor':'middle'});
     lbl.textContent = 'girth gear on kiln shell';
     svg.appendChild(lbl);
-    const lbl2 = el('text',{x:meshX-95,y:meshY-60,class:'schem-sub','text-anchor':'middle'});
+    const lbl2 = el('text',{x:meshX-95,y:meshY-28,class:'schem-sub','text-anchor':'middle'});
     lbl2.textContent = '(no mounting room)';
     svg.appendChild(lbl2);
   }
@@ -610,6 +616,11 @@
     shaft(svg, leftX, gearBottom, L.motor.y);
     shaft(svg, leftX, L.motor.y+L.motor.h, L.encC.y+16);
 
+    // pinion-shaft pass-through: an access opening under the gearbox, on the
+    // same axis as the pinion wheel, for encoder B
+    shaft(svg, rightX, gearBottom, L.encB.y-16);
+    svg.appendChild(el('circle',{cx:rightX,cy:gearBottom,r:9,fill:'#fff',stroke:'var(--steel)','stroke-width':2,'stroke-dasharray':'2,2'}));
+
     coupling(svg, rightX, couplingAY);
     coupling(svg, rightX, couplingBY);
 
@@ -626,8 +637,7 @@
     labelBlock(svg, L.encA.x+26, L.encA.y-4, 'A — Normal placement', 'Standard encoder · top of pinion shaft', 'schemVal_pinion_A');
 
     encoderIcon(svg, 'encB', L.encB.x, L.encB.y, L.encB.rot||0);
-    svg.appendChild(el('line',{x1:rightX+30,y1:couplingBY,x2:L.encB.x-20,y2:L.encB.y,stroke:'var(--accent)','stroke-width':2,'stroke-dasharray':'3,2'}));
-    labelBlock(svg, L.encB.x+26, L.encB.y-17, 'B — Alternative', 'Standard encoder · gearbox output', 'schemVal_pinion_B');
+    labelBlock(svg, L.encB.x+26, L.encB.y-17, 'B — Alternative', 'Standard encoder · opening under gearbox', 'schemVal_pinion_B');
 
     encoderIcon(svg, 'encC', L.encC.x, L.encC.y, L.encC.rot||0);
     labelBlock(svg, L.encC.x+26, L.encC.y-17, 'C — Alternative placement', 'Alternative encoder · motor shaft', 'schemVal_motor');
