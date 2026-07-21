@@ -417,7 +417,7 @@
     gear:   {x:90,  y:430, w:380, h:110},
     pinion: {x:310, y:190, w:180, h:100},
     encA:   {x:400, y:40,  rot:0},
-    encB:   {x:480, y:352, rot:0},
+    encB:   {x:495, y:480, rot:0},
     encC:   {x:170, y:716, rot:90}
   };
   let layout = loadLayout();
@@ -552,6 +552,40 @@
     t = el('text',{id:valueId,x,y:y+26,class:'schem-value'}); svg.appendChild(t);
   }
 
+  // small dotted sliver of the girth gear (meshes with the pinion wheel) and,
+  // behind it, an even smaller dotted sliver of the kiln shell it's welded to
+  function drawGirthAndKiln(svg, meshX, meshY){
+    const toRad = d => d * Math.PI / 180;
+    function arcPath(cx, cy, r, aStart, aEnd){
+      const p1 = {x:cx+r*Math.cos(toRad(aStart)), y:cy+r*Math.sin(toRad(aStart))};
+      const p2 = {x:cx+r*Math.cos(toRad(aEnd)),   y:cy+r*Math.sin(toRad(aEnd))};
+      return `M ${p1.x.toFixed(1)},${p1.y.toFixed(1)} A ${r},${r} 0 0 1 ${p2.x.toFixed(1)},${p2.y.toFixed(1)}`;
+    }
+
+    // kiln shell — larger radius, taller sliver, sits behind the girth gear
+    const kR = 320, kA = 20;
+    const kCx = meshX - kR, kCy = meshY;
+    svg.appendChild(el('path',{d:arcPath(kCx,kCy,kR,-kA,kA), fill:'none', stroke:'var(--shell)','stroke-width':9,'stroke-dasharray':'2,7','stroke-linecap':'round'}));
+
+    // girth gear ring — smaller radius, teeth ticks, meshes right at the pinion box edge
+    const gR = 250, gA = 15;
+    const gCx = meshX - gR, gCy = meshY;
+    svg.appendChild(el('path',{d:arcPath(gCx,gCy,gR,-gA,gA), fill:'none', stroke:'var(--brass)','stroke-width':3,'stroke-dasharray':'1,5','stroke-linecap':'round'}));
+    for(let a=-gA; a<=gA+0.01; a += (2*gA)/6){
+      const ang = toRad(a);
+      const x1 = gCx+(gR-7)*Math.cos(ang), y1 = gCy+(gR-7)*Math.sin(ang);
+      const x2 = gCx+(gR+7)*Math.cos(ang), y2 = gCy+(gR+7)*Math.sin(ang);
+      svg.appendChild(el('line',{x1:x1.toFixed(1),y1:y1.toFixed(1),x2:x2.toFixed(1),y2:y2.toFixed(1),stroke:'var(--brass)','stroke-width':2.5}));
+    }
+
+    const lbl = el('text',{x:meshX-95,y:meshY-72,class:'schem-sub','text-anchor':'middle'});
+    lbl.textContent = 'girth gear on kiln shell';
+    svg.appendChild(lbl);
+    const lbl2 = el('text',{x:meshX-95,y:meshY-60,class:'schem-sub','text-anchor':'middle'});
+    lbl2.textContent = '(no mounting room)';
+    svg.appendChild(lbl2);
+  }
+
   function redraw(){
     const svg = $('schematic');
     svg.innerHTML = '';
@@ -578,6 +612,9 @@
 
     coupling(svg, rightX, couplingAY);
     coupling(svg, rightX, couplingBY);
+
+    // girth gear + kiln shell sliver, meshing into the pinion wheel's left edge
+    drawGirthAndKiln(svg, L.pinion.x, pinionTop + L.pinion.h/2);
 
     // boxes
     drawBox(svg, 'pinion', 'PINION WHEEL', '', '#eef1f4', '#33424f');
