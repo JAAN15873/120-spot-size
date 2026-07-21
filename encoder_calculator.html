@@ -398,7 +398,7 @@
     gear:   {x:90,  y:430, w:380, h:110},
     pinion: {x:310, y:190, w:180, h:100},
     encA:   {x:400, y:40,  rot:270},
-    encB:   {x:400, y:553, rot:90},
+    encB:   {x:400, y:568, rot:90},
     encC:   {x:170, y:764, rot:90}
   };
 
@@ -454,31 +454,52 @@
     t = el('text',{id:valueId,x,y:y+26,class:'schem-value'}); svg.appendChild(t);
   }
 
-  // Girth gear + kiln shell, drawn as flat dotted bars (at a ~10:1 size ratio
-  // the visible sliver near the mesh point is essentially straight, not
-  // curved). Pinion teeth are cut parallel to its own (vertical) shaft, so
-  // the mating girth gear teeth run the other way — horizontal notches along
-  // a horizontal bar 3/4 the width of the pinion wheel it meshes with.
+  // Girth gear + kiln shell. Only a small slice of the huge ring gear is
+  // visible where it meshes with the pinion wheel; at ~10:1 that slice reads
+  // as an essentially straight toothed rack segment. Drawn as a proper
+  // trapezoidal-tooth rack (dotted outline + light fill) so it reads as a
+  // real gear rather than a thin line, with the kiln shell it's bolted to as
+  // a thick dotted band behind it. Teeth point up toward the pinion; the
+  // right end tucks under the pinion box (drawn afterwards).
   function drawGirthAndKiln(svg, meshX, meshY, pinionW){
     const gy = meshY;
-    const girthW = pinionW * 0.75;
+    const girthW = pinionW;            // as wide as the pinion wheel
+    const x0 = meshX - girthW;         // left end
+    const x1 = meshX;                  // right end, tucks under pinion box
 
-    // kiln shell — thicker & longer, peeking out behind the girth gear, dotted
-    const kilnLen = girthW + 50;
-    svg.appendChild(el('line',{x1:meshX-kilnLen,y1:gy,x2:meshX,y2:gy,stroke:'var(--shell)','stroke-width':22,'stroke-linecap':'round','stroke-dasharray':'0.1,15'}));
+    const n = 8;                       // number of teeth
+    const pitch = girthW / n;
+    const rimTop    = gy + 4;          // tooth roots
+    const rimBottom = gy + 18;         // bottom of the ring rim
+    const toothTip  = gy - 14;         // tooth tips (facing the pinion)
 
-    // girth gear — 3/4 the pinion wheel's width, thick, dotted, teeth cut horizontally (rack-style)
-    svg.appendChild(el('line',{x1:meshX-girthW,y1:gy,x2:meshX,y2:gy,stroke:'var(--brass)','stroke-width':10,'stroke-linecap':'round','stroke-dasharray':'0.1,11'}));
-    const teeth = 6;
-    for(let i=0;i<=teeth;i++){
-      const x = meshX - girthW + (girthW/teeth)*i;
-      svg.appendChild(el('line',{x1:x,y1:gy-11,x2:x,y2:gy+11,stroke:'var(--brass)','stroke-width':2.5}));
+    // kiln shell — thick dotted band behind/below the ring
+    const shellY = rimBottom + 10;
+    svg.appendChild(el('line',{
+      x1:x0-46, y1:shellY, x2:x1, y2:shellY,
+      stroke:'var(--shell)', 'stroke-width':17, 'stroke-linecap':'round',
+      'stroke-dasharray':'1,8'
+    }));
+
+    // girth gear — trapezoidal-tooth rack segment
+    let d = `M ${x0.toFixed(1)},${rimBottom} L ${x0.toFixed(1)},${rimTop}`;
+    for(let i=0;i<n;i++){
+      const xi = x0 + i*pitch;
+      d += ` L ${(xi+pitch*0.20).toFixed(1)},${toothTip}`
+         + ` L ${(xi+pitch*0.44).toFixed(1)},${toothTip}`
+         + ` L ${(xi+pitch*0.64).toFixed(1)},${rimTop}`
+         + ` L ${(xi+pitch).toFixed(1)},${rimTop}`;
     }
+    d += ` L ${x1.toFixed(1)},${rimBottom} Z`;
+    svg.appendChild(el('path',{
+      d, fill:'rgba(201,138,58,0.14)',
+      stroke:'var(--brass)', 'stroke-width':2, 'stroke-dasharray':'3,3', 'stroke-linejoin':'round'
+    }));
 
-    const lbl = el('text',{x:meshX-girthW/2,y:gy-28,class:'schem-sub','text-anchor':'middle'});
+    const lbl = el('text',{x:meshX-girthW/2,y:gy-34,class:'schem-sub','text-anchor':'middle'});
     lbl.textContent = 'girth gear on kiln shell';
     svg.appendChild(lbl);
-    const lbl2 = el('text',{x:meshX-girthW/2,y:gy-16,class:'schem-sub','text-anchor':'middle'});
+    const lbl2 = el('text',{x:meshX-girthW/2,y:gy-22,class:'schem-sub','text-anchor':'middle'});
     lbl2.textContent = '(no mounting room)';
     svg.appendChild(lbl2);
   }
@@ -507,6 +528,9 @@
     shaft(svg, leftX, gearBottom, L.motor.y);
     shaft(svg, leftX, L.motor.y+L.motor.h, L.encC.y-16);
 
+    // short output-shaft stub under the gearbox that encoder B mounts on
+    shaft(svg, rightX, gearBottom, L.encB.y-13);
+
     coupling(svg, rightX, couplingAY);
     coupling(svg, rightX, couplingBY);
 
@@ -523,7 +547,7 @@
     labelBlock(svg, L.encA.x+26, L.encA.y-4, 'A — Normal placement', 'Standard encoder · top of pinion shaft', 'schemVal_pinion_A');
 
     encoderIcon(svg, L.encB.x, L.encB.y, L.encB.rot||0);
-    labelBlock(svg, L.encB.x+26, L.encB.y-17, 'B — Alternative', 'Standard encoder · on gearbox, pinion axis', 'schemVal_pinion_B');
+    labelBlock(svg, L.encB.x+26, L.encB.y-4, 'B — Alternative', 'Standard encoder · on gearbox, pinion axis', 'schemVal_pinion_B');
 
     encoderIcon(svg, L.encC.x, L.encC.y, L.encC.rot||0);
     labelBlock(svg, L.encC.x+26, L.encC.y-17, 'C — Alternative placement', 'Alternative encoder · motor shaft', 'schemVal_motor');
