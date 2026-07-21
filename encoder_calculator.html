@@ -20,8 +20,15 @@
   }
   h1{font-size:1.4rem; margin:0 0 4px;}
   .subtitle{color:var(--sub); margin:0 0 18px; font-size:0.9rem; max-width:900px;}
-  .grid{display:grid; grid-template-columns: 340px minmax(0, 680px); gap:16px; align-items:start; justify-content:center;}
-  @media (max-width:1000px){ .grid{grid-template-columns:1fr; justify-content:stretch;} }
+  .grid{display:grid; grid-template-columns: 340px 1fr; gap:16px; align-items:start;
+    grid-template-areas:"inputs schematic" "compare compare" "confirm confirm";}
+  .inputs-col{grid-area:inputs;}
+  .schematic-area{grid-area:schematic;}
+  .compare-area{grid-area:compare;}
+  .confirm-area{grid-area:confirm;}
+  @media (max-width:1000px){
+    .grid{grid-template-columns:1fr; grid-template-areas:"inputs" "schematic" "compare" "confirm";}
+  }
   .panel{background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:14px 16px; margin-bottom:16px;}
   .panel h2{font-size:0.96rem; margin:0 0 10px; display:flex; align-items:center; gap:8px;}
   .panel h2 .n{background:var(--accent); color:var(--accent-ink); width:19px; height:19px; border-radius:50%; font-size:0.7rem; display:inline-flex; align-items:center; justify-content:center; flex:none;}
@@ -114,7 +121,7 @@
 
 <div class="grid">
   <!-- LEFT: INPUTS -->
-  <div class="no-print">
+  <div class="no-print inputs-col">
     <div class="panel">
       <h2><span class="n">1</span> <span data-i18n="sec1Title">Kiln &amp; motor</span></h2>
 
@@ -178,14 +185,14 @@
     </div>
   </div>
 
-  <!-- RIGHT: SCHEMATIC + RESULTS -->
-  <div>
-    <div class="panel">
-      <h2><span class="n">4</span> <span data-i18n="sec4Title">Drivetrain &amp; mounting points</span></h2>
-      <svg id="schematic" viewBox="0 0 660 830" xmlns="http://www.w3.org/2000/svg"></svg>
-    </div>
+  <!-- RIGHT TOP: SCHEMATIC -->
+  <div class="panel schematic-area">
+    <h2><span class="n">4</span> <span data-i18n="sec4Title">Drivetrain &amp; mounting points</span></h2>
+    <svg id="schematic" viewBox="0 0 660 830" xmlns="http://www.w3.org/2000/svg"></svg>
+  </div>
 
-    <div class="panel no-print">
+  <!-- FULL WIDTH: COMPARE -->
+  <div class="panel no-print compare-area">
       <h2><span class="n">5</span> <span data-i18n="sec5Title">Compare mounting points</span></h2>
       <div style="overflow-x:auto;">
       <table>
@@ -246,7 +253,7 @@
       </details>
     </div>
 
-    <div class="panel" id="quotePanel">
+    <div class="panel confirm-area" id="quotePanel">
       <h2><span class="n">6</span> <span data-i18n="sec6Title">Confirmation sheet</span> <span class="no-print" style="font-weight:normal; font-size:0.78rem; color:var(--sub);" data-i18n="sec6Hint">(print or screenshot this to send)</span></h2>
 
       <div class="row2 no-print">
@@ -289,7 +296,6 @@
 
       <button type="button" class="btn-primary no-print" id="printBtn" style="margin-top:14px;" data-i18n="btnPrint">Print / Save as PDF</button>
     </div>
-  </div>
 </div>
 
 <script>
