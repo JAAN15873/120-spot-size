@@ -83,116 +83,128 @@
   }
   .btn-primary:hover{background:#1859ab;}
 
+  .brand-title{text-align:center; font-size:32px; font-weight:800; color:#1c6fd6; letter-spacing:0.5px; margin:0 0 14px;}
+  #lang-switcher{position:fixed; top:16px; right:16px; z-index:50;}
+  #lang-switcher select{font-size:13px; padding:6px 10px; border-radius:8px; cursor:pointer;
+    background:var(--panel); color:var(--ink); border:1px solid var(--line);}
+
   .no-print{}
   @media print{
     body{padding:0; background:#fff;}
-    .no-print, .info-btn, .info-pop, details{display:none !important;}
+    .no-print, .info-btn, .info-pop, details, #lang-switcher{display:none !important;}
     .grid{display:block;}
     .panel{border:none; box-shadow:none; padding:0; margin-bottom:14px;}
     svg#schematic{border:none; max-width:300px;}
     h1{font-size:1.2rem;}
+    .brand-title{color:#1c6fd6;}
     .subtitle{display:none;}
   }
 </style>
 </head>
 <body>
 
-<h1>Kiln Drive Encoder Placement &amp; Resolution Calculator</h1>
-<p class="subtitle no-print">Model the motor → gearbox → pinion drivetrain of a rotary kiln, compare the three real encoder mounting points, and print a clean confirmation sheet for the customer.</p>
+<div id="lang-switcher" class="no-print">
+  <select id="lang-select" aria-label="Language"></select>
+</div>
+
+<div class="brand-title">ECS/CemScanner™</div>
+
+<h1 data-i18n="pageTitle">Kiln Drive Encoder Placement &amp; Resolution Calculator</h1>
+<p class="subtitle no-print" data-i18n="pageSub">Model the motor → gearbox → pinion drivetrain of a rotary kiln, compare the three real encoder mounting points, and print a clean confirmation sheet for the customer.</p>
 
 <div class="grid">
   <!-- LEFT: INPUTS -->
   <div class="no-print">
     <div class="panel">
-      <h2><span class="n">1</span> Kiln &amp; motor</h2>
+      <h2><span class="n">1</span> <span data-i18n="sec1Title">Kiln &amp; motor</span></h2>
 
-      <label>Kiln shell diameter <span class="unit">(m)</span>
+      <label><span data-i18n="labelKilnDia">Kiln shell diameter</span> <span class="unit">(m)</span>
         <button type="button" class="info-btn" data-info="i-dia">?</button>
       </label>
       <input type="number" id="kilnDia" value="5" min="0.1" step="0.1">
-      <div class="info-pop" id="i-dia" hidden>Typical cement kilns: 3–6 m diameter. Used to convert pulses/rev into mm of shell travel per pulse.</div>
+      <div class="info-pop" id="i-dia" hidden data-i18n="infoDia">Typical cement kilns: 3–6 m diameter. Used to convert pulses/rev into mm of shell travel per pulse.</div>
 
       <div class="row2">
         <div>
-          <label>Motor speed <span class="unit">(rpm)</span></label>
+          <label><span data-i18n="labelMotorSpeed">Motor speed</span> <span class="unit">(rpm)</span></label>
           <input type="number" id="motorRpm" value="1500" min="1" step="1">
         </div>
         <div>
-          <label>Kiln ref. speed <span class="unit">(rpm)</span></label>
+          <label><span data-i18n="labelKilnRefSpeed">Kiln ref. speed</span> <span class="unit">(rpm)</span></label>
           <input type="number" id="kilnRefRpm" value="2.4" min="0.01" step="0.01">
         </div>
       </div>
       <button type="button" class="info-btn" data-info="i-ref" style="margin-top:4px;">?</button>
-      <div class="info-pop" id="i-ref" hidden>Kiln reference speed is the design/nameplate speed that pairs with motor speed to fix the drivetrain ratio — it's a hardware constant. Typical normal-operation kiln speed is 2–5 rpm; actual running speed can vary (e.g. via VFD) without changing this ratio.</div>
+      <div class="info-pop" id="i-ref" hidden data-i18n="infoRef">Kiln reference speed is the design/nameplate speed that pairs with motor speed to fix the drivetrain ratio — it's a hardware constant. Typical normal-operation kiln speed is 2–5 rpm; actual running speed can vary (e.g. via VFD) without changing this ratio.</div>
 
-      <label>Max kiln operating speed <span class="unit">(rpm)</span>
+      <label><span data-i18n="labelMaxKilnSpeed">Max kiln operating speed</span> <span class="unit">(rpm)</span>
         <button type="button" class="info-btn" data-info="i-max">?</button>
       </label>
       <input type="number" id="kilnMaxRpm" value="5" min="0.01" step="0.01">
-      <div class="info-pop" id="i-max" hidden>Used only for the worst-case pulse-frequency check (resolution itself doesn't change with kiln speed).</div>
+      <div class="info-pop" id="i-max" hidden data-i18n="infoMax">Used only for the worst-case pulse-frequency check (resolution itself doesn't change with kiln speed).</div>
     </div>
 
     <div class="panel">
-      <h2><span class="n">2</span> Final gear ratio</h2>
-      <label>Pinion wheel : girth gear on kiln
+      <h2><span class="n">2</span> <span data-i18n="sec2Title">Final gear ratio</span></h2>
+      <label><span data-i18n="labelFinalRatio">Pinion wheel : girth gear on kiln</span>
         <button type="button" class="info-btn" data-info="i-ratio">?</button>
       </label>
       <input type="number" id="finalRatio" value="10" min="1" step="0.1">
-      <div class="info-pop" id="i-ratio" hidden>The girth gear ring bolted to the kiln itself has no room for an encoder — this mesh is always the last, inaccessible leg to the kiln. Everything on the pinion-wheel side of it (points A and B) turns at this same ratio relative to the kiln.</div>
+      <div class="info-pop" id="i-ratio" hidden data-i18n="infoRatio">The girth gear ring bolted to the kiln itself has no room for an encoder — this mesh is always the last, inaccessible leg to the kiln. Everything on the pinion-wheel side of it (points A and B) turns at this same ratio relative to the kiln.</div>
     </div>
 
     <div class="panel">
-      <h2><span class="n">3</span> Encoder target
+      <h2><span class="n">3</span> <span data-i18n="sec3Title">Encoder target</span>
         <button type="button" class="info-btn" data-info="i-quad">?</button>
       </h2>
-      <div class="info-pop" id="i-quad" hidden>Quadrature decoding (×4 — counting both edges of both A/B channels) is assumed throughout; it's the standard way these counters are wired, so it isn't a toggle here.</div>
+      <div class="info-pop" id="i-quad" hidden data-i18n="infoQuad">Quadrature decoding (×4 — counting both edges of both A/B channels) is assumed throughout; it's the standard way these counters are wired, so it isn't a toggle here.</div>
 
       <div class="row2">
         <div>
-          <label>Target pulses/rev — min</label>
+          <label data-i18n="labelTargetMin">Target pulses/rev — min</label>
           <input type="number" id="targetMin" value="20000" min="1" step="1000">
         </div>
         <div>
-          <label>Target pulses/rev — max</label>
+          <label data-i18n="labelTargetMax">Target pulses/rev — max</label>
           <input type="number" id="targetMax" value="100000" min="1" step="1000">
         </div>
       </div>
 
-      <label>Max counter/interface frequency <span class="unit">(Hz)</span>
+      <label><span data-i18n="labelMaxFreq">Max counter/interface frequency</span> <span class="unit">(Hz)</span>
         <button type="button" class="info-btn" data-info="i-freq">?</button>
       </label>
       <input type="number" id="maxFreq" value="150000" min="1" step="1000">
-      <div class="info-pop" id="i-freq" hidden>Check your counter card / PLC input spec. High-PPR encoders on the fast motor shaft can exceed this even when the resolution looks fine.</div>
+      <div class="info-pop" id="i-freq" hidden data-i18n="infoFreq">Check your counter card / PLC input spec. High-PPR encoders on the fast motor shaft can exceed this even when the resolution looks fine.</div>
     </div>
   </div>
 
   <!-- RIGHT: SCHEMATIC + RESULTS -->
   <div>
     <div class="panel">
-      <h2><span class="n">4</span> Drivetrain &amp; mounting points</h2>
+      <h2><span class="n">4</span> <span data-i18n="sec4Title">Drivetrain &amp; mounting points</span></h2>
       <svg id="schematic" viewBox="0 0 660 830" xmlns="http://www.w3.org/2000/svg"></svg>
     </div>
 
     <div class="panel no-print">
-      <h2><span class="n">5</span> Compare mounting points</h2>
+      <h2><span class="n">5</span> <span data-i18n="sec5Title">Compare mounting points</span></h2>
       <div style="overflow-x:auto;">
       <table>
         <thead>
           <tr>
-            <th>Point</th>
-            <th>Shaft speed</th>
-            <th>Encoder PPR</th>
-            <th>Pulses/rev</th>
-            <th>Resolution</th>
-            <th>Frequency</th>
-            <th>Status</th>
-            <th>Required PPR</th>
+            <th data-i18n="thPoint">Point</th>
+            <th data-i18n="thShaftSpeed">Shaft speed</th>
+            <th data-i18n="thEncoderPpr">Encoder PPR</th>
+            <th data-i18n="thPulsesRev">Pulses/rev</th>
+            <th data-i18n="thResolution">Resolution</th>
+            <th data-i18n="thFrequency">Frequency</th>
+            <th data-i18n="thStatus">Status</th>
+            <th data-i18n="thRequiredPpr">Required PPR</th>
           </tr>
         </thead>
         <tbody>
           <tr data-pt="pinion">
-            <td class="pt-name">Pinion / gearbox shaft
-              <span class="pt-sub">A: normal (top of pinion) or B: alternative (gearbox output) — standard encoder</span>
+            <td class="pt-name"><span data-i18n="rowPinionName">Pinion / gearbox shaft</span>
+              <span class="pt-sub" data-i18n="rowPinionSub">A: normal (top of pinion) or B: alternative (gearbox output) — standard encoder</span>
             </td>
             <td class="mono" id="rpm_pinion">—</td>
             <td><input type="number" id="ppr_pinion" value="500" min="1" step="1"></td>
@@ -206,8 +218,8 @@
             </td>
           </tr>
           <tr data-pt="motor">
-            <td class="pt-name">Motor shaft
-              <span class="pt-sub">C: alternative — needs a higher-frequency / alternative encoder</span>
+            <td class="pt-name"><span data-i18n="rowMotorName">Motor shaft</span>
+              <span class="pt-sub" data-i18n="rowMotorSub">C: alternative — needs a higher-frequency / alternative encoder</span>
             </td>
             <td class="mono" id="rpm_motor">—</td>
             <td><input type="number" id="ppr_motor" value="10" min="1" step="1"></td>
@@ -225,60 +237,57 @@
       </div>
 
       <details>
-        <summary>How this is calculated</summary>
-        <p>The gear ratio between a shaft and the kiln is fixed by hardware, found once from <code>motor speed ÷ kiln reference speed</code> (point C) or the <code>pinion:girth ratio</code> alone (points A/B) — independent of how fast the kiln actually runs later. Pulses per kiln revolution = <code>PPR × shaft revs per kiln rev × 4</code> (quadrature). Resolution = <code>π × kiln diameter ÷ pulses per kiln revolution</code>. Frequency uses the max operating kiln speed to catch worst-case counter overload.</p>
+        <summary data-i18n="detailsCalcSummary">How this is calculated</summary>
+        <p data-i18n-html="detailsCalcBody">The gear ratio between a shaft and the kiln is fixed by hardware, found once from <code>motor speed ÷ kiln reference speed</code> (point C) or the <code>pinion:girth ratio</code> alone (points A/B) — independent of how fast the kiln actually runs later. Pulses per kiln revolution = <code>PPR × shaft revs per kiln rev × 4</code> (quadrature). Resolution = <code>π × kiln diameter ÷ pulses per kiln revolution</code>. Frequency uses the max operating kiln speed to catch worst-case counter overload.</p>
       </details>
       <details>
-        <summary>Why 20,000–100,000 pulses/rev?</summary>
-        <p>Too few pulses gives coarse shell position resolution; too many risks exceeding counter/interface frequency limits for little practical benefit. On a 5 m kiln, 20,000 pulses/rev ≈ 0.79 mm resolution and 100,000 ≈ 0.16 mm — both fine, so pick whichever standard encoder is cheapest/most available for the mounting point you actually have room for.</p>
+        <summary data-i18n="detailsWhySummary">Why 20,000–100,000 pulses/rev?</summary>
+        <p data-i18n="detailsWhyBody">Too few pulses gives coarse shell position resolution; too many risks exceeding counter/interface frequency limits for little practical benefit. On a 5 m kiln, 20,000 pulses/rev ≈ 0.79 mm resolution and 100,000 ≈ 0.16 mm — both fine, so pick whichever standard encoder is cheapest/most available for the mounting point you actually have room for.</p>
       </details>
     </div>
 
     <div class="panel" id="quotePanel">
-      <h2><span class="n">6</span> Confirmation sheet <span class="no-print" style="font-weight:normal; font-size:0.78rem; color:var(--sub);">(print or screenshot this to send)</span></h2>
+      <h2><span class="n">6</span> <span data-i18n="sec6Title">Confirmation sheet</span> <span class="no-print" style="font-weight:normal; font-size:0.78rem; color:var(--sub);" data-i18n="sec6Hint">(print or screenshot this to send)</span></h2>
 
       <div class="row2 no-print">
         <div>
-          <label>Customer / project</label>
-          <input type="text" id="custName" placeholder="Customer or kiln reference">
+          <label data-i18n="labelCustomer">Customer / project</label>
+          <input type="text" id="custName" placeholder="Customer or kiln reference" data-i18n-placeholder="phCustomer">
         </div>
         <div>
-          <label>Prepared by</label>
-          <input type="text" id="preparedBy" placeholder="Your name">
+          <label data-i18n="labelPreparedBy">Prepared by</label>
+          <input type="text" id="preparedBy" placeholder="Your name" data-i18n-placeholder="phPreparedBy">
         </div>
       </div>
-      <label class="no-print">Selected mounting point for this quote</label>
+      <label class="no-print" data-i18n="labelSelectedPoint">Selected mounting point for this quote</label>
       <select id="chosenPoint" class="no-print">
-        <option value="A">A — Normal: top of pinion shaft (standard encoder)</option>
-        <option value="B">B — Alternative: gearbox output shaft (standard encoder)</option>
-        <option value="C">C — Alternative: motor shaft (alternative encoder)</option>
+        <option value="A" data-i18n="optA">A — Normal: top of pinion shaft (standard encoder)</option>
+        <option value="B" data-i18n="optB">B — Alternative: gearbox output shaft (standard encoder)</option>
+        <option value="C" data-i18n="optC">C — Alternative: motor shaft (alternative encoder)</option>
       </select>
 
       <div class="quote-grid" style="margin-top:14px;">
-        <div class="quote-line"><span class="k">Kiln diameter</span><span class="v" id="q_dia">—</span></div>
-        <div class="quote-line"><span class="k">Motor speed</span><span class="v" id="q_motor">—</span></div>
-        <div class="quote-line"><span class="k">Kiln reference speed</span><span class="v" id="q_kiln">—</span></div>
-        <div class="quote-line"><span class="k">Pinion : girth ratio</span><span class="v" id="q_ratio">—</span></div>
-        <div class="quote-line"><span class="k">Selected mounting point</span><span class="v" id="q_point">—</span></div>
-        <div class="quote-line"><span class="k">Shaft speed at this point</span><span class="v" id="q_rpm">—</span></div>
-        <div class="quote-line"><span class="k">Encoder PPR</span><span class="v" id="q_ppr">—</span></div>
-        <div class="quote-line"><span class="k">Quadrature decoding</span><span class="v" id="q_quad">×4 (fixed)</span></div>
-        <div class="quote-line"><span class="k">Pulses / kiln revolution</span><span class="v" id="q_pulses">—</span></div>
-        <div class="quote-line"><span class="k">Shell resolution</span><span class="v" id="q_res">—</span></div>
-        <div class="quote-line"><span class="k">Status</span><span class="v" id="q_status">—</span></div>
+        <div class="quote-line"><span class="k" data-i18n="qKilnDia">Kiln diameter</span><span class="v" id="q_dia">—</span></div>
+        <div class="quote-line"><span class="k" data-i18n="qMotorSpeed">Motor speed</span><span class="v" id="q_motor">—</span></div>
+        <div class="quote-line"><span class="k" data-i18n="qKilnRefSpeed">Kiln reference speed</span><span class="v" id="q_kiln">—</span></div>
+        <div class="quote-line"><span class="k" data-i18n="qRatio">Pinion : girth ratio</span><span class="v" id="q_ratio">—</span></div>
+        <div class="quote-line"><span class="k" data-i18n="qSelectedPoint">Selected mounting point</span><span class="v" id="q_point">—</span></div>
+        <div class="quote-line"><span class="k" data-i18n="qShaftSpeed">Shaft speed at this point</span><span class="v" id="q_rpm">—</span></div>
+        <div class="quote-line"><span class="k" data-i18n="qEncoderPpr">Encoder PPR</span><span class="v" id="q_ppr">—</span></div>
+        <div class="quote-line"><span class="k" data-i18n="qQuad">Quadrature decoding</span><span class="v" id="q_quad" data-i18n="qQuadVal">×4 (fixed)</span></div>
+        <div class="quote-line"><span class="k" data-i18n="qPulses">Pulses / kiln revolution</span><span class="v" id="q_pulses">—</span></div>
+        <div class="quote-line"><span class="k" data-i18n="qResolution">Shell resolution</span><span class="v" id="q_res">—</span></div>
+        <div class="quote-line"><span class="k" data-i18n="qStatus">Status</span><span class="v" id="q_status">—</span></div>
       </div>
 
-      <div class="confirm-box">
-        Customer confirms the data above is correct and approves purchase of a
-        <b id="q_ppr2">—</b> PPR incremental encoder for mounting point <b id="q_point2">—</b>.
-      </div>
+      <div class="confirm-box" id="confirmBox"></div>
 
       <div class="sign-row">
-        <div class="sign-line">Customer signature / date</div>
+        <div class="sign-line" data-i18n="signCustomer">Customer signature / date</div>
         <div class="sign-line" id="preparedLine">Prepared by / date</div>
       </div>
 
-      <button type="button" class="btn-primary no-print" id="printBtn" style="margin-top:14px;">Print / Save as PDF</button>
+      <button type="button" class="btn-primary no-print" id="printBtn" style="margin-top:14px;" data-i18n="btnPrint">Print / Save as PDF</button>
     </div>
   </div>
 </div>
@@ -292,12 +301,484 @@
 
   const STANDARD_PPR = [1,2,5,10,20,25,50,60,100,120,200,250,300,360,500,512,600,1000,1024,1250,2000,2500,3600,5000,8192,10000];
 
+  // ---------- i18n ----------
+  const LANGS = [
+    {code:'en', name:'English', flag:'🇬🇧'},
+    {code:'es', name:'Español', flag:'🇪🇸'},
+    {code:'fr', name:'Français', flag:'🇫🇷'},
+    {code:'pt', name:'Português', flag:'🇵🇹'},
+    {code:'ar', name:'العربية', flag:'🇸🇦'}
+  ];
+  const I18N = {
+  en:{
+    pageTitle:"Kiln Drive Encoder Placement & Resolution Calculator",
+    pageSub:"Model the motor → gearbox → pinion drivetrain of a rotary kiln, compare the three real encoder mounting points, and print a clean confirmation sheet for the customer.",
+    sec1Title:"Kiln & motor",
+    labelKilnDia:"Kiln shell diameter",
+    infoDia:"Typical cement kilns: 3–6 m diameter. Used to convert pulses/rev into mm of shell travel per pulse.",
+    labelMotorSpeed:"Motor speed",
+    labelKilnRefSpeed:"Kiln ref. speed",
+    infoRef:"Kiln reference speed is the design/nameplate speed that pairs with motor speed to fix the drivetrain ratio — it's a hardware constant. Typical normal-operation kiln speed is 2–5 rpm; actual running speed can vary (e.g. via VFD) without changing this ratio.",
+    labelMaxKilnSpeed:"Max kiln operating speed",
+    infoMax:"Used only for the worst-case pulse-frequency check (resolution itself doesn't change with kiln speed).",
+    sec2Title:"Final gear ratio",
+    labelFinalRatio:"Pinion wheel : girth gear on kiln",
+    infoRatio:"The girth gear ring bolted to the kiln itself has no room for an encoder — this mesh is always the last, inaccessible leg to the kiln. Everything on the pinion-wheel side of it (points A and B) turns at this same ratio relative to the kiln.",
+    sec3Title:"Encoder target",
+    infoQuad:"Quadrature decoding (×4 — counting both edges of both A/B channels) is assumed throughout; it's the standard way these counters are wired, so it isn't a toggle here.",
+    labelTargetMin:"Target pulses/rev — min",
+    labelTargetMax:"Target pulses/rev — max",
+    labelMaxFreq:"Max counter/interface frequency",
+    infoFreq:"Check your counter card / PLC input spec. High-PPR encoders on the fast motor shaft can exceed this even when the resolution looks fine.",
+    sec4Title:"Drivetrain & mounting points",
+    schemATitle:"A — Normal placement",
+    schemASub:"Standard encoder · top of pinion shaft",
+    schemBTitle:"B — Alternative",
+    schemBSub:"Standard encoder · on gearbox, pinion axis",
+    schemCTitle:"C — Alternative placement",
+    schemCSub:"Alternative encoder · motor shaft",
+    boxPinion:"PINION WHEEL",
+    boxGear:"GEAR",
+    boxGearSub:"(gearbox)",
+    boxMotor:"MOTOR",
+    girthLabel:"girth gear on kiln shell",
+    sec5Title:"Compare mounting points",
+    thPoint:"Point",
+    thShaftSpeed:"Shaft speed",
+    thEncoderPpr:"Encoder PPR",
+    thPulsesRev:"Pulses/rev",
+    thResolution:"Resolution",
+    thFrequency:"Frequency",
+    thStatus:"Status",
+    thRequiredPpr:"Required PPR",
+    rowPinionName:"Pinion / gearbox shaft",
+    rowPinionSub:"A: normal (top of pinion) or B: alternative (gearbox output) — standard encoder",
+    rowMotorName:"Motor shaft",
+    rowMotorSub:"C: alternative — needs a higher-frequency / alternative encoder",
+    detailsCalcSummary:"How this is calculated",
+    detailsCalcBody:"The gear ratio between a shaft and the kiln is fixed by hardware, found once from <code>motor speed ÷ kiln reference speed</code> (point C) or the <code>pinion:girth ratio</code> alone (points A/B) — independent of how fast the kiln actually runs later. Pulses per kiln revolution = <code>PPR × shaft revs per kiln rev × 4</code> (quadrature). Resolution = <code>π × kiln diameter ÷ pulses per kiln revolution</code>. Frequency uses the max operating kiln speed to catch worst-case counter overload.",
+    detailsWhySummary:"Why 20,000–100,000 pulses/rev?",
+    detailsWhyBody:"Too few pulses gives coarse shell position resolution; too many risks exceeding counter/interface frequency limits for little practical benefit. On a 5 m kiln, 20,000 pulses/rev ≈ 0.79 mm resolution and 100,000 ≈ 0.16 mm — both fine, so pick whichever standard encoder is cheapest/most available for the mounting point you actually have room for.",
+    statusInRange:"In range",
+    statusTooCoarse:"Too coarse",
+    statusOverResolved:"Over-resolved",
+    statusFreqHigh:"Freq too high",
+    statusPlusFreq:"{s} + freq",
+    chipsNone:"none — widen range",
+    sec6Title:"Confirmation sheet",
+    sec6Hint:"(print or screenshot this to send)",
+    labelCustomer:"Customer / project",
+    phCustomer:"Customer or kiln reference",
+    labelPreparedBy:"Prepared by",
+    phPreparedBy:"Your name",
+    labelSelectedPoint:"Selected mounting point for this quote",
+    optA:"A — Normal: top of pinion shaft (standard encoder)",
+    optB:"B — Alternative: gearbox output shaft (standard encoder)",
+    optC:"C — Alternative: motor shaft (alternative encoder)",
+    qKilnDia:"Kiln diameter",
+    qMotorSpeed:"Motor speed",
+    qKilnRefSpeed:"Kiln reference speed",
+    qRatio:"Pinion : girth ratio",
+    qSelectedPoint:"Selected mounting point",
+    qShaftSpeed:"Shaft speed at this point",
+    qEncoderPpr:"Encoder PPR",
+    qQuad:"Quadrature decoding",
+    qQuadVal:"×4 (fixed)",
+    qPulses:"Pulses / kiln revolution",
+    qResolution:"Shell resolution",
+    qStatus:"Status",
+    pointLabelA:"A — top of pinion shaft (normal)",
+    pointLabelB:"B — gearbox output shaft (alternative)",
+    pointLabelC:"C — motor shaft (alternative)",
+    confirmText:"Customer confirms the data above is correct and approves purchase of a <b>{ppr}</b> PPR incremental encoder for mounting point <b>{point}</b>.",
+    signCustomer:"Customer signature / date",
+    signPreparedBlank:"Prepared by / date",
+    signPreparedNamed:"Prepared by: {name} / date",
+    btnPrint:"Print / Save as PDF",
+    titleQuote:"Encoder placement — {cust} — {pt}",
+    confirmationWord:"confirmation"
+  },
+  es:{
+    pageTitle:"Calculadora de ubicación y resolución del encoder del accionamiento del horno",
+    pageSub:"Modele la cadena cinemática motor → reductor → piñón de un horno rotatorio, compare los tres puntos reales de montaje del encoder e imprima una hoja de confirmación clara para el cliente.",
+    sec1Title:"Horno y motor",
+    labelKilnDia:"Diámetro de la virola del horno",
+    infoDia:"Hornos de cemento típicos: 3–6 m de diámetro. Se usa para convertir pulsos/rev en mm de recorrido de la virola por pulso.",
+    labelMotorSpeed:"Velocidad del motor",
+    labelKilnRefSpeed:"Velocidad ref. del horno",
+    infoRef:"La velocidad de referencia del horno es la velocidad de diseño/placa que se corresponde con la velocidad del motor para fijar la relación de transmisión: es una constante del equipo. La velocidad normal de operación del horno suele ser de 2–5 rpm; la velocidad real puede variar (p. ej. mediante variador) sin cambiar esta relación.",
+    labelMaxKilnSpeed:"Velocidad máx. de operación del horno",
+    infoMax:"Se usa solo para la comprobación de frecuencia de pulsos en el peor caso (la resolución en sí no cambia con la velocidad del horno).",
+    sec2Title:"Relación de transmisión final",
+    labelFinalRatio:"Piñón : corona dentada del horno",
+    infoRatio:"La corona dentada atornillada al horno no tiene espacio para un encoder: este engrane es siempre el último tramo, inaccesible, hasta el horno. Todo lo que está del lado del piñón (puntos A y B) gira con esta misma relación respecto al horno.",
+    sec3Title:"Objetivo del encoder",
+    infoQuad:"Se asume decodificación en cuadratura (×4 — contando ambos flancos de los dos canales A/B); es la forma estándar de cablear estos contadores, por lo que aquí no es una opción conmutable.",
+    labelTargetMin:"Pulsos/rev objetivo — mín.",
+    labelTargetMax:"Pulsos/rev objetivo — máx.",
+    labelMaxFreq:"Frecuencia máx. del contador/interfaz",
+    infoFreq:"Compruebe la especificación de su tarjeta contadora / entrada del PLC. Encoders de alto PPR en el eje rápido del motor pueden superarla aunque la resolución parezca correcta.",
+    sec4Title:"Cadena cinemática y puntos de montaje",
+    schemATitle:"A — Ubicación normal",
+    schemASub:"Encoder estándar · extremo del eje del piñón",
+    schemBTitle:"B — Alternativa",
+    schemBSub:"Encoder estándar · en el reductor, eje del piñón",
+    schemCTitle:"C — Ubicación alternativa",
+    schemCSub:"Encoder alternativo · eje del motor",
+    boxPinion:"PIÑÓN",
+    boxGear:"REDUCTOR",
+    boxGearSub:"(caja de engranajes)",
+    boxMotor:"MOTOR",
+    girthLabel:"corona dentada en la virola del horno",
+    sec5Title:"Comparar puntos de montaje",
+    thPoint:"Punto",
+    thShaftSpeed:"Velocidad del eje",
+    thEncoderPpr:"PPR del encoder",
+    thPulsesRev:"Pulsos/rev",
+    thResolution:"Resolución",
+    thFrequency:"Frecuencia",
+    thStatus:"Estado",
+    thRequiredPpr:"PPR necesario",
+    rowPinionName:"Eje del piñón / reductor",
+    rowPinionSub:"A: normal (extremo del piñón) o B: alternativa (salida del reductor) — encoder estándar",
+    rowMotorName:"Eje del motor",
+    rowMotorSub:"C: alternativa — requiere un encoder de mayor frecuencia / alternativo",
+    detailsCalcSummary:"Cómo se calcula",
+    detailsCalcBody:"La relación entre un eje y el horno la fija el equipo; se obtiene una vez a partir de <code>velocidad del motor ÷ velocidad de referencia del horno</code> (punto C) o solo de la <code>relación piñón:corona</code> (puntos A/B), con independencia de la velocidad real posterior del horno. Pulsos por revolución del horno = <code>PPR × revoluciones del eje por rev. del horno × 4</code> (cuadratura). Resolución = <code>π × diámetro del horno ÷ pulsos por revolución del horno</code>. La frecuencia usa la velocidad máx. de operación para detectar la sobrecarga del contador en el peor caso.",
+    detailsWhySummary:"¿Por qué 20.000–100.000 pulsos/rev?",
+    detailsWhyBody:"Muy pocos pulsos dan una resolución de posición gruesa; demasiados arriesgan superar los límites de frecuencia del contador/interfaz con poco beneficio práctico. En un horno de 5 m, 20.000 pulsos/rev ≈ 0,79 mm de resolución y 100.000 ≈ 0,16 mm — ambos válidos, así que elija el encoder estándar más barato/disponible para el punto de montaje del que realmente disponga.",
+    statusInRange:"En rango",
+    statusTooCoarse:"Demasiado grueso",
+    statusOverResolved:"Sobre-resuelto",
+    statusFreqHigh:"Frecuencia alta",
+    statusPlusFreq:"{s} + frec.",
+    chipsNone:"ninguno — amplíe el rango",
+    sec6Title:"Hoja de confirmación",
+    sec6Hint:"(imprima o capture esto para enviarlo)",
+    labelCustomer:"Cliente / proyecto",
+    phCustomer:"Cliente o referencia del horno",
+    labelPreparedBy:"Preparado por",
+    phPreparedBy:"Su nombre",
+    labelSelectedPoint:"Punto de montaje seleccionado para esta oferta",
+    optA:"A — Normal: extremo del eje del piñón (encoder estándar)",
+    optB:"B — Alternativa: eje de salida del reductor (encoder estándar)",
+    optC:"C — Alternativa: eje del motor (encoder alternativo)",
+    qKilnDia:"Diámetro del horno",
+    qMotorSpeed:"Velocidad del motor",
+    qKilnRefSpeed:"Velocidad de referencia del horno",
+    qRatio:"Relación piñón : corona",
+    qSelectedPoint:"Punto de montaje seleccionado",
+    qShaftSpeed:"Velocidad del eje en este punto",
+    qEncoderPpr:"PPR del encoder",
+    qQuad:"Decodificación en cuadratura",
+    qQuadVal:"×4 (fijo)",
+    qPulses:"Pulsos / revolución del horno",
+    qResolution:"Resolución en la virola",
+    qStatus:"Estado",
+    pointLabelA:"A — extremo del eje del piñón (normal)",
+    pointLabelB:"B — eje de salida del reductor (alternativa)",
+    pointLabelC:"C — eje del motor (alternativa)",
+    confirmText:"El cliente confirma que los datos anteriores son correctos y aprueba la compra de un encoder incremental de <b>{ppr}</b> PPR para el punto de montaje <b>{point}</b>.",
+    signCustomer:"Firma del cliente / fecha",
+    signPreparedBlank:"Preparado por / fecha",
+    signPreparedNamed:"Preparado por: {name} / fecha",
+    btnPrint:"Imprimir / Guardar como PDF",
+    titleQuote:"Ubicación del encoder — {cust} — {pt}",
+    confirmationWord:"confirmación"
+  },
+  fr:{
+    pageTitle:"Calculateur d'emplacement et de résolution du codeur d'entraînement du four",
+    pageSub:"Modélisez la chaîne cinématique moteur → réducteur → pignon d'un four rotatif, comparez les trois points de montage réels du codeur et imprimez une fiche de confirmation claire pour le client.",
+    sec1Title:"Four et moteur",
+    labelKilnDia:"Diamètre de la virole du four",
+    infoDia:"Fours à ciment typiques : 3–6 m de diamètre. Sert à convertir les impulsions/tr en mm de déplacement de la virole par impulsion.",
+    labelMotorSpeed:"Vitesse du moteur",
+    labelKilnRefSpeed:"Vitesse réf. du four",
+    infoRef:"La vitesse de référence du four est la vitesse de conception/plaque associée à la vitesse du moteur pour fixer le rapport de transmission — c'est une constante matérielle. La vitesse normale d'exploitation du four est généralement de 2–5 tr/min ; la vitesse réelle peut varier (p. ex. via variateur) sans changer ce rapport.",
+    labelMaxKilnSpeed:"Vitesse maxi d'exploitation du four",
+    infoMax:"Utilisée uniquement pour la vérification de fréquence d'impulsions dans le pire cas (la résolution elle-même ne change pas avec la vitesse du four).",
+    sec2Title:"Rapport de transmission final",
+    labelFinalRatio:"Pignon : couronne dentée du four",
+    infoRatio:"La couronne dentée boulonnée au four n'a pas de place pour un codeur — cet engrènement est toujours le dernier tronçon, inaccessible, jusqu'au four. Tout ce qui se trouve du côté pignon (points A et B) tourne au même rapport par rapport au four.",
+    sec3Title:"Objectif du codeur",
+    infoQuad:"Le décodage en quadrature (×4 — comptage des deux fronts des deux voies A/B) est supposé partout ; c'est la manière standard de câbler ces compteurs, ce n'est donc pas une option commutable ici.",
+    labelTargetMin:"Impulsions/tr cibles — min",
+    labelTargetMax:"Impulsions/tr cibles — max",
+    labelMaxFreq:"Fréquence maxi du compteur/interface",
+    infoFreq:"Vérifiez la spécification de votre carte de comptage / entrée d'API. Des codeurs à PPR élevé sur l'arbre moteur rapide peuvent la dépasser même si la résolution semble correcte.",
+    sec4Title:"Chaîne cinématique et points de montage",
+    schemATitle:"A — Emplacement normal",
+    schemASub:"Codeur standard · bout d'arbre du pignon",
+    schemBTitle:"B — Alternative",
+    schemBSub:"Codeur standard · sur le réducteur, axe du pignon",
+    schemCTitle:"C — Emplacement alternatif",
+    schemCSub:"Codeur alternatif · arbre moteur",
+    boxPinion:"PIGNON",
+    boxGear:"RÉDUCTEUR",
+    boxGearSub:"(boîte de vitesses)",
+    boxMotor:"MOTEUR",
+    girthLabel:"couronne dentée sur la virole du four",
+    sec5Title:"Comparer les points de montage",
+    thPoint:"Point",
+    thShaftSpeed:"Vitesse d'arbre",
+    thEncoderPpr:"PPR du codeur",
+    thPulsesRev:"Impulsions/tr",
+    thResolution:"Résolution",
+    thFrequency:"Fréquence",
+    thStatus:"État",
+    thRequiredPpr:"PPR requis",
+    rowPinionName:"Arbre pignon / réducteur",
+    rowPinionSub:"A : normal (bout du pignon) ou B : alternative (sortie réducteur) — codeur standard",
+    rowMotorName:"Arbre moteur",
+    rowMotorSub:"C : alternative — nécessite un codeur à fréquence plus élevée / alternatif",
+    detailsCalcSummary:"Comment c'est calculé",
+    detailsCalcBody:"Le rapport entre un arbre et le four est fixé par le matériel, déterminé une fois à partir de <code>vitesse moteur ÷ vitesse de référence du four</code> (point C) ou du seul <code>rapport pignon:couronne</code> (points A/B) — indépendamment de la vitesse réelle ultérieure du four. Impulsions par tour de four = <code>PPR × tours d'arbre par tour de four × 4</code> (quadrature). Résolution = <code>π × diamètre du four ÷ impulsions par tour de four</code>. La fréquence utilise la vitesse maxi d'exploitation pour détecter la surcharge du compteur dans le pire cas.",
+    detailsWhySummary:"Pourquoi 20 000–100 000 impulsions/tr ?",
+    detailsWhyBody:"Trop peu d'impulsions donne une résolution de position grossière ; trop d'impulsions risque de dépasser les limites de fréquence du compteur/interface pour peu de bénéfice pratique. Sur un four de 5 m, 20 000 impulsions/tr ≈ 0,79 mm de résolution et 100 000 ≈ 0,16 mm — les deux conviennent, choisissez donc le codeur standard le moins cher/le plus disponible pour le point de montage dont vous disposez réellement.",
+    statusInRange:"Dans la plage",
+    statusTooCoarse:"Trop grossier",
+    statusOverResolved:"Sur-résolu",
+    statusFreqHigh:"Fréquence trop élevée",
+    statusPlusFreq:"{s} + fréq.",
+    chipsNone:"aucun — élargissez la plage",
+    sec6Title:"Fiche de confirmation",
+    sec6Hint:"(imprimez ou capturez ceci pour l'envoyer)",
+    labelCustomer:"Client / projet",
+    phCustomer:"Client ou référence du four",
+    labelPreparedBy:"Préparé par",
+    phPreparedBy:"Votre nom",
+    labelSelectedPoint:"Point de montage sélectionné pour ce devis",
+    optA:"A — Normal : bout d'arbre du pignon (codeur standard)",
+    optB:"B — Alternative : arbre de sortie du réducteur (codeur standard)",
+    optC:"C — Alternative : arbre moteur (codeur alternatif)",
+    qKilnDia:"Diamètre du four",
+    qMotorSpeed:"Vitesse du moteur",
+    qKilnRefSpeed:"Vitesse de référence du four",
+    qRatio:"Rapport pignon : couronne",
+    qSelectedPoint:"Point de montage sélectionné",
+    qShaftSpeed:"Vitesse d'arbre à ce point",
+    qEncoderPpr:"PPR du codeur",
+    qQuad:"Décodage en quadrature",
+    qQuadVal:"×4 (fixe)",
+    qPulses:"Impulsions / tour de four",
+    qResolution:"Résolution sur la virole",
+    qStatus:"État",
+    pointLabelA:"A — bout d'arbre du pignon (normal)",
+    pointLabelB:"B — arbre de sortie du réducteur (alternative)",
+    pointLabelC:"C — arbre moteur (alternative)",
+    confirmText:"Le client confirme que les données ci-dessus sont correctes et approuve l'achat d'un codeur incrémental de <b>{ppr}</b> PPR pour le point de montage <b>{point}</b>.",
+    signCustomer:"Signature du client / date",
+    signPreparedBlank:"Préparé par / date",
+    signPreparedNamed:"Préparé par : {name} / date",
+    btnPrint:"Imprimer / Enregistrer en PDF",
+    titleQuote:"Emplacement du codeur — {cust} — {pt}",
+    confirmationWord:"confirmation"
+  },
+  pt:{
+    pageTitle:"Calculadora de posicionamento e resolução do encoder do acionamento do forno",
+    pageSub:"Modele a cadeia cinemática motor → redutor → pinhão de um forno rotativo, compare os três pontos reais de montagem do encoder e imprima uma folha de confirmação clara para o cliente.",
+    sec1Title:"Forno e motor",
+    labelKilnDia:"Diâmetro do casco do forno",
+    infoDia:"Fornos de cimento típicos: 3–6 m de diâmetro. Usado para converter pulsos/rev em mm de deslocamento do casco por pulso.",
+    labelMotorSpeed:"Velocidade do motor",
+    labelKilnRefSpeed:"Velocidade ref. do forno",
+    infoRef:"A velocidade de referência do forno é a velocidade de projeto/placa associada à velocidade do motor para fixar a relação de transmissão — é uma constante do equipamento. A velocidade normal de operação do forno costuma ser de 2–5 rpm; a velocidade real pode variar (p. ex. via inversor) sem alterar esta relação.",
+    labelMaxKilnSpeed:"Velocidade máx. de operação do forno",
+    infoMax:"Usada apenas para a verificação de frequência de pulsos no pior caso (a resolução em si não muda com a velocidade do forno).",
+    sec2Title:"Relação de transmissão final",
+    labelFinalRatio:"Pinhão : coroa dentada do forno",
+    infoRatio:"A coroa dentada aparafusada ao forno não tem espaço para um encoder — este engrenamento é sempre o último trecho, inacessível, até o forno. Tudo do lado do pinhão (pontos A e B) gira nesta mesma relação em relação ao forno.",
+    sec3Title:"Objetivo do encoder",
+    infoQuad:"Assume-se decodificação em quadratura (×4 — contando ambas as bordas dos dois canais A/B); é a forma padrão de ligar esses contadores, por isso não é uma opção comutável aqui.",
+    labelTargetMin:"Pulsos/rev alvo — mín.",
+    labelTargetMax:"Pulsos/rev alvo — máx.",
+    labelMaxFreq:"Frequência máx. do contador/interface",
+    infoFreq:"Verifique a especificação da sua placa contadora / entrada do CLP. Encoders de alto PPR no eixo rápido do motor podem excedê-la mesmo quando a resolução parece adequada.",
+    sec4Title:"Cadeia cinemática e pontos de montagem",
+    schemATitle:"A — Posição normal",
+    schemASub:"Encoder padrão · ponta do eixo do pinhão",
+    schemBTitle:"B — Alternativa",
+    schemBSub:"Encoder padrão · no redutor, eixo do pinhão",
+    schemCTitle:"C — Posição alternativa",
+    schemCSub:"Encoder alternativo · eixo do motor",
+    boxPinion:"PINHÃO",
+    boxGear:"REDUTOR",
+    boxGearSub:"(caixa de engrenagens)",
+    boxMotor:"MOTOR",
+    girthLabel:"coroa dentada no casco do forno",
+    sec5Title:"Comparar pontos de montagem",
+    thPoint:"Ponto",
+    thShaftSpeed:"Velocidade do eixo",
+    thEncoderPpr:"PPR do encoder",
+    thPulsesRev:"Pulsos/rev",
+    thResolution:"Resolução",
+    thFrequency:"Frequência",
+    thStatus:"Estado",
+    thRequiredPpr:"PPR necessário",
+    rowPinionName:"Eixo do pinhão / redutor",
+    rowPinionSub:"A: normal (ponta do pinhão) ou B: alternativa (saída do redutor) — encoder padrão",
+    rowMotorName:"Eixo do motor",
+    rowMotorSub:"C: alternativa — requer um encoder de maior frequência / alternativo",
+    detailsCalcSummary:"Como isto é calculado",
+    detailsCalcBody:"A relação entre um eixo e o forno é fixada pelo equipamento, obtida uma vez a partir de <code>velocidade do motor ÷ velocidade de referência do forno</code> (ponto C) ou apenas da <code>relação pinhão:coroa</code> (pontos A/B) — independentemente da velocidade real posterior do forno. Pulsos por revolução do forno = <code>PPR × revoluções do eixo por rev. do forno × 4</code> (quadratura). Resolução = <code>π × diâmetro do forno ÷ pulsos por revolução do forno</code>. A frequência usa a velocidade máx. de operação para detectar a sobrecarga do contador no pior caso.",
+    detailsWhySummary:"Por que 20.000–100.000 pulsos/rev?",
+    detailsWhyBody:"Pulsos de menos dão uma resolução de posição grosseira; pulsos demais arriscam exceder os limites de frequência do contador/interface com pouco benefício prático. Num forno de 5 m, 20.000 pulsos/rev ≈ 0,79 mm de resolução e 100.000 ≈ 0,16 mm — ambos adequados, portanto escolha o encoder padrão mais barato/disponível para o ponto de montagem de que realmente dispõe.",
+    statusInRange:"Na faixa",
+    statusTooCoarse:"Grosseiro demais",
+    statusOverResolved:"Excesso de resolução",
+    statusFreqHigh:"Frequência alta",
+    statusPlusFreq:"{s} + freq.",
+    chipsNone:"nenhum — amplie a faixa",
+    sec6Title:"Folha de confirmação",
+    sec6Hint:"(imprima ou capture isto para enviar)",
+    labelCustomer:"Cliente / projeto",
+    phCustomer:"Cliente ou referência do forno",
+    labelPreparedBy:"Preparado por",
+    phPreparedBy:"Seu nome",
+    labelSelectedPoint:"Ponto de montagem selecionado para esta proposta",
+    optA:"A — Normal: ponta do eixo do pinhão (encoder padrão)",
+    optB:"B — Alternativa: eixo de saída do redutor (encoder padrão)",
+    optC:"C — Alternativa: eixo do motor (encoder alternativo)",
+    qKilnDia:"Diâmetro do forno",
+    qMotorSpeed:"Velocidade do motor",
+    qKilnRefSpeed:"Velocidade de referência do forno",
+    qRatio:"Relação pinhão : coroa",
+    qSelectedPoint:"Ponto de montagem selecionado",
+    qShaftSpeed:"Velocidade do eixo neste ponto",
+    qEncoderPpr:"PPR do encoder",
+    qQuad:"Decodificação em quadratura",
+    qQuadVal:"×4 (fixo)",
+    qPulses:"Pulsos / revolução do forno",
+    qResolution:"Resolução no casco",
+    qStatus:"Estado",
+    pointLabelA:"A — ponta do eixo do pinhão (normal)",
+    pointLabelB:"B — eixo de saída do redutor (alternativa)",
+    pointLabelC:"C — eixo do motor (alternativa)",
+    confirmText:"O cliente confirma que os dados acima estão corretos e aprova a compra de um encoder incremental de <b>{ppr}</b> PPR para o ponto de montagem <b>{point}</b>.",
+    signCustomer:"Assinatura do cliente / data",
+    signPreparedBlank:"Preparado por / data",
+    signPreparedNamed:"Preparado por: {name} / data",
+    btnPrint:"Imprimir / Salvar como PDF",
+    titleQuote:"Posicionamento do encoder — {cust} — {pt}",
+    confirmationWord:"confirmação"
+  },
+  ar:{
+    pageTitle:"حاسبة موضع ودقة مُرمِّز محرك الفرن الدوار",
+    pageSub:"نمذج سلسلة الحركة محرك → صندوق تروس → ترس صغير للفرن الدوار، وقارن نقاط التركيب الثلاث الفعلية للمُرمِّز، واطبع ورقة تأكيد واضحة للعميل.",
+    sec1Title:"الفرن والمحرك",
+    labelKilnDia:"قطر غلاف الفرن",
+    infoDia:"أفران الأسمنت النموذجية: قطر 3–6 م. يُستخدم لتحويل النبضات/دورة إلى مم من حركة الغلاف لكل نبضة.",
+    labelMotorSpeed:"سرعة المحرك",
+    labelKilnRefSpeed:"سرعة الفرن المرجعية",
+    infoRef:"سرعة الفرن المرجعية هي سرعة التصميم/اللوحة المقترنة بسرعة المحرك لتحديد نسبة نقل الحركة — وهي ثابت في العتاد. سرعة التشغيل العادية للفرن عادة 2–5 دورة/دقيقة؛ وقد تتغير السرعة الفعلية (مثلاً عبر مغيّر التردد) دون تغيير هذه النسبة.",
+    labelMaxKilnSpeed:"أقصى سرعة تشغيل للفرن",
+    infoMax:"تُستخدم فقط للتحقق من تردد النبضات في أسوأ الحالات (الدقة نفسها لا تتغير بسرعة الفرن).",
+    sec2Title:"نسبة النقل النهائية",
+    labelFinalRatio:"الترس الصغير : الترس المحيطي للفرن",
+    infoRatio:"الحلقة المسننة المحيطية المثبتة على الفرن لا يوجد بها مكان لمُرمِّز — هذا التعشيق هو دائماً الوصلة الأخيرة التي يتعذر الوصول إليها حتى الفرن. كل ما هو على جانب الترس الصغير (النقطتان A وB) يدور بالنسبة نفسها بالنسبة للفرن.",
+    sec3Title:"هدف المُرمِّز",
+    infoQuad:"يُفترض فك التشفير الرباعي (×4 — بعدّ كلتا حافتي القناتين A/B) في كل مكان؛ وهي الطريقة القياسية لتوصيل هذه العدّادات، لذا فهي ليست خياراً قابلاً للتبديل هنا.",
+    labelTargetMin:"النبضات/دورة المستهدفة — الأدنى",
+    labelTargetMax:"النبضات/دورة المستهدفة — الأقصى",
+    labelMaxFreq:"أقصى تردد للعدّاد/الواجهة",
+    infoFreq:"تحقق من مواصفات بطاقة العدّاد / مدخل الـ PLC. قد تتجاوزها المُرمِّزات عالية الـ PPR على عمود المحرك السريع حتى عندما تبدو الدقة مناسبة.",
+    sec4Title:"سلسلة الحركة ونقاط التركيب",
+    schemATitle:"A — الموضع العادي",
+    schemASub:"مُرمِّز قياسي · طرف عمود الترس الصغير",
+    schemBTitle:"B — بديل",
+    schemBSub:"مُرمِّز قياسي · على صندوق التروس، محور الترس الصغير",
+    schemCTitle:"C — موضع بديل",
+    schemCSub:"مُرمِّز بديل · عمود المحرك",
+    boxPinion:"الترس الصغير",
+    boxGear:"صندوق التروس",
+    boxGearSub:"(المخفّض)",
+    boxMotor:"المحرك",
+    girthLabel:"الترس المحيطي على غلاف الفرن",
+    sec5Title:"مقارنة نقاط التركيب",
+    thPoint:"النقطة",
+    thShaftSpeed:"سرعة العمود",
+    thEncoderPpr:"PPR المُرمِّز",
+    thPulsesRev:"نبضات/دورة",
+    thResolution:"الدقة",
+    thFrequency:"التردد",
+    thStatus:"الحالة",
+    thRequiredPpr:"PPR المطلوب",
+    rowPinionName:"عمود الترس الصغير / صندوق التروس",
+    rowPinionSub:"A: عادي (طرف الترس الصغير) أو B: بديل (خرج صندوق التروس) — مُرمِّز قياسي",
+    rowMotorName:"عمود المحرك",
+    rowMotorSub:"C: بديل — يتطلب مُرمِّزاً بتردد أعلى / بديلاً",
+    detailsCalcSummary:"كيف يُحسب هذا",
+    detailsCalcBody:"نسبة النقل بين عمود والفرن يحددها العتاد، وتُحسب مرة واحدة من <code>سرعة المحرك ÷ سرعة الفرن المرجعية</code> (النقطة C) أو من <code>نسبة الترس الصغير:المحيطي</code> وحدها (النقطتان A/B) — بصرف النظر عن سرعة الفرن الفعلية لاحقاً. النبضات لكل دورة فرن = <code>PPR × دورات العمود لكل دورة فرن × 4</code> (رباعي). الدقة = <code>π × قطر الفرن ÷ النبضات لكل دورة فرن</code>. يستخدم التردد أقصى سرعة تشغيل لالتقاط الحمل الزائد على العدّاد في أسوأ الحالات.",
+    detailsWhySummary:"لماذا 20٬000–100٬000 نبضة/دورة؟",
+    detailsWhyBody:"القليل جداً من النبضات يعطي دقة موضع خشنة؛ والكثير جداً يخاطر بتجاوز حدود تردد العدّاد/الواجهة مقابل فائدة عملية ضئيلة. في فرن قطره 5 م، 20٬000 نبضة/دورة ≈ 0٫79 مم دقة و100٬000 ≈ 0٫16 مم — كلاهما مناسب، لذا اختر المُرمِّز القياسي الأرخص/الأكثر توفراً لنقطة التركيب المتاحة لديك فعلاً.",
+    statusInRange:"ضمن النطاق",
+    statusTooCoarse:"خشن جداً",
+    statusOverResolved:"دقة مفرطة",
+    statusFreqHigh:"تردد مرتفع",
+    statusPlusFreq:"{s} + تردد",
+    chipsNone:"لا شيء — وسّع النطاق",
+    sec6Title:"ورقة التأكيد",
+    sec6Hint:"(اطبع أو التقط صورة لهذا لإرساله)",
+    labelCustomer:"العميل / المشروع",
+    phCustomer:"العميل أو مرجع الفرن",
+    labelPreparedBy:"أعدّه",
+    phPreparedBy:"اسمك",
+    labelSelectedPoint:"نقطة التركيب المختارة لهذا العرض",
+    optA:"A — عادي: طرف عمود الترس الصغير (مُرمِّز قياسي)",
+    optB:"B — بديل: عمود خرج صندوق التروس (مُرمِّز قياسي)",
+    optC:"C — بديل: عمود المحرك (مُرمِّز بديل)",
+    qKilnDia:"قطر الفرن",
+    qMotorSpeed:"سرعة المحرك",
+    qKilnRefSpeed:"سرعة الفرن المرجعية",
+    qRatio:"نسبة الترس الصغير : المحيطي",
+    qSelectedPoint:"نقطة التركيب المختارة",
+    qShaftSpeed:"سرعة العمود عند هذه النقطة",
+    qEncoderPpr:"PPR المُرمِّز",
+    qQuad:"فك التشفير الرباعي",
+    qQuadVal:"×4 (ثابت)",
+    qPulses:"النبضات / دورة الفرن",
+    qResolution:"الدقة على الغلاف",
+    qStatus:"الحالة",
+    pointLabelA:"A — طرف عمود الترس الصغير (عادي)",
+    pointLabelB:"B — عمود خرج صندوق التروس (بديل)",
+    pointLabelC:"C — عمود المحرك (بديل)",
+    confirmText:"يؤكد العميل صحة البيانات أعلاه ويوافق على شراء مُرمِّز تزايدي بدقة <b>{ppr}</b> PPR لنقطة التركيب <b>{point}</b>.",
+    signCustomer:"توقيع العميل / التاريخ",
+    signPreparedBlank:"أعدّه / التاريخ",
+    signPreparedNamed:"أعدّه: {name} / التاريخ",
+    btnPrint:"طباعة / حفظ كـ PDF",
+    titleQuote:"موضع المُرمِّز — {cust} — {pt}",
+    confirmationWord:"تأكيد"
+  }
+  };
+  let currentLang = localStorage.getItem('cemscanner-lang') || 'en';
+  if(!I18N[currentLang]) currentLang = 'en';
+  function t(key, vars){
+    let str = (I18N[currentLang] && I18N[currentLang][key]) || I18N.en[key] || key;
+    if(vars) Object.keys(vars).forEach(k => { str = str.split('{'+k+'}').join(vars[k]); });
+    return str;
+  }
+  function applyStaticI18n(){
+    document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.getAttribute('data-i18n')); });
+    document.querySelectorAll('[data-i18n-html]').forEach(el => { el.innerHTML = t(el.getAttribute('data-i18n-html')); });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => { el.placeholder = t(el.getAttribute('data-i18n-placeholder')); });
+    document.title = t('pageTitle');
+  }
+  function setLanguage(code){
+    currentLang = code;
+    localStorage.setItem('cemscanner-lang', code);
+    document.documentElement.lang = code;
+    document.documentElement.dir = code === 'ar' ? 'rtl' : 'ltr';
+    applyStaticI18n();
+    recalc();
+  }
+
   // info toggle buttons
   document.querySelectorAll('.info-btn').forEach(btn=>{
     btn.addEventListener('click', ()=>{
-      const t = $(btn.dataset.info);
-      if(!t) return;
-      t.hidden = !t.hidden;
+      const pop = $(btn.dataset.info);
+      if(!pop) return;
+      pop.hidden = !pop.hidden;
     });
   });
 
@@ -340,10 +821,10 @@
       const freqHz = ppr * QUAD * shaftRpmAtMax / 60;
       $('freq_'+p.key).textContent = fmt0(freqHz) + ' Hz';
 
-      let pillClass = 'good', pillText = 'In range';
-      if(pulses < targetMin){ pillClass='bad'; pillText='Too coarse'; }
-      else if(pulses > targetMax){ pillClass='warn'; pillText='Over-resolved'; }
-      if(freqHz > maxFreq){ pillClass='bad'; pillText = (pillText==='In range' ? 'Freq too high' : pillText + ' + freq'); }
+      let pillClass = 'good', pillText = t('statusInRange'), inRange = true;
+      if(pulses < targetMin){ pillClass='bad'; pillText=t('statusTooCoarse'); inRange=false; }
+      else if(pulses > targetMax){ pillClass='warn'; pillText=t('statusOverResolved'); inRange=false; }
+      if(freqHz > maxFreq){ pillClass='bad'; pillText = inRange ? t('statusFreqHigh') : t('statusPlusFreq', {s:pillText}); }
       $('status_'+p.key).innerHTML = '<span class="pill '+pillClass+'">'+pillText+'</span>';
 
       const pprMin = targetMin / (p.mult * QUAD);
@@ -352,7 +833,7 @@
       const inRangeStd = STANDARD_PPR.filter(v => v >= pprMin && v <= pprMax);
       $('chips_'+p.key).innerHTML = inRangeStd.length
         ? inRangeStd.map(v=>'<span class="chip">'+v+'</span>').join('')
-        : '<span class="range-hint">none — widen range</span>';
+        : '<span class="range-hint">'+t('chipsNone')+'</span>';
 
       state[p.key] = {rpm:p.rpm, ppr, pulses, resMm, freqHz, pillClass, pillText};
     });
@@ -366,11 +847,7 @@
   function updateQuote(){
     const chosen = $('chosenPoint').value; // A, B, C
     const src = (chosen === 'C') ? state.motor : state.pinion;
-    const pointLabel = {
-      A: 'A — top of pinion shaft (normal)',
-      B: 'B — gearbox output shaft (alternative)',
-      C: 'C — motor shaft (alternative)'
-    }[chosen];
+    const pointLabel = t('pointLabel' + chosen);
 
     $('q_dia').textContent   = fmt(state.kilnDia) + ' m';
     $('q_motor').textContent = fmt(state.motorRpm) + ' rpm';
@@ -382,13 +859,13 @@
     $('q_pulses').textContent= src ? fmt0(src.pulses) : '—';
     $('q_res').textContent   = src ? src.resMm.toFixed(3) + ' mm' : '—';
     $('q_status').innerHTML  = src ? '<span class="pill '+src.pillClass+'">'+src.pillText+'</span>' : '—';
-    $('q_ppr2').textContent  = src ? fmt0(src.ppr) : '—';
-    $('q_point2').textContent= pointLabel;
+
+    $('confirmBox').innerHTML = t('confirmText', { ppr: (src ? fmt0(src.ppr) : '—'), point: pointLabel });
 
     const prepared = $('preparedBy').value.trim();
     const cust = $('custName').value.trim();
-    $('preparedLine').textContent = 'Prepared by' + (prepared ? (': ' + prepared) : '') + ' / date';
-    document.title = 'Encoder placement — ' + (cust || 'confirmation') + ' — ' + pointLabel.split(' ')[0];
+    $('preparedLine').textContent = prepared ? t('signPreparedNamed', {name:prepared}) : t('signPreparedBlank');
+    document.title = t('titleQuote', { cust: (cust || t('confirmationWord')), pt: chosen });
   }
 
   // ---------- schematic: fixed layout ----------
@@ -449,9 +926,9 @@
   }
 
   function labelBlock(svg, x, y, title, sub, valueId){
-    let t = el('text',{x,y,class:'schem-title'}); t.textContent=title; svg.appendChild(t);
-    t = el('text',{x,y:y+13,class:'schem-sub'}); t.textContent=sub; svg.appendChild(t);
-    t = el('text',{id:valueId,x,y:y+26,class:'schem-value'}); svg.appendChild(t);
+    let node = el('text',{x,y,class:'schem-title'}); node.textContent=title; svg.appendChild(node);
+    node = el('text',{x,y:y+13,class:'schem-sub'}); node.textContent=sub; svg.appendChild(node);
+    node = el('text',{id:valueId,x,y:y+26,class:'schem-value'}); svg.appendChild(node);
   }
 
   // Girth gear on the kiln shell — purely schematic: a dashed grey rectangle
@@ -468,7 +945,7 @@
     }));
 
     const lbl = el('text',{x:leftX + w/2, y:cy+4, class:'schem-sub', 'text-anchor':'middle'});
-    lbl.textContent = 'girth gear on kiln shell';
+    lbl.textContent = t('girthLabel');
     svg.appendChild(lbl);
   }
 
@@ -506,19 +983,19 @@
     drawGirthAndKiln(svg, L.gear.x, L.pinion.x, pinionTop + L.pinion.h/2, L.pinion.h);
 
     // boxes
-    drawBox(svg, 'pinion', 'PINION WHEEL', '', '#eef1f4', '#33424f');
-    drawBox(svg, 'gear', 'GEAR', '(gearbox)', '#eef1f4', '#33424f');
-    drawBox(svg, 'motor', 'MOTOR', '', 'var(--steel-dark)', '#fff');
+    drawBox(svg, 'pinion', t('boxPinion'), '', '#eef1f4', '#33424f');
+    drawBox(svg, 'gear', t('boxGear'), t('boxGearSub'), '#eef1f4', '#33424f');
+    drawBox(svg, 'motor', t('boxMotor'), '', 'var(--steel-dark)', '#fff');
 
     // encoders + labels
     encoderIcon(svg, L.encA.x, L.encA.y, L.encA.rot||0);
-    labelBlock(svg, L.encA.x+26, L.encA.y-4, 'A — Normal placement', 'Standard encoder · top of pinion shaft', 'schemVal_pinion_A');
+    labelBlock(svg, L.encA.x+26, L.encA.y-4, t('schemATitle'), t('schemASub'), 'schemVal_pinion_A');
 
     encoderIcon(svg, L.encB.x, L.encB.y, L.encB.rot||0);
-    labelBlock(svg, L.encB.x+26, L.encB.y-4, 'B — Alternative', 'Standard encoder · on gearbox, pinion axis', 'schemVal_pinion_B');
+    labelBlock(svg, L.encB.x+26, L.encB.y-4, t('schemBTitle'), t('schemBSub'), 'schemVal_pinion_B');
 
     encoderIcon(svg, L.encC.x, L.encC.y, L.encC.rot||0);
-    labelBlock(svg, L.encC.x+26, L.encC.y-17, 'C — Alternative placement', 'Alternative encoder · motor shaft', 'schemVal_motor');
+    labelBlock(svg, L.encC.x+26, L.encC.y-17, t('schemCTitle'), t('schemCSub'), 'schemVal_motor');
 
     // live values
     const pinionTxt = state.pinion ? (fmt(state.pinion.rpm)+' rpm · '+fmt0(state.pinion.pulses)+' p/rev') : '—';
@@ -534,6 +1011,19 @@
   });
 
   $('printBtn').addEventListener('click', ()=> window.print());
+
+  // language switcher
+  const langSelectEl = $('lang-select');
+  LANGS.forEach(l => {
+    const opt = document.createElement('option');
+    opt.value = l.code; opt.textContent = l.flag + ' ' + l.name;
+    langSelectEl.appendChild(opt);
+  });
+  langSelectEl.value = currentLang;
+  langSelectEl.addEventListener('change', () => setLanguage(langSelectEl.value));
+  document.documentElement.lang = currentLang;
+  document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+  applyStaticI18n();
 
   recalc();
 })();
