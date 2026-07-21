@@ -454,54 +454,22 @@
     t = el('text',{id:valueId,x,y:y+26,class:'schem-value'}); svg.appendChild(t);
   }
 
-  // Girth gear + kiln shell. Only a small slice of the huge ring gear is
-  // visible where it meshes with the pinion wheel; at ~10:1 that slice reads
-  // as an essentially straight toothed rack segment. Drawn as a proper
-  // trapezoidal-tooth rack (dotted outline + light fill) so it reads as a
-  // real gear rather than a thin line, with the kiln shell it's bolted to as
-  // a thick dotted band behind it. Teeth point up toward the pinion; the
-  // right end tucks under the pinion box (drawn afterwards).
-  function drawGirthAndKiln(svg, meshX, meshY, pinionW){
-    const gy = meshY;
-    const girthW = pinionW;            // as wide as the pinion wheel
-    const x0 = meshX - girthW;         // left end
-    const x1 = meshX;                  // right end, tucks under pinion box
+  // Girth gear on the kiln shell — purely schematic: a dashed grey rectangle
+  // spanning from the gearbox's left edge across to touch the pinion wheel,
+  // 3/4 the pinion wheel's height and centred on its axis, labelled inside.
+  function drawGirthAndKiln(svg, leftX, rightX, cy, pinionH){
+    const h = pinionH * 0.75;
+    const y = cy - h/2;
+    const w = rightX - leftX;
 
-    const n = 8;                       // number of teeth
-    const pitch = girthW / n;
-    const rimTop    = gy + 4;          // tooth roots
-    const rimBottom = gy + 18;         // bottom of the ring rim
-    const toothTip  = gy - 14;         // tooth tips (facing the pinion)
-
-    // kiln shell — thick dotted band behind/below the ring
-    const shellY = rimBottom + 10;
-    svg.appendChild(el('line',{
-      x1:x0-46, y1:shellY, x2:x1, y2:shellY,
-      stroke:'var(--shell)', 'stroke-width':17, 'stroke-linecap':'round',
-      'stroke-dasharray':'1,8'
+    svg.appendChild(el('rect',{
+      x:leftX, y:y, width:w, height:h, rx:4,
+      fill:'none', stroke:'var(--steel)', 'stroke-width':2, 'stroke-dasharray':'6,4'
     }));
 
-    // girth gear — trapezoidal-tooth rack segment
-    let d = `M ${x0.toFixed(1)},${rimBottom} L ${x0.toFixed(1)},${rimTop}`;
-    for(let i=0;i<n;i++){
-      const xi = x0 + i*pitch;
-      d += ` L ${(xi+pitch*0.20).toFixed(1)},${toothTip}`
-         + ` L ${(xi+pitch*0.44).toFixed(1)},${toothTip}`
-         + ` L ${(xi+pitch*0.64).toFixed(1)},${rimTop}`
-         + ` L ${(xi+pitch).toFixed(1)},${rimTop}`;
-    }
-    d += ` L ${x1.toFixed(1)},${rimBottom} Z`;
-    svg.appendChild(el('path',{
-      d, fill:'rgba(201,138,58,0.14)',
-      stroke:'var(--brass)', 'stroke-width':2, 'stroke-dasharray':'3,3', 'stroke-linejoin':'round'
-    }));
-
-    const lbl = el('text',{x:meshX-girthW/2,y:gy-34,class:'schem-sub','text-anchor':'middle'});
+    const lbl = el('text',{x:leftX + w/2, y:cy+4, class:'schem-sub', 'text-anchor':'middle'});
     lbl.textContent = 'girth gear on kiln shell';
     svg.appendChild(lbl);
-    const lbl2 = el('text',{x:meshX-girthW/2,y:gy-22,class:'schem-sub','text-anchor':'middle'});
-    lbl2.textContent = '(no mounting room)';
-    svg.appendChild(lbl2);
   }
 
   function redraw(){
@@ -534,8 +502,8 @@
     coupling(svg, rightX, couplingAY);
     coupling(svg, rightX, couplingBY);
 
-    // girth gear + kiln shell sliver, meshing into the pinion wheel's left edge
-    drawGirthAndKiln(svg, L.pinion.x, pinionTop + L.pinion.h/2, L.pinion.w);
+    // girth gear on kiln shell — schematic dashed rectangle touching the pinion
+    drawGirthAndKiln(svg, L.gear.x, L.pinion.x, pinionTop + L.pinion.h/2, L.pinion.h);
 
     // boxes
     drawBox(svg, 'pinion', 'PINION WHEEL', '', '#eef1f4', '#33424f');
