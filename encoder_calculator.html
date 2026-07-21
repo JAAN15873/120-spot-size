@@ -25,9 +25,6 @@
   .panel{background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:14px 16px; margin-bottom:16px;}
   .panel h2{font-size:0.96rem; margin:0 0 10px; display:flex; align-items:center; gap:8px;}
   .panel h2 .n{background:var(--accent); color:var(--accent-ink); width:19px; height:19px; border-radius:50%; font-size:0.7rem; display:inline-flex; align-items:center; justify-content:center; flex:none;}
-  .panel-head{display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:10px;}
-  .panel-head h2{margin:0;}
-  .head-btns{display:flex; gap:6px;}
   label{display:flex; align-items:center; gap:6px; font-size:0.8rem; color:var(--sub); margin:9px 0 3px;}
   label .unit{color:#9aa7b3; font-weight:normal;}
   input[type=number], input[type=text], input[type=date], select{
@@ -46,19 +43,11 @@
     font-size:0.75rem; color:var(--sub); background:#f6f8fa; border:1px solid var(--line);
     border-radius:6px; padding:7px 9px; margin:4px 0 2px;
   }
-  .btn-mini{
-    font-size:0.72rem; padding:4px 9px; border-radius:6px; border:1px solid var(--line);
-    background:#f6f8fa; color:var(--accent); cursor:pointer; font-weight:600;
-  }
-  .btn-mini:hover{background:#eef4fc;}
-  .btn-mini.active{background:var(--accent); color:#fff; border-color:var(--accent);}
-
   svg#schematic{width:100%; max-width:460px; height:auto; display:block; margin:0 auto; background:#fbfcfd; border:1px solid var(--line); border-radius:10px;}
   .schem-title{font-size:11.5px; fill:var(--ink); font-weight:700; font-family:inherit;}
   .schem-sub{font-size:10px; fill:var(--sub); font-family:inherit;}
   .schem-value{font-size:11px; fill:var(--accent); font-weight:700; font-family:inherit;}
   .box-label{font-size:13px; fill:#33424f; font-weight:700; font-family:inherit; text-anchor:middle;}
-  .edit-hint{font-size:0.76rem; color:var(--sub); margin-top:8px;}
 
   table{width:100%; border-collapse:collapse; font-size:0.84rem;}
   th,td{padding:7px 8px; border-bottom:1px solid var(--line); text-align:left; vertical-align:middle;}
@@ -180,15 +169,8 @@
   <!-- RIGHT: SCHEMATIC + RESULTS -->
   <div>
     <div class="panel">
-      <div class="panel-head">
-        <h2><span class="n">4</span> Drivetrain &amp; mounting points</h2>
-        <div class="head-btns no-print">
-          <button type="button" class="btn-mini" id="editToggle">Edit layout</button>
-          <button type="button" class="btn-mini" id="resetLayout">Reset layout</button>
-        </div>
-      </div>
+      <h2><span class="n">4</span> Drivetrain &amp; mounting points</h2>
       <svg id="schematic" viewBox="0 0 660 830" xmlns="http://www.w3.org/2000/svg"></svg>
-      <p class="edit-hint no-print" id="editHint" hidden>Drag boxes and encoder icons to move them. Drag the small square at a box's bottom-right corner to resize it. Click the ⟳ button on an encoder to rotate it 90°. Changes are saved automatically in this browser.</p>
     </div>
 
     <div class="panel no-print">
@@ -409,66 +391,22 @@
     document.title = 'Encoder placement — ' + (cust || 'confirmation') + ' — ' + pointLabel.split(' ')[0];
   }
 
-  // ---------- schematic: data-driven, draggable layout ----------
+  // ---------- schematic: fixed layout ----------
 
-  const LAYOUT_KEY = 'kilnEncoderLayout_v1';
-  const DEFAULT_LAYOUT = {
+  const layout = {
     motor:  {x:125, y:560, w:90,  h:150},
     gear:   {x:90,  y:430, w:380, h:110},
     pinion: {x:310, y:190, w:180, h:100},
     encA:   {x:400, y:40,  rot:270},
-    encB:   {x:400, y:551, rot:90},
+    encB:   {x:400, y:553, rot:90},
     encC:   {x:170, y:764, rot:90}
   };
-  let layout = loadLayout();
-  let editMode = false;
-
-  function loadLayout(){
-    try{
-      const raw = localStorage.getItem(LAYOUT_KEY);
-      if(!raw) return JSON.parse(JSON.stringify(DEFAULT_LAYOUT));
-      const saved = JSON.parse(raw);
-      const merged = JSON.parse(JSON.stringify(DEFAULT_LAYOUT));
-      for(const k in merged) if(saved[k]) Object.assign(merged[k], saved[k]);
-      return merged;
-    }catch(e){ return JSON.parse(JSON.stringify(DEFAULT_LAYOUT)); }
-  }
-  function saveLayout(){
-    try{ localStorage.setItem(LAYOUT_KEY, JSON.stringify(layout)); }catch(e){}
-  }
 
   function el(tag, attrs){
     const NS = 'http://www.w3.org/2000/svg';
     const e = document.createElementNS(NS, tag);
     for(const k in attrs) e.setAttribute(k, attrs[k]);
     return e;
-  }
-
-  function toSvgPoint(svg, clientX, clientY){
-    const pt = svg.createSVGPoint();
-    pt.x = clientX; pt.y = clientY;
-    return pt.matrixTransform(svg.getScreenCTM().inverse());
-  }
-
-  function enableDrag(svg, handle, getStart, apply){
-    handle.style.cursor = 'move';
-    handle.addEventListener('pointerdown', (e)=>{
-      e.preventDefault(); e.stopPropagation();
-      const start = toSvgPoint(svg, e.clientX, e.clientY);
-      const startState = getStart();
-      function onMove(ev){
-        const cur = toSvgPoint(svg, ev.clientX, ev.clientY);
-        apply(startState, cur.x - start.x, cur.y - start.y);
-        redraw();
-      }
-      function onUp(){
-        window.removeEventListener('pointermove', onMove);
-        window.removeEventListener('pointerup', onUp);
-        saveLayout();
-      }
-      window.addEventListener('pointermove', onMove);
-      window.addEventListener('pointerup', onUp);
-    });
   }
 
   function drawBox(svg, key, label, sublabel, fill, textFill){
@@ -486,51 +424,15 @@
       g.appendChild(sub);
     }
     svg.appendChild(g);
-
-    if(editMode){
-      enableDrag(svg, rect, ()=>({x:b.x,y:b.y}), (start,dx,dy)=>{ b.x = start.x+dx; b.y = start.y+dy; });
-      rect.setAttribute('stroke-dasharray','4,3');
-      rect.setAttribute('stroke', 'var(--accent)');
-      rect.setAttribute('stroke-width','2');
-
-      const handle = el('rect',{x:b.x+b.w-10,y:b.y+b.h-10,width:16,height:16,rx:3,fill:'var(--accent)'});
-      svg.appendChild(handle);
-      enableDrag(svg, handle, ()=>({w:b.w,h:b.h}), (start,dx,dy)=>{
-        b.w = Math.max(70, start.w+dx);
-        b.h = Math.max(50, start.h+dy);
-      });
-    }
   }
 
-  function encoderIcon(svg, key, cx, cy, rot){
+  function encoderIcon(svg, cx, cy, rot){
     const g = el('g',{transform:`rotate(${rot} ${cx} ${cy})`});
     g.appendChild(el('rect',{x:cx-13,y:cy-11,width:26,height:22,rx:4,fill:'#fff',stroke:'var(--accent)','stroke-width':2.5}));
     g.appendChild(el('circle',{cx:cx,cy:cy,r:5,fill:'var(--accent)'}));
     g.appendChild(el('line',{x1:cx-13,y1:cy-11,x2:cx-20,y2:cy-11,stroke:'var(--accent)','stroke-width':2.5}));
     g.appendChild(el('line',{x1:cx-13,y1:cy+11,x2:cx-20,y2:cy+11,stroke:'var(--accent)','stroke-width':2.5}));
     svg.appendChild(g);
-
-    if(editMode){
-      const hit = el('circle',{cx:cx,cy:cy,r:20,fill:'rgba(28,111,214,0.08)',stroke:'var(--accent)','stroke-width':1.5,'stroke-dasharray':'3,2'});
-      svg.insertBefore(hit, g);
-      enableDrag(svg, hit, ()=>({x:layout[key].x,y:layout[key].y}), (start,dx,dy)=>{
-        layout[key].x = start.x+dx; layout[key].y = start.y+dy;
-      });
-
-      const rotBtn = el('g',{style:'cursor:pointer;'});
-      rotBtn.appendChild(el('circle',{cx:cx+26,cy:cy+22,r:11,fill:'#fff',stroke:'var(--steel)','stroke-width':1.5}));
-      const rt = el('text',{x:cx+26,y:cy+26,'text-anchor':'middle','font-size':'12'});
-      rt.textContent = '⟳';
-      rotBtn.appendChild(rt);
-      rotBtn.addEventListener('pointerdown', (e)=>{ e.stopPropagation(); });
-      rotBtn.addEventListener('click', (e)=>{
-        e.stopPropagation();
-        layout[key].rot = ((layout[key].rot||0) + 90) % 360;
-        saveLayout();
-        redraw();
-      });
-      svg.appendChild(rotBtn);
-    }
   }
 
   function coupling(svg, cx, cy){
@@ -556,26 +458,27 @@
   // the visible sliver near the mesh point is essentially straight, not
   // curved). Pinion teeth are cut parallel to its own (vertical) shaft, so
   // the mating girth gear teeth run the other way — horizontal notches along
-  // a horizontal bar exactly as wide as the pinion wheel it meshes with.
-  function drawGirthAndKiln(svg, meshX, meshY, spanW){
+  // a horizontal bar 3/4 the width of the pinion wheel it meshes with.
+  function drawGirthAndKiln(svg, meshX, meshY, pinionW){
     const gy = meshY;
+    const girthW = pinionW * 0.75;
 
-    // kiln shell — thicker & longer, peeking out behind the girth gear
-    const kilnLen = spanW + 50;
-    svg.appendChild(el('line',{x1:meshX-kilnLen,y1:gy,x2:meshX,y2:gy,stroke:'var(--shell)','stroke-width':16,'stroke-dasharray':'3,9','stroke-linecap':'round'}));
+    // kiln shell — thicker & longer, peeking out behind the girth gear, dotted
+    const kilnLen = girthW + 50;
+    svg.appendChild(el('line',{x1:meshX-kilnLen,y1:gy,x2:meshX,y2:gy,stroke:'var(--shell)','stroke-width':22,'stroke-linecap':'round','stroke-dasharray':'0.1,15'}));
 
-    // girth gear — same width as the pinion wheel, teeth cut horizontally (rack-style)
-    svg.appendChild(el('line',{x1:meshX-spanW,y1:gy,x2:meshX,y2:gy,stroke:'var(--brass)','stroke-width':4,'stroke-dasharray':'2,6','stroke-linecap':'round'}));
-    const teeth = 7;
+    // girth gear — 3/4 the pinion wheel's width, thick, dotted, teeth cut horizontally (rack-style)
+    svg.appendChild(el('line',{x1:meshX-girthW,y1:gy,x2:meshX,y2:gy,stroke:'var(--brass)','stroke-width':10,'stroke-linecap':'round','stroke-dasharray':'0.1,11'}));
+    const teeth = 6;
     for(let i=0;i<=teeth;i++){
-      const x = meshX - spanW + (spanW/teeth)*i;
-      svg.appendChild(el('line',{x1:x,y1:gy-8,x2:x,y2:gy+8,stroke:'var(--brass)','stroke-width':2.5}));
+      const x = meshX - girthW + (girthW/teeth)*i;
+      svg.appendChild(el('line',{x1:x,y1:gy-11,x2:x,y2:gy+11,stroke:'var(--brass)','stroke-width':2.5}));
     }
 
-    const lbl = el('text',{x:meshX-spanW/2,y:gy-24,class:'schem-sub','text-anchor':'middle'});
+    const lbl = el('text',{x:meshX-girthW/2,y:gy-28,class:'schem-sub','text-anchor':'middle'});
     lbl.textContent = 'girth gear on kiln shell';
     svg.appendChild(lbl);
-    const lbl2 = el('text',{x:meshX-spanW/2,y:gy-12,class:'schem-sub','text-anchor':'middle'});
+    const lbl2 = el('text',{x:meshX-girthW/2,y:gy-16,class:'schem-sub','text-anchor':'middle'});
     lbl2.textContent = '(no mounting room)';
     svg.appendChild(lbl2);
   }
@@ -602,7 +505,7 @@
     shaft(svg, rightX, couplingBY+16, gearTop);
 
     shaft(svg, leftX, gearBottom, L.motor.y);
-    shaft(svg, leftX, L.motor.y+L.motor.h, L.encC.y+16);
+    shaft(svg, leftX, L.motor.y+L.motor.h, L.encC.y-16);
 
     coupling(svg, rightX, couplingAY);
     coupling(svg, rightX, couplingBY);
@@ -616,13 +519,13 @@
     drawBox(svg, 'motor', 'MOTOR', '', 'var(--steel-dark)', '#fff');
 
     // encoders + labels
-    encoderIcon(svg, 'encA', L.encA.x, L.encA.y, L.encA.rot||0);
+    encoderIcon(svg, L.encA.x, L.encA.y, L.encA.rot||0);
     labelBlock(svg, L.encA.x+26, L.encA.y-4, 'A — Normal placement', 'Standard encoder · top of pinion shaft', 'schemVal_pinion_A');
 
-    encoderIcon(svg, 'encB', L.encB.x, L.encB.y, L.encB.rot||0);
+    encoderIcon(svg, L.encB.x, L.encB.y, L.encB.rot||0);
     labelBlock(svg, L.encB.x+26, L.encB.y-17, 'B — Alternative', 'Standard encoder · on gearbox, pinion axis', 'schemVal_pinion_B');
 
-    encoderIcon(svg, 'encC', L.encC.x, L.encC.y, L.encC.rot||0);
+    encoderIcon(svg, L.encC.x, L.encC.y, L.encC.rot||0);
     labelBlock(svg, L.encC.x+26, L.encC.y-17, 'C — Alternative placement', 'Alternative encoder · motor shaft', 'schemVal_motor');
 
     // live values
@@ -632,18 +535,6 @@
     const b = $('schemVal_pinion_B'); if(b) b.textContent = pinionTxt;
     const c = $('schemVal_motor'); if(c) c.textContent = motorTxt;
   }
-
-  $('editToggle').addEventListener('click', ()=>{
-    editMode = !editMode;
-    $('editToggle').classList.toggle('active', editMode);
-    $('editHint').hidden = !editMode;
-    redraw();
-  });
-  $('resetLayout').addEventListener('click', ()=>{
-    layout = JSON.parse(JSON.stringify(DEFAULT_LAYOUT));
-    try{ localStorage.removeItem(LAYOUT_KEY); }catch(e){}
-    redraw();
-  });
 
   document.querySelectorAll('input[type=number], input[type=text], select').forEach(inp=>{
     inp.addEventListener('input', recalc);
