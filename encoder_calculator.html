@@ -299,7 +299,16 @@
 </div>
 
 <script>
+function showFatalError(err){
+  try{
+    const box = document.createElement('div');
+    box.style.cssText = 'position:relative;margin:16px 0;padding:14px 16px;background:#fde9e9;border:1px solid #f3b3b0;border-radius:8px;color:#7a1a16;font-family:monospace;white-space:pre-wrap;';
+    box.textContent = 'This page failed to run its script and could not calculate anything:\n' + (err && err.stack ? err.stack : String(err));
+    document.body.prepend(box);
+  }catch(e){ /* nothing more we can do */ }
+}
 (function(){
+try{
   const $ = id => document.getElementById(id);
   const fmt = n => isFinite(n) ? n.toLocaleString(undefined,{maximumFractionDigits:2}) : "—";
   const fmt0 = n => isFinite(n) ? Math.round(n).toLocaleString() : "—";
@@ -757,7 +766,13 @@
     confirmationWord:"تأكيد"
   }
   };
-  let currentLang = localStorage.getItem('cemscanner-lang') || 'en';
+  // localStorage can throw (sandboxed iframes / some embedded previewers) —
+  // never let that stop the whole script from running.
+  const safeStorage = {
+    get(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } },
+    set(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+  };
+  let currentLang = safeStorage.get('cemscanner-lang') || 'en';
   if(!I18N[currentLang]) currentLang = 'en';
   function t(key, vars){
     let str = (I18N[currentLang] && I18N[currentLang][key]) || I18N.en[key] || key;
@@ -772,7 +787,7 @@
   }
   function setLanguage(code){
     currentLang = code;
-    localStorage.setItem('cemscanner-lang', code);
+    safeStorage.set('cemscanner-lang', code);
     document.documentElement.lang = code;
     document.documentElement.dir = code === 'ar' ? 'rtl' : 'ltr';
     applyStaticI18n();
@@ -1032,6 +1047,9 @@
   applyStaticI18n();
 
   recalc();
+}catch(err){
+  showFatalError(err);
+}
 })();
 </script>
 
