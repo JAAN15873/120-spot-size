@@ -21,7 +21,10 @@
   .centerline{position:absolute; left:0; right:0; height:1px; background:rgba(255,255,255,0.85);}
 
   .brand{position:absolute; top:10px; left:10px; font-size:11px; font-weight:600; color:#7f9cf5;
-    background:rgba(0,0,0,0.45); padding:4px 8px; border-radius:6px;}
+    background:rgba(0,0,0,0.45); padding:4px 8px; border-radius:6px; cursor:pointer;}
+  #debugPanel{position:absolute; top:36px; left:10px; max-width:80%; font-size:10px; line-height:1.5;
+    background:rgba(0,0,0,0.8); color:#3ec9a7; padding:8px 10px; border-radius:8px; white-space:pre-wrap;
+    font-family:ui-monospace,Menlo,monospace; z-index:20;}
   .warning{position:absolute; top:10px; left:50%; transform:translateX(-50%); font-size:12px;
     background:rgba(226,99,95,0.92); color:#fff; padding:7px 12px; border-radius:8px; max-width:78%; text-align:center;}
   .tip{position:absolute; top:54px; left:50%; transform:translateX(-50%); font-size:11px;
@@ -46,7 +49,8 @@
 <div id="app">
   <video id="video" autoplay playsinline muted></video>
   <div id="overlay"></div>
-  <div class="brand">ECS/CemScanner™ FOV check</div>
+  <div class="brand" id="brandLabel" title="Tap for camera diagnostics">ECS/CemScanner™ FOV check</div>
+  <pre id="debugPanel" style="display:none;"></pre>
   <div class="warning" id="warning" style="display:none;"></div>
   <div class="tip" id="tip" style="display:none;"></div>
   <div id="actionBar">
@@ -118,9 +122,7 @@
   // label also contains "wide angle" in most languages, just without "ultra" in front of it,
   // so it was being misidentified as the ultra-wide lens.
   var ULTRA_WIDE_LABEL_RE = /ultra/i;
-  var FRONT_LABEL_RE = /front|facetime|selfie|přední|frontal/i;
   function isUltraWideLabel(label){ return ULTRA_WIDE_LABEL_RE.test(label || ""); }
-  function isFrontLabel(label){ return FRONT_LABEL_RE.test(label || ""); }
 
   var REMEMBERED_CAMERA_KEY = "fovcheck_camera_deviceId";
   function rememberCamera(deviceId){ try { localStorage.setItem(REMEMBERED_CAMERA_KEY, deviceId); } catch(e){} }
@@ -171,7 +173,7 @@
     usingUltraWide = isUltraWideLabel(label);
     document.getElementById("permissionMsg").style.display = "none";
     var zoomCheck = currentTrack ? forceMinZoom(currentTrack) : Promise.resolve();
-    return zoomCheck.then(updateWarning);
+    return zoomCheck.then(updateWarning).then(renderDebug);
   }
 
   // Opens a specific camera by deviceId. Two things that broke switching on some phones:
@@ -201,12 +203,33 @@
     }).catch(function(err){ console.error("Camera switch error", err); });
   }
 
+  // Cycles through every video input, front camera included. Filtering the front camera out
+  // used to mean the switch button did nothing at all on a phone with only one usable back
+  // lens (e.g. iPhone XR) -- no feedback, looked broken. Including it means the button always
+  // visibly does something; the warning banner already correctly flags the front camera as
+  // wrong for this tool, so nothing is lost by leaving it in the cycle.
   function refreshDeviceList(){
     return navigator.mediaDevices.enumerateDevices().then(function(devices){
-      cameras = devices.filter(function(d){ return d.kind === "videoinput" && !isFrontLabel(d.label); });
-      if (cameras.length === 0) cameras = devices.filter(function(d){ return d.kind === "videoinput"; });
+      cameras = devices.filter(function(d){ return d.kind === "videoinput"; });
+      renderDebug();
     });
   }
+
+  var debugPanelEl = document.getElementById("debugPanel");
+  function renderDebug(){
+    if (!debugPanelEl) return;
+    var lines = cameras.map(function(d, i){
+      return (i === camIndex ? "> " : "  ") + (d.label || "(no label)") + "  " + d.deviceId.slice(0, 12);
+    });
+    lines.push("");
+    lines.push("usingUltraWide=" + usingUltraWide + " cropped=" + possiblyCropped + " portrait=" + isPortrait);
+    debugPanelEl.textContent = lines.join("\n");
+  }
+  document.getElementById("brandLabel").addEventListener("click", function(){
+    var show = debugPanelEl.style.display === "none";
+    debugPanelEl.style.display = show ? "block" : "none";
+    if (show) renderDebug();
+  });
 
   function startCamera(){
     var rememberedId = getRememberedCameraId();
