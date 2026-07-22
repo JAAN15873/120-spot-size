@@ -287,23 +287,29 @@
   });
 
   // ---------- photo capture (burns the same grid the screen shows into the saved image) ----------
-  document.getElementById("photoBtn").addEventListener("click", function(){
-    var vw = video.videoWidth, vh = video.videoHeight;
-    if (!vw || !vh) return;
+  // Two capture paths, tried in order:
+  // 1) ImageCapture.takePhoto() -- a real still-photo capture, often much higher resolution
+  //    than the live video stream (which stays capped for real-time bandwidth even at the
+  //    3840x2160 we ask for). Not guaranteed to work on iOS Safari, and in principle a lens's
+  //    still-photo mode *could* use a different sensor crop than its video mode -- if the grid
+  //    in a saved photo ever looks like it doesn't match what was on screen, that's why; the
+  //    fallback below is the one guaranteed to be pixel-for-pixel what you saw live.
+  // 2) A frame grabbed straight from the live <video> element.
+  function renderPhotoFrom(source, srcW, srcH){
     var containerW = video.clientWidth, containerH = video.clientHeight;
     var containerAspect = containerW / containerH;
-    var videoAspect = vw / vh;
+    var srcAspect = srcW / srcH;
     var sx, sy, sw, sh;
-    if (videoAspect > containerAspect){
-      sh = vh; sw = vh * containerAspect; sx = (vw - sw) / 2; sy = 0;
+    if (srcAspect > containerAspect){
+      sh = srcH; sw = srcH * containerAspect; sx = (srcW - sw) / 2; sy = 0;
     } else {
-      sw = vw; sh = vw / containerAspect; sx = 0; sy = (vh - sh) / 2;
+      sw = srcW; sh = srcW / containerAspect; sx = 0; sy = (srcH - sh) / 2;
     }
 
     var canvas = document.createElement("canvas");
     canvas.width = sw; canvas.height = sh;
     var ctx = canvas.getContext("2d");
-    ctx.drawImage(video, sx, sy, sw, sh, 0, 0, sw, sh);
+    ctx.drawImage(source, sx, sy, sw, sh, 0, 0, sw, sh);
 
     ctx.strokeStyle = "rgba(255,255,255,0.85)";
     ctx.lineWidth = Math.max(1, sh/500);
@@ -323,19 +329,41 @@
       ctx.fillText(label, Math.max(2, Math.min(sw-ctx.measureText(label).width-2, textX)), 8);
     });
 
-    canvas.toBlob(function(blob){
-      if (!blob) return;
-      var file = new File([blob], "fov-check-" + Date.now() + ".jpg", { type: "image/jpeg" });
-      if (navigator.canShare && navigator.canShare({ files: [file] })){
-        navigator.share({ files: [file], title: "FOV check photo" }).catch(function(){});
-      } else {
-        var url = URL.createObjectURL(blob);
-        var a = document.createElement("a");
-        a.href = url; a.download = file.name;
-        document.body.appendChild(a); a.click(); document.body.removeChild(a);
-        setTimeout(function(){ URL.revokeObjectURL(url); }, 4000);
-      }
-    }, "image/jpeg", 0.92);
+    return new Promise(function(resolve){
+      canvas.toBlob(function(blob){ resolve(blob); }, "image/jpeg", 0.92);
+    });
+  }
+
+  function deliverPhotoBlob(blob){
+    if (!blob) return;
+    var file = new File([blob], "fov-check-" + Date.now() + ".jpg", { type: "image/jpeg" });
+    if (navigator.canShare && navigator.canShare({ files: [file] })){
+      navigator.share({ files: [file], title: "FOV check photo" }).catch(function(){});
+    } else {
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url; a.download = file.name;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function(){ URL.revokeObjectURL(url); }, 4000);
+    }
+  }
+
+  function captureFromVideoFrame(){
+    if (!video.videoWidth || !video.videoHeight) return Promise.resolve(null);
+    return renderPhotoFrom(video, video.videoWidth, video.videoHeight);
+  }
+
+  function captureHighRes(){
+    if (!window.ImageCapture || !currentTrack) return Promise.reject(new Error("ImageCapture unavailable"));
+    var capture;
+    try { capture = new ImageCapture(currentTrack); } catch(e){ return Promise.reject(e); }
+    return capture.takePhoto()
+      .then(function(blob){ return createImageBitmap(blob); })
+      .then(function(bitmap){ return renderPhotoFrom(bitmap, bitmap.width, bitmap.height); });
+  }
+
+  document.getElementById("photoBtn").addEventListener("click", function(){
+    captureHighRes().catch(function(){ return captureFromVideoFrame(); }).then(deliverPhotoBlob);
   });
 
   // ---------- "full screen" ----------
