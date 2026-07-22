@@ -95,8 +95,21 @@
   .print-caption-row{display:none;}
   .marketing-block h1{color:#2a4fd7; font-size:22px; margin:0 0 6px;}
   .marketing-block h3{font-size:15px; margin:0 0 10px; color:#333;}
+  .marketing-block h2{color:#2a4fd7; font-size:14px; margin:20px 0 8px; font-weight:700;}
   .marketing-block p{font-size:13px; line-height:1.6; color:#222;}
   .marketing-block{color:#111;}
+  .quote-info-box{display:none; background:#f2f5fc; border:1px solid #ccd6ef; border-radius:8px; padding:10px 14px; margin:12px 0 18px;}
+  .quote-info-box p{margin:2px 0 !important;}
+  .quote-info-box strong{color:#2a4fd7;}
+  .benefit-grid{display:grid; grid-template-columns:repeat(5,1fr); gap:8px; margin:8px 0 18px;}
+  .benefit-tile{background:#2a4fd7; color:#fff; border-radius:6px; padding:8px 8px; font-size:11px; font-weight:700; line-height:1.3;}
+  .benefit-tile .num{display:block; font-size:17px; font-weight:800; margin-bottom:3px;}
+  .capability-grid{display:grid; grid-template-columns:1fr 1fr; gap:6px 20px; margin:8px 0 18px;}
+  .capability-item h4{margin:0 0 3px; font-size:13px; color:#111;}
+  .capability-item p{margin:0 !important; font-size:12px !important; line-height:1.5 !important; color:#333;}
+  .marketing-link{font-size:12px; margin:6px 0 4px;}
+  .marketing-link a{color:#2a4fd7; font-weight:700; text-decoration:none;}
+  .marketing-copyright{font-size:10px !important; color:#888 !important; line-height:1.4 !important; margin-top:14px !important;}
   .ring-label{ fill:#e8e8e6; }
   @media print{ .ring-label{ fill:#1a1a1a; } }
 
@@ -104,6 +117,14 @@
   #lang-switcher select{font-size:13px; padding:6px 10px; border-radius:8px; cursor:pointer;
     background:var(--panel); color:var(--text); border:1px solid var(--border-strong);}
   @media print{ #lang-switcher{display:none !important;} }
+
+  .sec-help-btn{display:inline-flex; align-items:center; justify-content:center; width:18px; height:18px;
+    border-radius:50%; border:1px solid var(--border-strong); background:transparent; color:var(--text-secondary);
+    font-size:11px; font-weight:700; line-height:1; cursor:pointer; padding:0; flex-shrink:0;}
+  .sec-help-btn:hover{color:var(--accent); border-color:var(--accent);}
+  .help-box{display:none; background:var(--bg); border:1px solid var(--border); border-left:3px solid var(--accent);
+    border-radius:6px; padding:10px 12px; margin:8px 0 14px; font-size:12px; line-height:1.5; color:var(--text-secondary);}
+  .help-box.show{display:block;}
 </style>
 </head>
 <body>
@@ -112,7 +133,7 @@
 </div>
 <div class="wrap">
   <div class="brand-title">ECS/CemScanner™</div>
-  <div class="row" style="max-width:460px; margin:0 auto 16px;">
+  <div class="row no-print" style="max-width:460px; margin:0 auto 16px;">
     <label style="width:auto; white-space:nowrap; margin-right:4px;" data-i18n="placementStudyForLabel">Placement study for:</label>
     <input type="text" id="customer-name" placeholder="Site name" data-i18n-placeholder="placeholderSiteName" style="width:100%;">
   </div>
@@ -120,8 +141,40 @@
   <div class="print-only marketing-block">
     <h1 data-i18n="marketingTitle">ECS/CemScanner™ kiln shell monitoring system</h1>
     <h3 data-i18n="marketingSubtitle">Protect your kiln with our ECS/CemScanner™ kiln shell monitoring system</h3>
+
+    <div class="quote-info-box" id="quote-info-box">
+      <p id="print-placement-line" style="display:none;"><strong><span data-i18n="placementStudyForLabel">Placement study for:</span></strong> <span id="print-customer-name"></span></p>
+      <p id="print-customer-contact-line" style="display:none;"><strong><span data-i18n="printCustomerContactLabel">Customer contact:</span></strong> <span id="print-customer-contact"></span></p>
+      <p id="print-fuller-contact-line" style="display:none;"><strong><span data-i18n="printFullerContactLabel">Fuller contact:</span></strong> <span id="print-fuller-contact"></span></p>
+    </div>
+
     <p data-i18n="marketingParagraph">Our kiln shell monitoring system, ECS/CemScanner™, is the product of 40-years worth of development and refining. It’s a technologically advanced system that will allow your operators to better protect your kiln and extend the life of your plant.</p>
-    <p id="print-placement-line" style="display:none;"><strong><span data-i18n="placementStudyForLabel">Placement study for:</span> <span id="print-customer-name"></span></strong></p>
+
+    <h2 data-i18n="marketingHowItWorksTitle">How it works</h2>
+    <p data-i18n="marketingHowItWorksText">A high-speed infrared scanner constructs a thermal image of the entire flattened kiln shell surface. The thermal profile shows four superimposed curves — minimum, maximum, average, and worst-case shell temperature — with alarm levels for individual kiln sections, so operators can spot problems long before they become failures.</p>
+
+    <h2 data-i18n="marketingBenefitsTitle">Key benefits</h2>
+    <div class="benefit-grid">
+      <div class="benefit-tile"><span class="num">01</span><span data-i18n="benefit1Title">Increase kiln availability</span></div>
+      <div class="benefit-tile"><span class="num">02</span><span data-i18n="benefit2Title">Lower refractory consumption</span></div>
+      <div class="benefit-tile"><span class="num">03</span><span data-i18n="benefit3Title">Reduce stoppages</span></div>
+      <div class="benefit-tile"><span class="num">04</span><span data-i18n="benefit4Title">Decrease thermal consumption</span></div>
+      <div class="benefit-tile"><span class="num">05</span><span data-i18n="benefit5Title">Effectively plan overhauls</span></div>
+    </div>
+
+    <h2 data-i18n="marketingCapabilitiesTitle">Monitor, protect, and optimise your kiln</h2>
+    <div class="capability-grid">
+      <div class="capability-item"><h4 data-i18n="capabilityTyreSlipTitle">Tyre slip monitoring</h4><p data-i18n="capabilityTyreSlipText">Continuous, automatic tracking of live ring migration (LRM) between shell and tyres — the simplest, most accurate way to monitor kiln ovality and anticipate constriction before it affects clinker quality.</p></div>
+      <div class="capability-item"><h4 data-i18n="capabilityFanTitle">Fan control</h4><p data-i18n="capabilityFanText">Automatically controls cooling fans through the plant PLC based on continuous burning-zone temperature monitoring, avoiding uneconomical fan operation and extending fan service life.</p></div>
+      <div class="capability-item"><h4 data-i18n="capabilityBrickTitle">Brick &amp; coating thickness</h4><p data-i18n="capabilityBrickText">Calculates brick and coating thickness in real time from shell temperature, displayed as a profile or 3D "walk-in-the-kiln" image — typically accurate to within a few millimetres.</p></div>
+      <div class="capability-item"><h4 data-i18n="capabilityHistoryTitle">Historical data</h4><p data-i18n="capabilityHistoryText">Years of stored data let operators analyse kiln performance over time, search past hot spots, and save snapshots for later review.</p></div>
+    </div>
+
+    <h2 data-i18n="marketingOptionsTitle">Customise to your needs</h2>
+    <p data-i18n="marketingOptionsText">Beyond the standard infrared scanner head, CemMicro-III processing unit, and user software, the system can be extended with a stereo scanner arrangement for kilns where one head can't get a clear view; up to 16 additional infrared pyrometers (PyroScan) for obstructed sections; an integrated scanner camera to check alignment and window cleanliness; kiln camera ("kiln TV"); process trending; and full system diagnostics.</p>
+
+    <p class="marketing-link"><span data-i18n="marketingLinkLabel">Learn more:</span> <a href="https://www.fuller-technologies.com/products/ecs-cemscanner-kiln-shell-monitoring-system">fuller-technologies.com/products/ecs-cemscanner-kiln-shell-monitoring-system</a></p>
+    <p class="marketing-copyright" data-i18n="marketingCopyright">FULLER and ECS/CemScanner are trademarks of FULLER Technologies. This document is for general reference only and does not constitute an offer.</p>
   </div>
 
   <h1 data-i18n="pageTitle">ECS/CemScanner™ coverage &amp; shadow model</h1>
@@ -129,7 +182,8 @@
 
   <div class="two-col">
     <div class="panel">
-      <h3 style="color:var(--accent);" data-i18n="scanner1Title">Scanner1</h3>
+      <h3 style="color:var(--accent); display:flex; align-items:center; gap:6px;"><span data-i18n="scanner1Title">Scanner1</span><button type="button" class="sec-help-btn no-print" data-help="help-s1" data-i18n-aria="ariaSectionHelp" aria-label="Section help">?</button></h3>
+      <div class="help-box no-print" id="help-s1" data-i18n="helpScanner1">Scanner1 is always active. Set its distance from the kiln and rotation so the 120° cone covers the section of kiln you want measured — or position Scanner 2 first and press "Combine scanners" to have both angled automatically.</div>
       <div class="row"><label for="s1-d" data-i18n="labelDistanceFromKiln">Distance from kiln (m)</label>
         <input type="range" id="s1-d" min="0" max="50" step="0.1" value="20">
         <input type="number" id="s1-d-num" min="0" max="50" step="0.1" value="20"></div>
@@ -144,7 +198,8 @@
     </div>
 
     <div class="panel">
-      <h3 style="color:var(--s2);"><input type="checkbox" id="s2-enabled"> <span data-i18n="scanner2Title">Scanner 2</span></h3>
+      <h3 style="color:var(--s2); display:flex; align-items:center; gap:6px;"><input type="checkbox" id="s2-enabled"> <span data-i18n="scanner2Title">Scanner 2</span><button type="button" class="sec-help-btn no-print" data-help="help-s2" data-i18n-aria="ariaSectionHelp" aria-label="Section help">?</button></h3>
+      <div class="help-box no-print" id="help-s2" data-i18n="helpScanner2">Scanner 2 is optional — tick the checkbox to enable it. Use a second scanner to cover the opposite end of the kiln, eliminate shadows the first scanner can't see around, or add redundancy where both scanners can see the same section.</div>
       <div class="row"><label for="s2-d" data-i18n="labelDistanceFromKiln">Distance from kiln (m)</label>
         <input type="range" id="s2-d" min="0" max="50" step="0.1" value="10">
         <input type="number" id="s2-d-num" min="0" max="50" step="0.1" value="10"></div>
@@ -164,7 +219,8 @@
   </div>
 
   <div class="panel">
-    <h2 style="margin-top:0;" data-i18n="kilnSectionTitle">Kiln</h2>
+    <h2 style="margin-top:0; display:flex; align-items:center; gap:6px;"><span data-i18n="kilnSectionTitle">Kiln</span><button type="button" class="sec-help-btn no-print" data-help="help-kiln" data-i18n-aria="ariaSectionHelp" aria-label="Section help">?</button></h2>
+    <div class="help-box no-print" id="help-kiln" data-i18n="helpKiln">Physical length of the kiln shell being measured, in metres. The cooler end is always position zero — every other distance in this tool is measured from there.</div>
     <div class="row"><label for="pec" data-i18n="labelKilnLength">Kiln length (m)</label>
       <input type="range" id="pec" min="0" max="120" step="1" value="60">
       <input type="number" id="pec-num" min="0" max="120" step="1" value="60"></div>
@@ -209,7 +265,8 @@
   <div class="page-break"></div>
 
   <div class="panel">
-    <h2 style="margin-top:0;" data-i18n="tyresGearTitle">Tyres (T) &amp; Gear (G)</h2>
+    <h2 style="margin-top:0; display:flex; align-items:center; gap:6px;"><span data-i18n="tyresGearTitle">Tyres (T) &amp; Gear (G)</span><button type="button" class="sec-help-btn no-print" data-help="help-tyres" data-i18n-aria="ariaSectionHelp" aria-label="Section help">?</button></h2>
+    <div class="help-box no-print" id="help-tyres" data-i18n="helpTyresGear">Positions, thickness, and outside diameter of the gear ring and each tyre. These cast shadows on the shell where a scanner can't see through them — untick a tyre if you want to ignore it in the shadow calculation without deleting its row.</div>
     <div class="row">
       <label for="kilnDiameter" data-i18n="labelKilnDiameter">Kiln diameter (m)</label>
       <input type="number" id="kilnDiameter" min="0.5" max="10" step="0.1" value="5">
@@ -234,7 +291,8 @@
   </div>
 
   <div class="panel">
-    <h2 style="margin-top:0;" data-i18n="pyroSectionTitle">Pyrometers (bottom of kiln, FOV ratio 1:15)</h2>
+    <h2 style="margin-top:0; display:flex; align-items:center; gap:6px;"><span data-i18n="pyroSectionTitle">Pyrometers (bottom of kiln, FOV ratio 1:15)</span><button type="button" class="sec-help-btn no-print" data-help="help-pyro" data-i18n-aria="ariaSectionHelp" aria-label="Section help">?</button></h2>
+    <div class="help-box no-print" id="help-pyro" data-i18n="helpPyrometers">Fixed-point infrared pyrometers aimed straight down at the shell from below, useful for spots a scanner's line of sight can't reach. "Place automatically" fills the shadow zones left by the scanners with 30 cm-spot pyrometers in one click.</div>
     <p class="note" style="margin-top:0;" data-i18n="pyroSectionNote">Enter distance from kiln and position (distance from cooler); spot size is calculated automatically. Rotation 90° = pointing straight at the kiln. Spot size above 50 cm is highlighted.</p>
     <div class="btn-row">
       <button class="btn" id="btn-pyro-auto" data-i18n="btnPyroAuto">Place automatically (30 cm spots on shadow zones)</button>
@@ -249,7 +307,8 @@
   </div>
 
   <div class="panel">
-    <h2 style="margin-top:0;" data-i18n="obstaclesTitle">Obstacles (beams, poles, trees…) between scanner and kiln</h2>
+    <h2 style="margin-top:0; display:flex; align-items:center; gap:6px;"><span data-i18n="obstaclesTitle">Obstacles (beams, poles, trees…) between scanner and kiln</span><button type="button" class="sec-help-btn no-print" data-help="help-obstacles" data-i18n-aria="ariaSectionHelp" aria-label="Section help">?</button></h2>
+    <div class="help-box no-print" id="help-obstacles" data-i18n="helpObstacles">Beams, poles, trees, or anything else standing between a scanner and the kiln shell. Each one is modelled as a circle and casts its own shadow — only checked ("On") rows are included in the calculation.</div>
     <div class="table-wrap" style="max-height:none;">
       <table class="aligned-table">
         <colgroup><col style="width:60px"><col style="width:44px"><col style="width:170px"><col style="width:170px"><col style="width:280px"></colgroup>
@@ -259,7 +318,8 @@
     </div>
   </div>
 
-  <h2 data-i18n="shadowLengthsTitle">Shadow lengths per object</h2>
+  <h2 style="display:flex; align-items:center; gap:6px;"><span data-i18n="shadowLengthsTitle">Shadow lengths per object</span><button type="button" class="sec-help-btn no-print" data-help="help-shadow" data-i18n-aria="ariaSectionHelp" aria-label="Section help">?</button></h2>
+  <div class="help-box no-print" id="help-shadow" data-i18n="helpShadowLengths">Per-object breakdown of how much of the kiln shell each tyre, the gear, and each obstacle keeps hidden from every active scanner, plus how many 30 cm-spot pyrometers would be needed to cover that gap.</div>
   <div class="table-wrap">
     <table>
       <thead>
@@ -272,7 +332,8 @@
 
   <div class="page-break"></div>
 
-  <h2 data-i18n="spotSizesTitle">Spot sizes along the kiln</h2>
+  <h2 style="display:flex; align-items:center; gap:6px;"><span data-i18n="spotSizesTitle">Spot sizes along the kiln</span><button type="button" class="sec-help-btn no-print" data-help="help-spot" data-i18n-aria="ariaSectionHelp" aria-label="Section help">?</button></h2>
+  <div class="help-box no-print" id="help-spot" data-i18n="helpSpotSizes">Sampled measurement points along the visible kiln length, showing the slant range, grazing angle, and resulting infrared spot size at each point — smaller means finer resolution. Where two scanners overlap, the one giving the smaller spot is shown.</div>
   <div class="table-wrap">
     <table>
       <thead>
@@ -284,7 +345,8 @@
   </div>
 
   <div class="panel no-print">
-    <h2 style="margin-top:0;" data-i18n="settingsTitle">Scanner &amp; measurement settings</h2>
+    <h2 style="margin-top:0; display:flex; align-items:center; gap:6px;"><span data-i18n="settingsTitle">Scanner &amp; measurement settings</span><button type="button" class="sec-help-btn no-print" data-help="help-settings" data-i18n-aria="ariaSectionHelp" aria-label="Section help">?</button></h2>
+    <div class="help-box no-print" id="help-settings" data-i18n="helpSettings">Sensor resolution (mrad) per head model, the pyrometer distance-to-spot ratio, and the brick size used to judge "good enough" resolution. These apply to every calculation on the page and are not included when printing.</div>
     <div class="row"><label for="res-tmc5" data-i18n="labelTmc5">TMC5HT (mrad)</label><input type="number" id="res-tmc5" step="0.1" value="5"></div>
     <div class="row"><label for="res-tmc8" data-i18n="labelTmc8">TMC8HT (mrad)</label><input type="number" id="res-tmc8" step="0.1" value="2"></div>
     <div class="row"><label for="brickSize" data-i18n="labelBrickSize">Brick size / max spot (mm)</label>
@@ -292,6 +354,14 @@
     <div class="row"><label for="pyroRatio" data-i18n="labelPyroRatio">Pyrometer resolution (distance:spot, 1:X)</label>
       <input type="number" id="pyroRatio" min="1" step="0.5" value="15"></div>
     <p class="note" style="margin-bottom:0;" data-i18n="pyroRatioNote">At the default 1:15 ratio and the 4.5 m distance used by "Place automatically", each pyrometer measures a spot of about 300 mm (30 cm). A finer ratio — e.g. changing the pyrometers to achieve a 20 cm spot — would let more of the measured surface fall under the Brick threshold, potentially pushing the "smaller than Brick" percentage toward 100%.</p>
+  </div>
+
+  <div class="panel no-print">
+    <h2 style="margin-top:0;" data-i18n="contactPersonsTitle">Contact persons</h2>
+    <div class="row"><label for="customer-contact" data-i18n="labelCustomerContact">Customer contact person</label>
+      <input type="text" id="customer-contact" placeholder="Name, email, phone" data-i18n-placeholder="placeholderContact" style="width:100%;"></div>
+    <div class="row"><label for="fuller-contact" data-i18n="labelFullerContact">Fuller contact person</label>
+      <input type="text" id="fuller-contact" placeholder="Name, email, phone" data-i18n-placeholder="placeholderContact" style="width:100%;"></div>
   </div>
 
   <div class="banner yellow no-print" id="print-sandbox-notice" style="margin-top:24px;"></div>
@@ -374,7 +444,44 @@ en:{
   marketingTitle:"ECS/CemScanner™ kiln shell monitoring system",
   marketingSubtitle:"Protect your kiln with our ECS/CemScanner™ kiln shell monitoring system",
   marketingParagraph:"Our kiln shell monitoring system, ECS/CemScanner™, is the product of 40-years worth of development and refining. It's a technologically advanced system that will allow your operators to better protect your kiln and extend the life of your plant.",
-  placementStudyForLabel:"Placement study for:"
+  placementStudyForLabel:"Placement study for:",
+  ariaSectionHelp:"Section help",
+  helpScanner1:'Scanner1 is always active. Set its distance from the kiln and rotation so the 120° cone covers the section of kiln you want measured — or position Scanner 2 first and press "Combine scanners" to have both angled automatically.',
+  helpScanner2:"Scanner 2 is optional — tick the checkbox to enable it. Use a second scanner to cover the opposite end of the kiln, eliminate shadows the first scanner can't see around, or add redundancy where both scanners can see the same section.",
+  helpKiln:"Physical length of the kiln shell being measured, in metres. The cooler end is always position zero — every other distance in this tool is measured from there.",
+  helpTyresGear:"Positions, thickness, and outside diameter of the gear ring and each tyre. These cast shadows on the shell where a scanner can't see through them — untick a tyre if you want to ignore it in the shadow calculation without deleting its row.",
+  helpPyrometers:'Fixed-point infrared pyrometers aimed straight down at the shell from below, useful for spots a scanner\'s line of sight can\'t reach. "Place automatically" fills the shadow zones left by the scanners with 30 cm-spot pyrometers in one click.',
+  helpObstacles:'Beams, poles, trees, or anything else standing between a scanner and the kiln shell. Each one is modelled as a circle and casts its own shadow — only checked ("On") rows are included in the calculation.',
+  helpShadowLengths:"Per-object breakdown of how much of the kiln shell each tyre, the gear, and each obstacle keeps hidden from every active scanner, plus how many 30 cm-spot pyrometers would be needed to cover that gap.",
+  helpSpotSizes:"Sampled measurement points along the visible kiln length, showing the slant range, grazing angle, and resulting infrared spot size at each point — smaller means finer resolution. Where two scanners overlap, the one giving the smaller spot is shown.",
+  helpSettings:'Sensor resolution (mrad) per head model, the pyrometer distance-to-spot ratio, and the brick size used to judge "good enough" resolution. These apply to every calculation on the page and are not included when printing.',
+  marketingHowItWorksTitle:"How it works",
+  marketingHowItWorksText:"A high-speed infrared scanner constructs a thermal image of the entire flattened kiln shell surface. The thermal profile shows four superimposed curves — minimum, maximum, average, and worst-case shell temperature — with alarm levels for individual kiln sections, so operators can spot problems long before they become failures.",
+  marketingBenefitsTitle:"Key benefits",
+  benefit1Title:"Increase kiln availability",
+  benefit2Title:"Lower refractory consumption",
+  benefit3Title:"Reduce stoppages",
+  benefit4Title:"Decrease thermal consumption",
+  benefit5Title:"Effectively plan overhauls",
+  marketingCapabilitiesTitle:"Monitor, protect, and optimise your kiln",
+  capabilityTyreSlipTitle:"Tyre slip monitoring",
+  capabilityTyreSlipText:"Continuous, automatic tracking of live ring migration (LRM) between shell and tyres — the simplest, most accurate way to monitor kiln ovality and anticipate constriction before it affects clinker quality.",
+  capabilityFanTitle:"Fan control",
+  capabilityFanText:"Automatically controls cooling fans through the plant PLC based on continuous burning-zone temperature monitoring, avoiding uneconomical fan operation and extending fan service life.",
+  capabilityBrickTitle:"Brick & coating thickness",
+  capabilityBrickText:'Calculates brick and coating thickness in real time from shell temperature, displayed as a profile or 3D "walk-in-the-kiln" image — typically accurate to within a few millimetres.',
+  capabilityHistoryTitle:"Historical data",
+  capabilityHistoryText:"Years of stored data let operators analyse kiln performance over time, search past hot spots, and save snapshots for later review.",
+  marketingOptionsTitle:"Customise to your needs",
+  marketingOptionsText:'Beyond the standard infrared scanner head, CemMicro-III processing unit, and user software, the system can be extended with a stereo scanner arrangement for kilns where one head can\'t get a clear view; up to 16 additional infrared pyrometers (PyroScan) for obstructed sections; an integrated scanner camera to check alignment and window cleanliness; kiln camera ("kiln TV"); process trending; and full system diagnostics.',
+  marketingLinkLabel:"Learn more:",
+  marketingCopyright:"FULLER and ECS/CemScanner are trademarks of FULLER Technologies. This document is for general reference only and does not constitute an offer.",
+  printCustomerContactLabel:"Customer contact:",
+  printFullerContactLabel:"Fuller contact:",
+  contactPersonsTitle:"Contact persons",
+  labelCustomerContact:"Customer contact person",
+  labelFullerContact:"Fuller contact person",
+  placeholderContact:"Name, email, phone"
 },
 es:{
   placeholderSiteName:"Nombre del sitio",
@@ -430,7 +537,44 @@ es:{
   marketingTitle:"Sistema de monitorización de carcasa de horno ECS/CemScanner™",
   marketingSubtitle:"Proteja su horno con nuestro sistema de monitorización de carcasa ECS/CemScanner™",
   marketingParagraph:"Nuestro sistema de monitorización de la carcasa del horno, ECS/CemScanner™, es el resultado de 40 años de desarrollo y perfeccionamiento. Es un sistema tecnológicamente avanzado que permitirá a sus operadores proteger mejor el horno y prolongar la vida útil de la planta.",
-  placementStudyForLabel:"Estudio de ubicación para:"
+  placementStudyForLabel:"Estudio de ubicación para:",
+  ariaSectionHelp:"Ayuda de la sección",
+  helpScanner1:'El Escáner1 está siempre activo. Ajuste su distancia al horno y su rotación para que el cono de 120° cubra la sección del horno que desea medir — o posicione primero el Escáner 2 y pulse "Combinar escáneres" para orientar ambos automáticamente.',
+  helpScanner2:"El Escáner 2 es opcional — marque la casilla para activarlo. Use un segundo escáner para cubrir el extremo opuesto del horno, eliminar sombras que el primero no puede ver, o añadir redundancia donde ambos vean la misma sección.",
+  helpKiln:"Longitud física del horno que se está midiendo, en metros. El extremo del enfriador siempre es la posición cero — el resto de distancias de esta herramienta se miden desde ahí.",
+  helpTyresGear:"Posiciones, espesor y diámetro exterior de la corona y cada llanta. Proyectan sombra sobre la carcasa donde un escáner no puede ver a través de ellas — desmarque una llanta si desea ignorarla en el cálculo de sombra sin borrar su fila.",
+  helpPyrometers:'Pirómetros infrarrojos de punto fijo apuntando directamente hacia abajo, hacia la carcasa, útiles para puntos que la línea de visión de un escáner no puede alcanzar. "Colocar automáticamente" rellena las zonas de sombra dejadas por los escáneres con pirómetros de spot de 30 cm en un clic.',
+  helpObstacles:'Vigas, postes, árboles o cualquier otra cosa entre un escáner y la carcasa del horno. Cada uno se modela como un círculo y proyecta su propia sombra — solo las filas marcadas ("Activo") se incluyen en el cálculo.',
+  helpShadowLengths:"Desglose por objeto de cuánta carcasa del horno oculta cada llanta, la corona y cada obstáculo a todos los escáneres activos, además de cuántos pirómetros de spot de 30 cm harían falta para cubrir ese hueco.",
+  helpSpotSizes:"Puntos de medición muestreados a lo largo de la longitud visible del horno, mostrando la distancia oblicua, el ángulo rasante y el tamaño de spot infrarrojo resultante en cada punto — cuanto menor, mejor resolución. Donde se solapan dos escáneres, se muestra el que da el spot más pequeño.",
+  helpSettings:'Resolución del sensor (mrad) por modelo de cabezal, la relación distancia:spot del pirómetro y el tamaño de ladrillo usado para juzgar una resolución "suficientemente buena". Se aplican a todos los cálculos de la página y no se incluyen al imprimir.',
+  marketingHowItWorksTitle:"Cómo funciona",
+  marketingHowItWorksText:"Un escáner infrarrojo de alta velocidad construye una imagen térmica de toda la superficie de la carcasa del horno desplegada. El perfil térmico muestra cuatro curvas superpuestas — temperatura mínima, máxima, media y de peor caso de la carcasa — con niveles de alarma para secciones individuales del horno, para que los operadores detecten problemas mucho antes de que se conviertan en averías.",
+  marketingBenefitsTitle:"Beneficios clave",
+  benefit1Title:"Aumentar la disponibilidad del horno",
+  benefit2Title:"Reducir el consumo de refractario",
+  benefit3Title:"Reducir las paradas",
+  benefit4Title:"Disminuir el consumo térmico",
+  benefit5Title:"Planificar eficazmente las revisiones",
+  marketingCapabilitiesTitle:"Supervise, proteja y optimice su horno",
+  capabilityTyreSlipTitle:"Monitorización de deslizamiento de llantas",
+  capabilityTyreSlipText:"Seguimiento continuo y automático de la migración del anillo vivo (LRM) entre la carcasa y las llantas — la forma más simple y precisa de monitorizar la ovalización del horno y anticipar constricciones antes de que afecten a la calidad del clínker.",
+  capabilityFanTitle:"Control de ventiladores",
+  capabilityFanText:"Controla automáticamente los ventiladores de enfriamiento a través del PLC de la planta según la monitorización continua de la temperatura de la zona de combustión, evitando el funcionamiento antieconómico y alargando su vida útil.",
+  capabilityBrickTitle:"Espesor de ladrillo y capa",
+  capabilityBrickText:'Calcula el espesor del ladrillo y la capa en tiempo real a partir de la temperatura de la carcasa, mostrado como perfil o imagen 3D "walk-in-the-kiln" — normalmente con una precisión de pocos milímetros.',
+  capabilityHistoryTitle:"Datos históricos",
+  capabilityHistoryText:"Años de datos almacenados permiten a los operadores analizar el rendimiento del horno a lo largo del tiempo, buscar puntos calientes pasados y guardar instantáneas para su posterior revisión.",
+  marketingOptionsTitle:"Personalícelo según sus necesidades",
+  marketingOptionsText:'Además del cabezal escáner infrarrojo estándar, la unidad de procesamiento CemMicro-III y el software de usuario, el sistema puede ampliarse con una disposición de escáner estéreo para hornos donde un cabezal no obtiene una visión clara; hasta 16 pirómetros infrarrojos adicionales (PyroScan) para secciones obstruidas; una cámara de escáner integrada para comprobar la alineación y la limpieza de la ventana; cámara de horno ("kiln TV"); tendencias de proceso; y diagnóstico completo del sistema.',
+  marketingLinkLabel:"Más información:",
+  marketingCopyright:"FULLER y ECS/CemScanner son marcas registradas de FULLER Technologies. Este documento es de referencia general únicamente y no constituye una oferta.",
+  printCustomerContactLabel:"Contacto del cliente:",
+  printFullerContactLabel:"Contacto de Fuller:",
+  contactPersonsTitle:"Personas de contacto",
+  labelCustomerContact:"Persona de contacto del cliente",
+  labelFullerContact:"Persona de contacto de Fuller",
+  placeholderContact:"Nombre, correo, teléfono"
 },
 fr:{
   placeholderSiteName:"Nom du site",
@@ -486,7 +630,44 @@ fr:{
   marketingTitle:"Système de surveillance de la virole de four ECS/CemScanner™",
   marketingSubtitle:"Protégez votre four avec notre système de surveillance de virole ECS/CemScanner™",
   marketingParagraph:"Notre système de surveillance de la virole de four, ECS/CemScanner™, est le fruit de 40 ans de développement et de perfectionnement. C'est un système technologiquement avancé qui permettra à vos opérateurs de mieux protéger votre four et de prolonger la durée de vie de votre installation.",
-  placementStudyForLabel:"Étude d'implantation pour :"
+  placementStudyForLabel:"Étude d'implantation pour :",
+  ariaSectionHelp:"Aide de la section",
+  helpScanner1:'Le Scanner1 est toujours actif. Réglez sa distance au four et sa rotation pour que le cône de 120° couvre la section du four à mesurer — ou positionnez d\'abord le Scanner 2 et appuyez sur "Combiner les scanners" pour orienter les deux automatiquement.',
+  helpScanner2:"Le Scanner 2 est optionnel — cochez la case pour l'activer. Utilisez un second scanner pour couvrir l'extrémité opposée du four, éliminer les ombres que le premier ne peut pas voir, ou ajouter de la redondance là où les deux voient la même section.",
+  helpKiln:"Longueur physique du four mesuré, en mètres. L'extrémité du refroidisseur est toujours la position zéro — toutes les autres distances de cet outil sont mesurées à partir de là.",
+  helpTyresGear:"Positions, épaisseur et diamètre extérieur de la couronne et de chaque bandage. Ils projettent une ombre sur la virole là où un scanner ne peut pas voir au travers — décochez un bandage pour l'ignorer dans le calcul d'ombre sans supprimer sa ligne.",
+  helpPyrometers:'Pyromètres infrarouges à point fixe, pointés directement vers le bas sur la virole, utiles pour les zones que la ligne de visée d\'un scanner ne peut pas atteindre. "Placer automatiquement" remplit les zones d\'ombre laissées par les scanners avec des pyromètres à spot de 30 cm en un clic.',
+  helpObstacles:'Poutres, poteaux, arbres ou tout autre élément entre un scanner et la virole du four. Chacun est modélisé comme un cercle et projette sa propre ombre — seules les lignes cochées ("Actif") sont incluses dans le calcul.',
+  helpShadowLengths:"Détail par objet de la longueur de virole que chaque bandage, la couronne et chaque obstacle cache à tous les scanners actifs, ainsi que le nombre de pyromètres à spot de 30 cm nécessaires pour combler cet écart.",
+  helpSpotSizes:"Points de mesure échantillonnés le long de la longueur visible du four, montrant la distance oblique, l'angle rasant et la taille du spot infrarouge résultante à chaque point — plus petit signifie une meilleure résolution. Là où deux scanners se chevauchent, celui donnant le plus petit spot est affiché.",
+  helpSettings:'Résolution du capteur (mrad) par modèle de tête, le rapport distance:spot du pyromètre et la taille de brique utilisée pour juger une résolution "suffisante". Ces réglages s\'appliquent à tous les calculs de la page et ne sont pas inclus à l\'impression.',
+  marketingHowItWorksTitle:"Comment ça marche",
+  marketingHowItWorksText:"Un scanner infrarouge à haute vitesse construit une image thermique de toute la surface de la virole du four à plat. Le profil thermique affiche quatre courbes superposées — température minimale, maximale, moyenne et du pire cas de la virole — avec des niveaux d'alarme pour chaque section du four, afin que les opérateurs repèrent les problèmes bien avant qu'ils ne deviennent des pannes.",
+  marketingBenefitsTitle:"Avantages clés",
+  benefit1Title:"Augmenter la disponibilité du four",
+  benefit2Title:"Réduire la consommation de réfractaire",
+  benefit3Title:"Réduire les arrêts",
+  benefit4Title:"Diminuer la consommation thermique",
+  benefit5Title:"Planifier efficacement les révisions",
+  marketingCapabilitiesTitle:"Surveillez, protégez et optimisez votre four",
+  capabilityTyreSlipTitle:"Surveillance du glissement des bandages",
+  capabilityTyreSlipText:"Suivi continu et automatique de la migration de l'anneau vif (LRM) entre la virole et les bandages — le moyen le plus simple et le plus précis de surveiller l'ovalisation du four et d'anticiper une constriction avant qu'elle n'affecte la qualité du clinker.",
+  capabilityFanTitle:"Contrôle des ventilateurs",
+  capabilityFanText:"Contrôle automatiquement les ventilateurs de refroidissement via l'automate de l'usine selon la surveillance continue de la température de la zone de cuisson, évitant un fonctionnement non économique et prolongeant leur durée de vie.",
+  capabilityBrickTitle:"Épaisseur de brique et de couche",
+  capabilityBrickText:'Calcule l\'épaisseur de la brique et de la couche en temps réel à partir de la température de la virole, affichée sous forme de profil ou d\'image 3D "walk-in-the-kiln" — généralement précise à quelques millimètres près.',
+  capabilityHistoryTitle:"Données historiques",
+  capabilityHistoryText:"Des années de données stockées permettent aux opérateurs d'analyser la performance du four dans le temps, de rechercher d'anciens points chauds et d'enregistrer des instantanés pour une consultation ultérieure.",
+  marketingOptionsTitle:"Personnalisez selon vos besoins",
+  marketingOptionsText:'Au-delà de la tête de scanner infrarouge standard, de l\'unité de traitement CemMicro-III et du logiciel utilisateur, le système peut être étendu avec une configuration de scanner stéréo pour les fours où une seule tête n\'obtient pas une vue claire ; jusqu\'à 16 pyromètres infrarouges supplémentaires (PyroScan) pour les sections obstruées ; une caméra de scanner intégrée pour vérifier l\'alignement et la propreté de la fenêtre ; une caméra de four ("kiln TV") ; le suivi de tendances de process ; et un diagnostic complet du système.',
+  marketingLinkLabel:"En savoir plus :",
+  marketingCopyright:"FULLER et ECS/CemScanner sont des marques de FULLER Technologies. Ce document est fourni à titre de référence générale uniquement et ne constitue pas une offre.",
+  printCustomerContactLabel:"Contact client :",
+  printFullerContactLabel:"Contact Fuller :",
+  contactPersonsTitle:"Personnes de contact",
+  labelCustomerContact:"Personne de contact client",
+  labelFullerContact:"Personne de contact Fuller",
+  placeholderContact:"Nom, e-mail, téléphone"
 },
 pt:{
   placeholderSiteName:"Nome do local",
@@ -542,7 +723,44 @@ pt:{
   marketingTitle:"Sistema de monitorização de carcaça de forno ECS/CemScanner™",
   marketingSubtitle:"Proteja o seu forno com o nosso sistema de monitorização de carcaça ECS/CemScanner™",
   marketingParagraph:"O nosso sistema de monitorização da carcaça do forno, ECS/CemScanner™, é o resultado de 40 anos de desenvolvimento e aperfeiçoamento. É um sistema tecnologicamente avançado que permitirá aos seus operadores proteger melhor o forno e prolongar a vida útil da fábrica.",
-  placementStudyForLabel:"Estudo de posicionamento para:"
+  placementStudyForLabel:"Estudo de posicionamento para:",
+  ariaSectionHelp:"Ajuda da secção",
+  helpScanner1:'O Scanner1 está sempre ativo. Defina a sua distância ao forno e rotação para que o cone de 120° cubra a secção do forno que pretende medir — ou posicione primeiro o Scanner 2 e prima "Combinar scanners" para orientar ambos automaticamente.',
+  helpScanner2:"O Scanner 2 é opcional — assinale a caixa para o ativar. Use um segundo scanner para cobrir a extremidade oposta do forno, eliminar sombras que o primeiro não consegue ver, ou adicionar redundância onde ambos veem a mesma secção.",
+  helpKiln:"Comprimento físico do forno a ser medido, em metros. A extremidade do arrefecedor é sempre a posição zero — todas as outras distâncias nesta ferramenta são medidas a partir daí.",
+  helpTyresGear:"Posições, espessura e diâmetro exterior da coroa e de cada roda de apoio. Estas projetam sombra na carcaça onde um scanner não consegue ver através delas — desmarque uma roda de apoio se quiser ignorá-la no cálculo de sombra sem apagar a sua linha.",
+  helpPyrometers:'Pirómetros infravermelhos de ponto fixo, apontados diretamente para baixo, para a carcaça, úteis para pontos que a linha de visão de um scanner não alcança. "Colocar automaticamente" preenche as zonas de sombra deixadas pelos scanners com pirómetros de spot de 30 cm num clique.',
+  helpObstacles:'Vigas, postes, árvores ou qualquer outra coisa entre um scanner e a carcaça do forno. Cada um é modelado como um círculo e projeta a sua própria sombra — apenas as linhas assinaladas ("Ativo") são incluídas no cálculo.',
+  helpShadowLengths:"Detalhe por objeto de quanto da carcaça do forno cada roda de apoio, a coroa e cada obstáculo escondem de todos os scanners ativos, além de quantos pirómetros de spot de 30 cm seriam necessários para cobrir essa lacuna.",
+  helpSpotSizes:"Pontos de medição amostrados ao longo do comprimento visível do forno, mostrando a distância oblíqua, o ângulo rasante e o tamanho do spot infravermelho resultante em cada ponto — quanto menor, melhor a resolução. Onde dois scanners se sobrepõem, é mostrado o que dá o spot mais pequeno.",
+  helpSettings:'Resolução do sensor (mrad) por modelo de cabeça, a relação distância:spot do pirómetro e o tamanho de tijolo usado para julgar uma resolução "suficientemente boa". Aplicam-se a todos os cálculos da página e não são incluídos na impressão.',
+  marketingHowItWorksTitle:"Como funciona",
+  marketingHowItWorksText:"Um scanner infravermelho de alta velocidade constrói uma imagem térmica de toda a superfície da carcaça do forno desdobrada. O perfil térmico mostra quatro curvas sobrepostas — temperatura mínima, máxima, média e de pior caso da carcaça — com níveis de alarme para secções individuais do forno, para que os operadores detetem problemas muito antes de se tornarem avarias.",
+  marketingBenefitsTitle:"Principais benefícios",
+  benefit1Title:"Aumentar a disponibilidade do forno",
+  benefit2Title:"Reduzir o consumo de refratário",
+  benefit3Title:"Reduzir paragens",
+  benefit4Title:"Diminuir o consumo térmico",
+  benefit5Title:"Planear eficazmente as revisões",
+  marketingCapabilitiesTitle:"Monitorize, proteja e otimize o seu forno",
+  capabilityTyreSlipTitle:"Monitorização de deslizamento de rodas de apoio",
+  capabilityTyreSlipText:"Monitorização contínua e automática da migração do anel vivo (LRM) entre a carcaça e as rodas de apoio — a forma mais simples e precisa de monitorizar a ovalização do forno e antecipar constrições antes de afetarem a qualidade do clínquer.",
+  capabilityFanTitle:"Controlo de ventiladores",
+  capabilityFanText:"Controla automaticamente os ventiladores de arrefecimento através do PLC da fábrica com base na monitorização contínua da temperatura da zona de queima, evitando funcionamento antieconómico e prolongando a sua vida útil.",
+  capabilityBrickTitle:"Espessura de tijolo e revestimento",
+  capabilityBrickText:'Calcula a espessura do tijolo e do revestimento em tempo real a partir da temperatura da carcaça, apresentada como perfil ou imagem 3D "walk-in-the-kiln" — normalmente com precisão de poucos milímetros.',
+  capabilityHistoryTitle:"Dados históricos",
+  capabilityHistoryText:"Anos de dados armazenados permitem aos operadores analisar o desempenho do forno ao longo do tempo, procurar pontos quentes anteriores e guardar instantâneos para consulta posterior.",
+  marketingOptionsTitle:"Personalize às suas necessidades",
+  marketingOptionsText:'Além da cabeça de scanner infravermelho padrão, da unidade de processamento CemMicro-III e do software de utilizador, o sistema pode ser expandido com uma configuração de scanner estéreo para fornos onde uma cabeça não obtém uma visão clara; até 16 pirómetros infravermelhos adicionais (PyroScan) para secções obstruídas; uma câmara de scanner integrada para verificar o alinhamento e a limpeza da janela; câmara de forno ("kiln TV"); tendências de processo; e diagnóstico completo do sistema.',
+  marketingLinkLabel:"Saiba mais:",
+  marketingCopyright:"FULLER e ECS/CemScanner são marcas registadas da FULLER Technologies. Este documento é apenas para referência geral e não constitui uma oferta.",
+  printCustomerContactLabel:"Contacto do cliente:",
+  printFullerContactLabel:"Contacto Fuller:",
+  contactPersonsTitle:"Pessoas de contacto",
+  labelCustomerContact:"Pessoa de contacto do cliente",
+  labelFullerContact:"Pessoa de contacto Fuller",
+  placeholderContact:"Nome, email, telefone"
 },
 ar:{
   placeholderSiteName:"اسم الموقع",
@@ -598,7 +816,44 @@ ar:{
   marketingTitle:"نظام ECS/CemScanner™ لمراقبة غلاف الفرن الدوار",
   marketingSubtitle:"احمِ فرنك الدوار بنظام ECS/CemScanner™ لمراقبة الغلاف",
   marketingParagraph:"نظامنا لمراقبة غلاف الفرن الدوار، ECS/CemScanner™، هو ثمرة 40 عامًا من التطوير والتحسين. إنه نظام متطور تقنيًا يتيح لمشغّليكم حماية الفرن بشكل أفضل وإطالة عمر المصنع.",
-  placementStudyForLabel:"دراسة التموضع لـ:"
+  placementStudyForLabel:"دراسة التموضع لـ:",
+  ariaSectionHelp:"مساعدة القسم",
+  helpScanner1:'الماسح 1 يعمل دائمًا. اضبط مسافته عن الفرن ودورانه بحيث يغطي المخروط بزاوية 120° القسم المطلوب قياسه من الفرن — أو ضع الماسح 2 أولاً واضغط "دمج الماسحين" لضبط زاويتيهما تلقائيًا.',
+  helpScanner2:"الماسح 2 اختياري — فعّل خانة الاختيار لتشغيله. استخدم ماسحًا ثانيًا لتغطية الطرف المقابل من الفرن، أو لإزالة الظلال التي لا يراها الماسح الأول، أو لإضافة تكرار حيث يرى كلا الماسحين نفس القسم.",
+  helpKiln:"الطول الفعلي لغلاف الفرن المراد قياسه، بالأمتار. طرف المبرّد هو دائمًا الموضع صفر — تُقاس كل المسافات الأخرى في هذه الأداة انطلاقًا منه.",
+  helpTyresGear:"مواضع وسماكة وقطر خارجي للترس ولكل إطار. تُلقي هذه العناصر ظلًا على الغلاف حيث لا يستطيع الماسح الرؤية من خلالها — أزل تحديد إطار إذا أردت تجاهله في حساب الظل دون حذف صفه.",
+  helpPyrometers:'مقاييس حرارية بالأشعة تحت الحمراء ذات نقطة ثابتة، موجّهة مباشرة للأسفل نحو الغلاف، مفيدة للنقاط التي لا يصل إليها خط رؤية الماسح. يملأ زر "الوضع التلقائي" مناطق الظل التي يتركها الماسحان بمقاييس حرارية ذات بقعة 30 سم بضغطة واحدة.',
+  helpObstacles:'عوارض أو أعمدة أو أشجار أو أي شيء آخر يقف بين الماسح وغلاف الفرن. يُمثَّل كل عائق كدائرة وله ظله الخاص — تُدرَج في الحساب فقط الصفوف المُفعّلة ("مُفعّل").',
+  helpShadowLengths:"تفصيل لكل عنصر يوضح مقدار غلاف الفرن الذي يخفيه كل إطار والترس وكل عائق عن جميع الماسحات النشطة، إضافة إلى عدد المقاييس الحرارية ذات بقعة 30 سم اللازمة لتغطية تلك الفجوة.",
+  helpSpotSizes:"نقاط قياس مأخوذة على طول الجزء المرئي من الفرن، تُظهر المسافة المائلة وزاوية السقوط وحجم البقعة الناتج بالأشعة تحت الحمراء عند كل نقطة — كلما صغر الحجم كانت الدقة أفضل. حيثما يتداخل الماسحان، يُعرض الماسح الذي يمنح البقعة الأصغر.",
+  helpSettings:'دقة المستشعر (مليراديان) لكل طراز رأس، ونسبة المسافة إلى البقعة للمقياس الحراري، وحجم الطوبة المستخدم للحكم على دقة "كافية". تنطبق هذه الإعدادات على جميع الحسابات في الصفحة ولا تُدرَج عند الطباعة.',
+  marketingHowItWorksTitle:"كيف يعمل النظام",
+  marketingHowItWorksText:"يقوم ماسح بالأشعة تحت الحمراء عالي السرعة ببناء صورة حرارية لكامل سطح غلاف الفرن مبسوطًا. يعرض المنحنى الحراري أربعة منحنيات متراكبة — أدنى وأعلى ومتوسط وأسوأ درجة حرارة للغلاف — مع مستويات إنذار لأقسام الفرن المختلفة، ليتمكن المشغّلون من رصد المشاكل قبل أن تتحول إلى أعطال.",
+  marketingBenefitsTitle:"الفوائد الرئيسية",
+  benefit1Title:"زيادة توفر الفرن",
+  benefit2Title:"خفض استهلاك الطوب الحراري",
+  benefit3Title:"تقليل التوقفات",
+  benefit4Title:"خفض الاستهلاك الحراري",
+  benefit5Title:"تخطيط فعّال لأعمال الصيانة الكبرى",
+  marketingCapabilitiesTitle:"راقب فرنك واحمِه وحسّن أداءه",
+  capabilityTyreSlipTitle:"مراقبة انزلاق الإطارات",
+  capabilityTyreSlipText:"تتبّع مستمر وتلقائي لانزياح الحلقة الحية (LRM) بين الغلاف والإطارات — أبسط وأدق طريقة لمراقبة بيضاوية الفرن وتوقّع الانقباض قبل أن يؤثر على جودة الكلنكر.",
+  capabilityFanTitle:"التحكم بالمراوح",
+  capabilityFanText:"يتحكم تلقائيًا بمراوح التبريد عبر نظام التحكم المنطقي القابل للبرمجة (PLC) بالمصنع استنادًا إلى المراقبة المستمرة لدرجة حرارة منطقة الحرق، مما يمنع التشغيل غير الاقتصادي للمراوح ويطيل عمرها التشغيلي.",
+  capabilityBrickTitle:"سماكة الطوب والطبقة العازلة",
+  capabilityBrickText:'يحسب سماكة الطوب والطبقة العازلة في الوقت الفعلي من درجة حرارة الغلاف، ويعرضها كمخطط أو صورة ثلاثية الأبعاد "walk-in-the-kiln" — بدقة عادةً في حدود بضعة مليمترات.',
+  capabilityHistoryTitle:"البيانات التاريخية",
+  capabilityHistoryText:"تتيح سنوات من البيانات المخزّنة للمشغّلين تحليل أداء الفرن عبر الزمن، والبحث عن النقاط الساخنة السابقة، وحفظ لقطات لمراجعتها لاحقًا.",
+  marketingOptionsTitle:"خصّصه حسب احتياجاتك",
+  marketingOptionsText:'إلى جانب رأس الماسح القياسي بالأشعة تحت الحمراء ووحدة المعالجة CemMicro-III وبرنامج المستخدم، يمكن توسيع النظام بترتيب ماسح مزدوج (ستيريو) للأفران التي لا يحصل فيها رأس واحد على رؤية واضحة؛ وحتى 16 مقياسًا حراريًا إضافيًا بالأشعة تحت الحمراء (PyroScan) للأقسام المحجوبة؛ وكاميرا ماسح مدمجة للتحقق من المحاذاة ونظافة النافذة؛ وكاميرا للفرن ("تلفزيون الفرن")؛ وتتبّع الاتجاهات؛ وتشخيص كامل للنظام.',
+  marketingLinkLabel:"لمعرفة المزيد:",
+  marketingCopyright:"FULLER وECS/CemScanner علامتان تجاريتان لشركة FULLER Technologies. هذا المستند لأغراض مرجعية عامة فقط ولا يشكل عرضًا.",
+  printCustomerContactLabel:"جهة اتصال العميل:",
+  printFullerContactLabel:"جهة اتصال Fuller:",
+  contactPersonsTitle:"جهات الاتصال",
+  labelCustomerContact:"جهة اتصال العميل",
+  labelFullerContact:"جهة اتصال Fuller",
+  placeholderContact:"الاسم، البريد الإلكتروني، الهاتف"
 }
 };
 let storageIsRestricted = false;
@@ -618,6 +873,7 @@ function applyStaticI18n(){
   document.querySelectorAll('[data-i18n-html]').forEach(el => { el.innerHTML = t(el.getAttribute('data-i18n-html')); });
   document.querySelectorAll('[data-i18n-placeholder]').forEach(el => { el.placeholder = t(el.getAttribute('data-i18n-placeholder')); });
   document.querySelectorAll('[data-i18n-title]').forEach(el => { el.title = t(el.getAttribute('data-i18n-title')); });
+  document.querySelectorAll('[data-i18n-aria]').forEach(el => { el.setAttribute('aria-label', t(el.getAttribute('data-i18n-aria'))); });
   document.title = t('pageTitle');
   updateSandboxNotice();
 }
@@ -635,6 +891,14 @@ function updateSandboxNotice(){
   } else {
     el.classList.remove('show');
   }
+}
+function initHelpToggles(){
+  document.querySelectorAll('.sec-help-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const box = document.getElementById(btn.dataset.help);
+      if (box) box.classList.toggle('show');
+    });
+  });
 }
 function setLanguage(code){
   currentLang = code;
@@ -655,6 +919,7 @@ langSelectEl.addEventListener('change', () => setLanguage(langSelectEl.value));
 document.documentElement.lang = currentLang;
 document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
 applyStaticI18n();
+initHelpToggles();
 
 /* ---------- scanners ---------- */
 function makeScanner(prefix, label, color, hasEnable){
@@ -688,17 +953,38 @@ const brickSubOut = document.getElementById('brick-sub-out');
 const brickBanner = document.getElementById('brick-banner');
 brickEl.addEventListener('input', render);
 
-/* ---------- customer name -> print block, and print button ---------- */
+/* ---------- customer name / contact persons -> print quote-info box ---------- */
+const quoteInfoBoxEl = document.getElementById('quote-info-box');
+function bindPrintLine(inputEl, printSpanEl, printLineEl){
+  function sync(){
+    const v = inputEl.value.trim();
+    printSpanEl.textContent = v;
+    printLineEl.style.display = v ? 'block' : 'none';
+    updateQuoteInfoBox();
+  }
+  inputEl.addEventListener('input', sync);
+  return sync;
+}
+function updateQuoteInfoBox(){
+  const anyVisible = [printPlacementLineEl, printCustomerContactLineEl, printFullerContactLineEl]
+    .some(el => el.style.display !== 'none');
+  quoteInfoBoxEl.style.display = anyVisible ? 'block' : 'none';
+}
 const customerNameEl = document.getElementById('customer-name');
 const printCustomerNameEl = document.getElementById('print-customer-name');
 const printPlacementLineEl = document.getElementById('print-placement-line');
-function syncCustomerName(){
-  const v = customerNameEl.value.trim();
-  printCustomerNameEl.textContent = v;
-  printPlacementLineEl.style.display = v ? 'block' : 'none';
-}
-customerNameEl.addEventListener('input', syncCustomerName);
+const customerContactEl = document.getElementById('customer-contact');
+const printCustomerContactEl = document.getElementById('print-customer-contact');
+const printCustomerContactLineEl = document.getElementById('print-customer-contact-line');
+const fullerContactEl = document.getElementById('fuller-contact');
+const printFullerContactEl = document.getElementById('print-fuller-contact');
+const printFullerContactLineEl = document.getElementById('print-fuller-contact-line');
+const syncCustomerName = bindPrintLine(customerNameEl, printCustomerNameEl, printPlacementLineEl);
+const syncCustomerContact = bindPrintLine(customerContactEl, printCustomerContactEl, printCustomerContactLineEl);
+const syncFullerContact = bindPrintLine(fullerContactEl, printFullerContactEl, printFullerContactLineEl);
 syncCustomerName();
+syncCustomerContact();
+syncFullerContact();
 /* Printing while the page is scrolled down throws off Chrome's page-break math for the
    print-caption-row table headers (they land mid-page instead of at the top of each printed
    page). Scrolling to the very top first, and giving the browser a couple of frames to reflow
