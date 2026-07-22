@@ -9,7 +9,7 @@
 <title>ECS/CemScanner™ FOV field check</title>
 <style>
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
-  html,body{margin:0; padding:0; width:100%; height:101%; overflow-y:auto; overflow-x:hidden; background:#000;
+  html,body{margin:0; padding:0; width:100%; height:100%; overflow:hidden; background:#000;
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif; color:#e8e8e6;}
   #app{position:fixed; inset:0;}
   #video{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; background:#000;}
@@ -223,6 +223,7 @@
     });
     lines.push("");
     lines.push("usingUltraWide=" + usingUltraWide + " cropped=" + possiblyCropped + " portrait=" + isPortrait);
+    lines.push("video native=" + video.videoWidth + "x" + video.videoHeight + " displayed=" + video.clientWidth + "x" + video.clientHeight);
     debugPanelEl.textContent = lines.join("\n");
   }
   document.getElementById("brandLabel").addEventListener("click", function(){
@@ -371,11 +372,6 @@
       }
     } catch(e){}
   }
-  // Legacy trick: a 1px scroll can nudge Safari into auto-hiding its own toolbar even in a
-  // normal tab. #app is position:fixed so this scroll is invisible either way. Effectiveness
-  // varies by iOS version -- Add to Home Screen (above) is the guaranteed fix.
-  window.addEventListener("load", function(){ setTimeout(function(){ window.scrollTo(0, 1); }, 300); });
-
   // ---------- boot ----------
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
     document.getElementById("permissionMsg").style.display = "flex";
