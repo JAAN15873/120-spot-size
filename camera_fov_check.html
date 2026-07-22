@@ -103,7 +103,15 @@
   var camIndex = -1;
   var usingUltraWide = false;
 
-  function isUltraWideLabel(label){ return /ultra.?wide/i.test(label || ""); }
+  // iOS labels back lenses in the phone's system language, not always English, so "ultra wide"
+  // alone misses non-English phones. This is only a best-effort first guess anyway -- the
+  // reliable fix is REMEMBERED_CAMERA_KEY below, which locks in whatever the user last picked.
+  var ULTRA_WIDE_LABEL_RE = /ultra.?wide|grand.?angle|gran.?angular|weitwinkel|širokoúhl|grande.?angular/i;
+  function isUltraWideLabel(label){ return ULTRA_WIDE_LABEL_RE.test(label || ""); }
+
+  var REMEMBERED_CAMERA_KEY = "fovcheck_camera_deviceId";
+  function rememberCamera(deviceId){ try { localStorage.setItem(REMEMBERED_CAMERA_KEY, deviceId); } catch(e){} }
+  function getRememberedCameraId(){ try { return localStorage.getItem(REMEMBERED_CAMERA_KEY); } catch(e){ return null; } }
 
   function updateWarning(){
     if (!usingUltraWide){
@@ -136,6 +144,7 @@
     }).then(function(stream){
       applyStream(stream, d.label);
       camIndex = idx;
+      rememberCamera(d.deviceId);
     }).catch(function(err){ console.error("Camera switch error", err); });
   }
 
@@ -148,8 +157,12 @@
       return navigator.mediaDevices.enumerateDevices();
     }).then(function(devices){
       cameras = devices.filter(function(d){ return d.kind === "videoinput"; });
-      var uwIndex = cameras.findIndex(function(d){ return isUltraWideLabel(d.label); });
-      if (uwIndex >= 0) return switchToIndex(uwIndex);
+      // Prefer whatever camera was confirmed to work last time on this phone (see the "?" in
+      // isUltraWideLabel's comment above) over guessing from the label again.
+      var rememberedId = getRememberedCameraId();
+      var idx = rememberedId ? cameras.findIndex(function(d){ return d.deviceId === rememberedId; }) : -1;
+      if (idx < 0) idx = cameras.findIndex(function(d){ return isUltraWideLabel(d.label); });
+      if (idx >= 0) return switchToIndex(idx);
       camIndex = 0;
     }).catch(function(err){
       document.getElementById("permissionMsg").style.display = "flex";
