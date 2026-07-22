@@ -237,12 +237,13 @@
     <button class="zoom-btn" id="zoom-out" title="Zoom out" data-i18n-title="zoomOutTitle">−</button>
     <button class="zoom-btn zoom-btn-wide" id="zoom-reset" title="Reset zoom" data-i18n-title="zoomResetTitle" data-i18n="zoomResetBtn">Reset</button>
     <span class="zoom-hint" data-i18n="zoomHint">Scroll to zoom, drag to pan</span>
+    <button type="button" class="sec-help-btn" data-help="help-diagram" data-i18n-aria="ariaSectionHelp" aria-label="Section help">?</button>
   </div>
   <svg id="svg" viewBox="0 0 800 460"></svg>
 
-  <p class="note" data-i18n-html="noteHtml">
+  <div class="help-box no-print" id="help-diagram" data-i18n-html="noteHtml">
     Dark-red bands = shadow not seen by <em>any</em> active scanner (shown above and below the kiln). Green marks and value = whole kiln length covered by the FOV(s). Scanner 2 is shown in its own color; its own shadow can eliminate Scanner 1's shadow where the two viewpoints differ. This placement tool is about aiming/targeting, so wherever both scanners can see the same spot, the one giving the <strong>smaller spot size</strong> is shown here (finer aiming resolution). For actual temperature measurement — handled by separate software — the <strong>higher measured temperature</strong> is what counts; this tool does not read temperature.
-  </p>
+  </div>
 
   <div class="results">
     <div class="card" id="card-fov">
@@ -309,6 +310,8 @@
       </table>
     </div>
   </div>
+
+  <div class="page-break"></div>
 
   <div class="panel">
     <h2 style="margin-top:0; display:flex; align-items:center; gap:6px;"><span data-i18n="obstaclesTitle">Obstacles (beams, poles, trees…) between scanner and kiln</span><button type="button" class="sec-help-btn no-print" data-help="help-obstacles" data-i18n-aria="ariaSectionHelp" aria-label="Section help">?</button></h2>
