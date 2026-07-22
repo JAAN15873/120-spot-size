@@ -2,11 +2,9 @@ name: Build iOS (unsigned)
 
 on:
   workflow_dispatch:
-  push:
-    branches: [ main, master ]
-    paths:
-      - 'ios/**'
-      - '.github/workflows/build-ios.yml'
+  # Native iOS build is on hold in favor of camera_fov_check.html (the web version) — trigger
+  # this manually from the Actions tab if the native prototype gets picked up again, rather
+  # than running (and failing) automatically on every push.
 
 jobs:
   build:

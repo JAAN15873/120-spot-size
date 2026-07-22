@@ -12,6 +12,7 @@
     --bg:#1c1d1f; --panel:#26282b; --border:#3a3d41; --border-strong:#52565c;
     --text:#e8e8e6; --text-secondary:#a3a6ab; --accent:#7f9cf5; --accent2:#3ec9a7;
     --danger:#e2635f; --danger-bg:#3a2426; --warn:#e0b23c; --warn-bg:#3a3320;
+    --left:#4fd6ff; --right:#ff9d4f;
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
   html,body{margin:0; padding:0; width:100%; height:100%; overflow:hidden; background:#000;
@@ -31,19 +32,25 @@
   .warning{position:absolute; top:40px; left:10px; right:10px; font-size:12px; background:rgba(226,99,95,0.9);
     color:#fff; padding:8px 10px; border-radius:8px;}
 
-  .center-msg{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; padding:24px; text-align:center;}
-  .center-msg .box{background:rgba(20,21,23,0.92); border:1px solid var(--border-strong); border-radius:14px; padding:22px; max-width:340px;}
+  .center-msg{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; padding:20px; text-align:center; z-index:20;}
+  .center-msg .box{background:rgba(20,21,23,0.96); border:1px solid var(--border-strong); border-radius:14px; padding:20px;
+    max-width:340px; max-height:calc(100% - 20px); overflow-y:auto;}
+  .center-msg .box.wide{max-width:360px;}
   .center-msg h2{font-size:16px; margin:0 0 10px;}
-  .center-msg p{font-size:13px; color:var(--text-secondary); line-height:1.5; margin:0 0 14px;}
+  .center-msg p{font-size:13px; color:var(--text-secondary); line-height:1.5; margin:0 0 10px; text-align:left;}
+  .center-msg ol{font-size:13px; color:var(--text); line-height:1.6; text-align:left; margin:0 0 14px; padding-left:20px;}
+  .center-msg ol li{margin-bottom:6px;}
+  .center-msg .tip{font-size:12px; color:var(--warn); text-align:left; margin:0 0 14px; line-height:1.5;}
 
   .btn{display:inline-block; padding:10px 16px; border-radius:10px; border:1px solid var(--accent);
     background:#2a2f45; color:var(--text); font-size:14px; cursor:pointer;}
   .btn:active{background:#333a56;}
   .btn.small{padding:6px 10px; font-size:12px;}
   .btn.danger{border-color:var(--danger); background:var(--danger-bg); color:var(--danger);}
+  .btn.round{width:32px; height:32px; border-radius:50%; padding:0; text-align:center; line-height:1;}
 
   #bottombar{position:absolute; left:0; right:0; bottom:0; background:rgba(15,16,18,0.85);
-    padding:10px 12px calc(10px + env(safe-area-inset-bottom)); pointer-events:auto;}
+    padding:10px 12px calc(10px + env(safe-area-inset-bottom));}
   .row{display:flex; align-items:center; gap:8px; margin-bottom:8px;}
   .row:last-child{margin-bottom:0;}
   .row label{font-size:12px; color:var(--text-secondary); flex-shrink:0;}
@@ -54,20 +61,23 @@
   details{color:var(--text);}
   summary{font-size:12px; color:var(--text-secondary); cursor:pointer; padding:2px 0;}
 
-  #calib{position:absolute; inset:0; background:#000; display:none; flex-direction:column;}
-  #calib.show{display:flex;}
-  #calibVideoWrap{position:relative; flex:1; overflow:hidden;}
+  /* Calibration marker layer sits directly on top of the live video/overlay -- no separate
+     video element, so the technician always sees the real scene while dragging markers. */
+  #calibLayer{position:absolute; inset:0; pointer-events:none; z-index:10; display:none;}
   .marker{position:absolute; top:0; bottom:0; width:3px; touch-action:none; pointer-events:auto;}
   .marker .line{position:absolute; inset:0;}
   .marker .grip{position:absolute; top:40%; left:-14px; width:31px; height:44px; border-radius:8px;
     display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:#111;}
-  .marker.left .line{background:#4fd6ff;} .marker.left .grip{background:#4fd6ff;}
-  .marker.right .line{background:#ff9d4f;} .marker.right .grip{background:#ff9d4f;}
-  #calibForm{background:var(--panel); border-top:1px solid var(--border); padding:12px 14px calc(12px + env(safe-area-inset-bottom));}
-  #calibForm .row{margin-bottom:10px;}
+  .marker.left .line{background:var(--left);} .marker.left .grip{background:var(--left);}
+  .marker.right .line{background:var(--right);} .marker.right .grip{background:var(--right);}
+
+  #calibForm{position:absolute; left:0; right:0; bottom:0; z-index:11; display:none;
+    background:var(--panel); border-top:1px solid var(--border); padding:10px 14px calc(10px + env(safe-area-inset-bottom));}
+  #calibForm .row{margin-bottom:8px;}
   #calibForm label{width:120px; flex-shrink:0;}
-  #calibResult{font-size:12px; color:var(--text-secondary); margin:8px 0; line-height:1.5;}
-  #calibActions{display:flex; gap:8px; justify-content:flex-end;}
+  #calibResult{font-size:12px; color:var(--text-secondary); margin:6px 0; line-height:1.5;}
+  #calibActions{display:flex; gap:8px; justify-content:flex-end; align-items:center;}
+  #calibActions .spacer{flex:1;}
 </style>
 </head>
 <body>
@@ -83,6 +93,66 @@
       <h2>Camera access needed</h2>
       <p>Allow camera access when prompted. If you already denied it, enable it for this site in Safari &rarr; aA &rarr; Website Settings.</p>
       <button class="btn" id="retryBtn">Try again</button>
+    </div>
+  </div>
+
+  <!-- Calibration markers, drawn directly over the live camera feed -->
+  <div id="calibLayer">
+    <div class="marker left" id="markL"><div class="line"></div><div class="grip">L</div></div>
+    <div class="marker right" id="markR"><div class="line"></div><div class="grip">R</div></div>
+  </div>
+
+  <!-- Step 1: instructions + diagram, shown before dragging markers -->
+  <div class="center-msg" id="calibIntro" style="display:none;">
+    <div class="box wide">
+      <h2>How to calibrate</h2>
+      <svg viewBox="0 0 300 190" width="100%" style="max-width:280px; margin:0 auto 12px; display:block;">
+        <defs>
+          <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="#a3a6ab"/>
+          </marker>
+        </defs>
+        <line x1="150" y1="165" x2="58" y2="32" stroke="#4fd6ff" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <line x1="150" y1="165" x2="242" y2="32" stroke="#ff9d4f" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <line x1="60" y1="30" x2="240" y2="30" stroke="#e8e8e6" stroke-width="2"/>
+        <circle cx="60" cy="30" r="6" fill="#4fd6ff"/>
+        <circle cx="240" cy="30" r="6" fill="#ff9d4f"/>
+        <text x="60" y="18" fill="#4fd6ff" font-size="11" text-anchor="middle">L</text>
+        <text x="240" y="18" fill="#ff9d4f" font-size="11" text-anchor="middle">R</text>
+        <line x1="60" y1="50" x2="240" y2="50" stroke="#a3a6ab" stroke-width="1" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+        <text x="150" y="66" fill="#a3a6ab" font-size="12" text-anchor="middle">width W (measured)</text>
+        <line x1="150" y1="165" x2="150" y2="34" stroke="#a3a6ab" stroke-width="1" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+        <text x="156" y="105" fill="#a3a6ab" font-size="11">distance D</text>
+        <text x="156" y="118" fill="#a3a6ab" font-size="11">(measured)</text>
+        <circle cx="150" cy="168" r="5" fill="#7f9cf5"/>
+        <text x="150" y="185" fill="#7f9cf5" font-size="11" text-anchor="middle">you, facing the line square-on</text>
+      </svg>
+      <ol>
+        <li>Pick a straight reference on flat ground: a tape measure or rope stretched taut works best. Aim for it to span a wide angle — roughly the size of what you'll actually check (for a 120° cone, that means long: 8–15 m is a good target, not something small and close).</li>
+        <li>Measure its exact length &rarr; that's <b>Width</b>.</li>
+        <li>Stand back facing its midpoint square-on (not at an angle), phone held level &rarr; measure that distance &rarr; that's <b>Distance</b>.</li>
+        <li>Enter both numbers, then drag the cyan (L) and orange (R) lines onto the two ends of the reference on screen.</li>
+        <li>Tap Compute, sanity-check the result, then Save.</li>
+      </ol>
+      <p class="tip">Calibrate with the same lens (camera switch button) you'll use for the real check afterward — switching lenses invalidates the calibration.</p>
+      <div style="display:flex; gap:8px; justify-content:flex-end;">
+        <button class="btn small danger" id="calibIntroCancel">Cancel</button>
+        <button class="btn small" id="calibIntroStart">Start calibrating</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 2: live marker dragging + numeric inputs -->
+  <div id="calibForm">
+    <div class="row"><label>Object width (m)</label><input type="text" id="calibWidth" inputmode="decimal" value="10"></div>
+    <div class="row"><label>Distance to it (m)</label><input type="text" id="calibDist" inputmode="decimal" value="5"></div>
+    <div id="calibResult">Drag the cyan (L) and orange (R) lines onto the reference's two ends.</div>
+    <div id="calibActions">
+      <button class="btn small round" id="calibHelp" title="Show instructions">?</button>
+      <div class="spacer"></div>
+      <button class="btn small danger" id="calibCancel">Cancel</button>
+      <button class="btn small" id="calibCompute">Compute</button>
+      <button class="btn small" id="calibSave" style="display:none;">Save</button>
     </div>
   </div>
 
@@ -103,24 +173,6 @@
       </div>
       <div class="row"><label>Spot size</label><span id="spotOut">–</span></div>
     </details>
-  </div>
-
-  <!-- Calibration screen -->
-  <div id="calib">
-    <div id="calibVideoWrap">
-      <div class="marker left" id="markL"><div class="line"></div><div class="grip">L</div></div>
-      <div class="marker right" id="markR"><div class="line"></div><div class="grip">R</div></div>
-    </div>
-    <div id="calibForm">
-      <div class="row"><label>Object width (m)</label><input type="text" id="calibWidth" inputmode="decimal" value="1.0"></div>
-      <div class="row"><label>Distance to it (m)</label><input type="text" id="calibDist" inputmode="decimal" value="10.0"></div>
-      <div id="calibResult">Stand facing the object. Drag the cyan (L) and orange (R) markers onto its left and right edges — ideally an object that spans a wide angle (tens of degrees), not something tiny and close.</div>
-      <div id="calibActions">
-        <button class="btn small danger" id="calibCancel">Cancel</button>
-        <button class="btn small" id="calibCompute">Compute</button>
-        <button class="btn small" id="calibSave" style="display:none;">Save</button>
-      </div>
-    </div>
   </div>
 </div>
 
@@ -256,19 +308,17 @@
     var effectiveFovDeg = (2 * halfFov * 180 / Math.PI);
     readout.textContent = "Calibrated FOV ≈ " + effectiveFovDeg.toFixed(1) + "°";
 
-    // 30° gridlines
+    // 30° gridlines, labelled as unsigned degrees-from-center on each side (0 at center).
     for (var a = -180; a <= 180; a += 30){
       var frac = fractionForAngle(a, halfFov);
       if (Math.abs(frac) > 1) continue;
       var g = document.createElement("div");
       g.className = "gridline";
       g.style.left = (50 + frac*50) + "%";
-      if (a !== 0){
-        var lbl = document.createElement("div");
-        lbl.className = "lbl";
-        lbl.textContent = a + "°";
-        g.appendChild(lbl);
-      }
+      var lbl = document.createElement("div");
+      lbl.className = "lbl";
+      lbl.textContent = Math.abs(a) + "°";
+      g.appendChild(lbl);
       overlay.appendChild(g);
     }
 
@@ -311,16 +361,19 @@
     document.getElementById(id).addEventListener("input", updateSpot);
   });
 
-  // ---------- calibration screen ----------
-  var calibScreen = document.getElementById("calib");
+  // ---------- calibration flow ----------
+  var app = document.getElementById("app");
+  var bottombar = document.getElementById("bottombar");
+  var calibIntro = document.getElementById("calibIntro");
+  var calibLayer = document.getElementById("calibLayer");
+  var calibForm = document.getElementById("calibForm");
   var markL = document.getElementById("markL");
   var markR = document.getElementById("markR");
-  var calibVideoWrap = document.getElementById("calibVideoWrap");
   var fracLState = -0.3, fracRState = 0.3;
   var computedHalfFov = null;
 
   function positionMarkers(){
-    var w = calibVideoWrap.clientWidth;
+    var w = app.clientWidth;
     markL.style.left = (w/2 + fracLState*w/2 - 1.5) + "px";
     markR.style.left = (w/2 + fracRState*w/2 - 1.5) + "px";
   }
@@ -329,7 +382,7 @@
     el.addEventListener("pointerdown", function(ev){
       el.setPointerCapture(ev.pointerId);
       function onMove(ev2){
-        var rect = calibVideoWrap.getBoundingClientRect();
+        var rect = app.getBoundingClientRect();
         var x = ev2.clientX - rect.left;
         var frac = (x - rect.width/2) / (rect.width/2);
         frac = Math.min(Math.max(frac, -1), 1);
@@ -347,17 +400,33 @@
   }
   makeDraggable(markL, true);
   makeDraggable(markR, false);
-
-  document.getElementById("calibBtn").addEventListener("click", function(){
-    calibScreen.classList.add("show");
-    document.getElementById("calibSave").style.display = "none";
-    document.getElementById("calibResult").textContent = "Stand facing the object. Drag the cyan (L) and orange (R) markers onto its left and right edges — ideally an object that spans a wide angle (tens of degrees), not something tiny and close.";
-    setTimeout(positionMarkers, 50);
-  });
-  document.getElementById("calibCancel").addEventListener("click", function(){
-    calibScreen.classList.remove("show");
-  });
   window.addEventListener("resize", positionMarkers);
+
+  function openIntro(){ calibIntro.style.display = "flex"; }
+  function closeIntro(){ calibIntro.style.display = "none"; }
+  function enterMarkerStep(){
+    closeIntro();
+    bottombar.style.display = "none";
+    overlay.style.display = "none";
+    calibLayer.style.display = "block";
+    calibForm.style.display = "block";
+    document.getElementById("calibSave").style.display = "none";
+    document.getElementById("calibResult").textContent = "Drag the cyan (L) and orange (R) lines onto the reference's two ends.";
+    setTimeout(positionMarkers, 50);
+  }
+  function exitCalibration(){
+    calibIntro.style.display = "none";
+    calibLayer.style.display = "none";
+    calibForm.style.display = "none";
+    bottombar.style.display = "block";
+    overlay.style.display = "block";
+  }
+
+  document.getElementById("calibBtn").addEventListener("click", openIntro);
+  document.getElementById("calibIntroCancel").addEventListener("click", exitCalibration);
+  document.getElementById("calibIntroStart").addEventListener("click", enterMarkerStep);
+  document.getElementById("calibHelp").addEventListener("click", openIntro);
+  document.getElementById("calibCancel").addEventListener("click", exitCalibration);
 
   document.getElementById("calibCompute").addEventListener("click", function(){
     var width = parseNum(document.getElementById("calibWidth").value);
@@ -371,7 +440,7 @@
     }
     var predictedFracSpan = Math.abs(fracRState - fracLState);
     if (predictedFracSpan < 0.02){
-      resultEl.textContent = "Markers are too close together — spread them further apart on the object's edges.";
+      resultEl.textContent = "Markers are too close together — spread them further apart on the reference's edges.";
       saveBtn.style.display = "none";
       return;
     }
@@ -390,7 +459,7 @@
   document.getElementById("calibSave").addEventListener("click", function(){
     if (computedHalfFov != null){
       saveCalibration(computedHalfFov);
-      calibScreen.classList.remove("show");
+      exitCalibration();
       render();
     }
   });
