@@ -27,13 +27,12 @@
   .tip{position:absolute; top:54px; left:50%; transform:translateX(-50%); font-size:11px;
     background:rgba(20,21,23,0.9); color:#e0b23c; padding:6px 10px; border-radius:8px; max-width:78%; text-align:center;}
 
-  .btn.round{position:absolute; right:8px; width:38px; height:38px; border-radius:50%;
-    border:1px solid #7f9cf5; background:rgba(20,21,23,0.6); color:#e8e8e6; font-size:16px;
+  #actionBar{position:absolute; left:0; right:0; bottom:calc(10px + env(safe-area-inset-bottom));
+    display:flex; justify-content:center; align-items:center; gap:16px;}
+  .btn.round{width:44px; height:44px; border-radius:50%;
+    border:1px solid #7f9cf5; background:rgba(20,21,23,0.6); color:#e8e8e6; font-size:18px;
     display:flex; align-items:center; justify-content:center; cursor:pointer;}
   .btn.round:active{background:rgba(51,58,86,0.8);}
-  #camSwitchBtn{top:8px;}
-  #photoBtn{top:54px;}
-  #fsBtn{top:100px;}
 
   .center-msg{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; padding:20px; text-align:center;}
   .center-msg .box{background:rgba(20,21,23,0.96); border:1px solid #52565c; border-radius:14px; padding:20px; max-width:320px;}
@@ -50,9 +49,11 @@
   <div class="brand">ECS/CemScanner™ FOV check</div>
   <div class="warning" id="warning" style="display:none;"></div>
   <div class="tip" id="tip" style="display:none;"></div>
-  <button class="btn round" id="camSwitchBtn" title="Switch camera">🔄</button>
-  <button class="btn round" id="photoBtn" title="Take photo">📷</button>
-  <button class="btn round" id="fsBtn" title="Full screen">⛶</button>
+  <div id="actionBar">
+    <button class="btn round" id="camSwitchBtn" title="Switch camera">🔄</button>
+    <button class="btn round" id="photoBtn" title="Take photo">📷</button>
+    <button class="btn round" id="fsBtn" title="Full screen">⛶</button>
+  </div>
 
   <div class="center-msg" id="permissionMsg" style="display:none;">
     <div class="box">
