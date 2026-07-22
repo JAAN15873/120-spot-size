@@ -15,14 +15,18 @@
   #video{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; background:#000;}
   #overlay{position:absolute; inset:0; pointer-events:none;}
   .gridline{position:absolute; top:0; bottom:0; width:1px; background:#3ec9a7;}
-  .gridline .lbl{position:absolute; top:6px; left:4px; font-size:11px; color:#3ec9a7; text-shadow:0 0 3px #000;}
+  .gridline .lbl{position:absolute; top:6px; font-size:11px; color:#3ec9a7; text-shadow:0 0 3px #000; white-space:nowrap;}
+  .gridline .lbl.after{left:4px;}   /* label sits to the right of the line (center + left-side lines) */
+  .gridline .lbl.before{right:4px;} /* label sits to the left of the line (right-side lines, so it isn't clipped off-screen) */
   .centerline{position:absolute; left:0; right:0; height:1px; background:rgba(255,255,255,0.85);}
 
   .brand{position:absolute; top:10px; left:10px; font-size:11px; font-weight:600; color:#7f9cf5;
     background:rgba(0,0,0,0.45); padding:4px 8px; border-radius:6px;}
+  .warning{position:absolute; top:10px; left:50%; transform:translateX(-50%); font-size:12px;
+    background:rgba(226,99,95,0.92); color:#fff; padding:7px 12px; border-radius:8px; max-width:80%; text-align:center;}
 
   .btn.round{position:absolute; top:8px; right:8px; width:38px; height:38px; border-radius:50%;
-    border:1px solid #7f9cf5; background:rgba(20,21,23,0.6); color:#e8e8e6; font-size:18px;
+    border:1px solid #7f9cf5; background:rgba(20,21,23,0.6); color:#e8e8e6; font-size:16px;
     display:flex; align-items:center; justify-content:center; cursor:pointer;}
   .btn.round:active{background:rgba(51,58,86,0.8);}
 
@@ -38,8 +42,9 @@
 <div id="app">
   <video id="video" autoplay playsinline muted></video>
   <div id="overlay"></div>
-  <div class="brand">ECS/CemScanner™ · ultra-wide · 120° assumed</div>
-  <button class="btn round" id="fsBtn" title="Full screen">⛶</button>
+  <div class="brand">ECS/CemScanner™ FOV check</div>
+  <div class="warning" id="warning" style="display:none;"></div>
+  <button class="btn round" id="camSwitchBtn" title="Switch camera">🔄</button>
 
   <div class="center-msg" id="permissionMsg" style="display:none;">
     <div class="box">
@@ -55,12 +60,11 @@
   "use strict";
 
   // Fixed reference grid assuming the ultra-wide's declared FOV (120°, so ±60° from center).
-  // No calibration in this build — see project notes for why (screen can't show more angle
-  // than the physical lens captures, so the previous per-device calibration stopped being
-  // the bottleneck). Rectilinear (tan-based) spacing, consistent with a geometrically
-  // distortion-corrected capture.
+  // No calibration in this build — the screen can't show more angle than the physical lens
+  // captures, so a per-device calibrated angle added complexity without adding capability.
+  // Rectilinear (tan-based) spacing, consistent with a geometrically distortion-corrected capture.
   var ASSUMED_HALF_FOV_RAD = 60 * Math.PI / 180;
-  var GRID_ANGLES = [-60, -30, 0, 30, 60];
+  var GRID_ANGLES = [-60, -55, -30, 0, 30, 55, 60];
 
   function fractionForAngle(angleDeg){
     var rad = angleDeg * Math.PI / 180;
@@ -82,7 +86,8 @@
       g.className = "gridline";
       g.style.left = (50 + frac*50) + "%";
       var lbl = document.createElement("div");
-      lbl.className = "lbl";
+      // Lines on the right half would otherwise print their label off the edge of the screen.
+      lbl.className = "lbl " + (a > 0 ? "before" : "after");
       lbl.textContent = Math.abs(a) + "°";
       g.appendChild(lbl);
       overlay.appendChild(g);
@@ -90,41 +95,62 @@
   }
   render();
 
-  // ---------- camera: always try to land on the ultra-wide back lens ----------
+  // ---------- camera: always try to land on the ultra-wide back lens, but allow switching ----------
   var video = document.getElementById("video");
+  var warningEl = document.getElementById("warning");
   var currentStream = null;
+  var cameras = [];
+  var camIndex = -1;
+  var usingUltraWide = false;
 
-  function pickUltraWideDeviceId(devices){
-    var match = devices.find(function(d){
-      return d.kind === "videoinput" && /ultra.?wide/i.test(d.label);
-    });
-    return match ? match.deviceId : null;
+  function isUltraWideLabel(label){ return /ultra.?wide/i.test(label || ""); }
+
+  function updateWarning(){
+    if (!usingUltraWide){
+      warningEl.style.display = "block";
+      warningEl.textContent = "Hold the phone in landscape and select the ultra-wide lens — angles above assume both.";
+    } else {
+      warningEl.style.display = "none";
+    }
+  }
+
+  function stopStream(){
+    if (currentStream) { currentStream.getTracks().forEach(function(t){ t.stop(); }); currentStream = null; }
+  }
+
+  function applyStream(stream, label){
+    stopStream();
+    currentStream = stream;
+    video.srcObject = stream;
+    usingUltraWide = isUltraWideLabel(label);
+    document.getElementById("permissionMsg").style.display = "none";
+    updateWarning();
+  }
+
+  function switchToIndex(idx){
+    var d = cameras[idx];
+    if (!d) return Promise.resolve();
+    return navigator.mediaDevices.getUserMedia({
+      audio: false,
+      video: { deviceId: { exact: d.deviceId }, width: { ideal: 1920 }, height: { ideal: 1080 } }
+    }).then(function(stream){
+      applyStream(stream, d.label);
+      camIndex = idx;
+    }).catch(function(err){ console.error("Camera switch error", err); });
   }
 
   function startCamera(){
-    var firstStream;
     return navigator.mediaDevices.getUserMedia({
       audio: false,
       video: { facingMode: { ideal: "environment" }, width: { ideal: 1920 }, height: { ideal: 1080 } }
     }).then(function(stream){
-      firstStream = stream;
-      currentStream = stream;
-      video.srcObject = stream;
-      document.getElementById("permissionMsg").style.display = "none";
+      applyStream(stream, (stream.getVideoTracks()[0] || {}).label);
       return navigator.mediaDevices.enumerateDevices();
     }).then(function(devices){
-      var uwId = pickUltraWideDeviceId(devices);
-      if (!uwId) return null;
-      return navigator.mediaDevices.getUserMedia({
-        audio: false,
-        video: { deviceId: { exact: uwId }, width: { ideal: 1920 }, height: { ideal: 1080 } }
-      });
-    }).then(function(uwStream){
-      if (uwStream){
-        firstStream.getTracks().forEach(function(t){ t.stop(); });
-        currentStream = uwStream;
-        video.srcObject = uwStream;
-      }
+      cameras = devices.filter(function(d){ return d.kind === "videoinput"; });
+      var uwIndex = cameras.findIndex(function(d){ return isUltraWideLabel(d.label); });
+      if (uwIndex >= 0) return switchToIndex(uwIndex);
+      camIndex = 0;
     }).catch(function(err){
       document.getElementById("permissionMsg").style.display = "flex";
       console.error("Camera error", err);
@@ -132,17 +158,9 @@
   }
 
   document.getElementById("retryBtn").addEventListener("click", function(){ startCamera(); });
-
-  // ---------- fullscreen ----------
-  document.getElementById("fsBtn").addEventListener("click", function(){
-    var el = document.documentElement;
-    if (!document.fullscreenElement){
-      var req = el.requestFullscreen || el.webkitRequestFullscreen;
-      if (req) req.call(el).catch(function(){});
-    } else {
-      var exit = document.exitFullscreen || document.webkitExitFullscreen;
-      if (exit) exit.call(document);
-    }
+  document.getElementById("camSwitchBtn").addEventListener("click", function(){
+    if (cameras.length < 2) return;
+    switchToIndex((camIndex + 1) % cameras.length);
   });
 
   // ---------- boot ----------
