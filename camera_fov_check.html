@@ -52,7 +52,6 @@
   <div id="actionBar">
     <button class="btn round" id="camSwitchBtn" title="Switch camera">🔄</button>
     <button class="btn round" id="photoBtn" title="Take photo">📷</button>
-    <button class="btn round" id="fsBtn" title="Full screen">⛶</button>
   </div>
 
   <div class="center-msg" id="permissionMsg" style="display:none;">
@@ -175,13 +174,27 @@
     return zoomCheck.then(updateWarning);
   }
 
+  // Opens a specific camera by deviceId. Two things that broke switching on some phones:
+  // 1) requesting a new stream while the old one is still open -- iOS won't run two camera
+  //    sessions at once on some models and silently fails the second getUserMedia call, so the
+  //    old stream must be stopped first (trading a brief black flash for it actually working).
+  // 2) asking for 3840x2160 as a hard requirement on a lens/mode that can't do 4K -- "ideal" is
+  //    only a hint, but some devices still reject it, so fall back to no resolution constraint
+  //    at all (the browser picks something that works) rather than failing outright.
+  function openDevice(deviceId){
+    stopStream();
+    return navigator.mediaDevices.getUserMedia({
+      audio: false,
+      video: { deviceId: { exact: deviceId }, width: { ideal: 3840 }, height: { ideal: 2160 } }
+    }).catch(function(){
+      return navigator.mediaDevices.getUserMedia({ audio: false, video: { deviceId: { exact: deviceId } } });
+    });
+  }
+
   function switchToIndex(idx){
     var d = cameras[idx];
     if (!d) return Promise.resolve();
-    return navigator.mediaDevices.getUserMedia({
-      audio: false,
-      video: { deviceId: { exact: d.deviceId }, width: { ideal: 3840 }, height: { ideal: 2160 } }
-    }).then(function(stream){
+    return openDevice(d.deviceId).then(function(stream){
       camIndex = idx;
       rememberCamera(d.deviceId);
       return applyStream(stream, d.label);
@@ -201,10 +214,7 @@
     // skip the generic "environment" default so the ultra-wide is what shows up first, not
     // whatever the browser considers the default back camera.
     var direct = rememberedId
-      ? navigator.mediaDevices.getUserMedia({
-          audio: false,
-          video: { deviceId: { exact: rememberedId }, width: { ideal: 3840 }, height: { ideal: 2160 } }
-        }).then(function(stream){
+      ? openDevice(rememberedId).then(function(stream){
             return applyStream(stream, (stream.getVideoTracks()[0]||{}).label).then(function(){ return true; });
           })
         .catch(function(){ return false; }) // remembered device gone (new phone, permission reset, ...) -- fall through
@@ -284,26 +294,24 @@
     }, "image/jpeg", 0.92);
   });
 
-  // ---------- fullscreen ----------
+  // ---------- "full screen" ----------
+  // Removed the fullscreen button: confirmed non-functional in both Safari and Chrome on iOS
+  // (Chrome on iOS is also WebKit under the hood -- Apple requires it -- so it inherits the
+  // same limitation). The Fullscreen API for a whole page, as opposed to a single <video>
+  // element, isn't implemented on iOS; no JS trick reaches around a platform gap like that.
+  // "Add to Home Screen" is the one thing that actually removes Safari's chrome on iOS, and
+  // the meta tags for it are already in <head> -- just surface it once as a tip instead.
   var tipEl = document.getElementById("tip");
-  document.getElementById("fsBtn").addEventListener("click", function(){
-    var el = document.documentElement;
-    if (!document.fullscreenElement){
-      var req = el.requestFullscreen || el.webkitRequestFullscreen;
-      if (!req){
-        showTip();
-        return;
+  var FS_TIP_SEEN_KEY = "fovcheck_fs_tip_seen";
+  if (!window.navigator.standalone) {
+    try {
+      if (!localStorage.getItem(FS_TIP_SEEN_KEY)) {
+        tipEl.style.display = "block";
+        tipEl.textContent = "Tip: for a full-screen view with no Safari toolbar, use Share → Add to Home Screen and open it from there.";
+        localStorage.setItem(FS_TIP_SEEN_KEY, "1");
+        setTimeout(function(){ tipEl.style.display = "none"; }, 8000);
       }
-      Promise.resolve(req.call(el)).catch(showTip);
-    } else {
-      var exit = document.exitFullscreen || document.webkitExitFullscreen;
-      if (exit) exit.call(document);
-    }
-  });
-  function showTip(){
-    tipEl.style.display = "block";
-    tipEl.textContent = "Full screen isn't supported in a regular Safari tab on iOS. Use Share → Add to Home Screen and open it from there instead — that view has no browser bar at all.";
-    setTimeout(function(){ tipEl.style.display = "none"; }, 6000);
+    } catch(e){}
   }
   // Legacy trick: a 1px scroll can nudge Safari into auto-hiding its own toolbar even in a
   // normal tab. #app is position:fixed so this scroll is invisible either way. Effectiveness
