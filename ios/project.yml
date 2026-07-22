@@ -1,0 +1,26 @@
+name: FovCheck
+options:
+  bundleIdPrefix: com.ecs.fovcheck
+  deploymentTarget:
+    iOS: "16.0"
+  createIntermediateGroups: true
+targets:
+  FovCheck:
+    type: application
+    platform: iOS
+    sources:
+      - path: FovCheck
+    info:
+      path: FovCheck/Info.plist
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.ecs.fovcheck
+        PRODUCT_NAME: FovCheck
+        SWIFT_VERSION: "5.0"
+        TARGETED_DEVICE_FAMILY: "1"
+        IPHONEOS_DEPLOYMENT_TARGET: "16.0"
+        CODE_SIGN_STYLE: Manual
+        CODE_SIGNING_REQUIRED: NO
+        CODE_SIGNING_ALLOWED: NO
+        CODE_SIGN_IDENTITY: ""
+        DEVELOPMENT_TEAM: ""
