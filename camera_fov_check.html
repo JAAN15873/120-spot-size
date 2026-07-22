@@ -112,8 +112,12 @@
   var usingUltraWide = false;
   var possiblyCropped = false;
 
-  // iOS labels back lenses in the phone's system language, not always English.
-  var ULTRA_WIDE_LABEL_RE = /ultra.?wide|grand.?angle|gran.?angular|weitwinkel|širokoúhl|grande.?angular/i;
+  // "ultra" is the one word Apple keeps in Latin script across every localization of this
+  // label (French "ultra grand-angle", Czech "ultraširokoúhlý", German "Ultraweitwinkel"...).
+  // Matching the translated word for plain "wide" instead was the bug: the regular 1x lens's
+  // label also contains "wide angle" in most languages, just without "ultra" in front of it,
+  // so it was being misidentified as the ultra-wide lens.
+  var ULTRA_WIDE_LABEL_RE = /ultra/i;
   var FRONT_LABEL_RE = /front|facetime|selfie|přední|frontal/i;
   function isUltraWideLabel(label){ return ULTRA_WIDE_LABEL_RE.test(label || ""); }
   function isFrontLabel(label){ return FRONT_LABEL_RE.test(label || ""); }
@@ -122,13 +126,22 @@
   function rememberCamera(deviceId){ try { localStorage.setItem(REMEMBERED_CAMERA_KEY, deviceId); } catch(e){} }
   function getRememberedCameraId(){ try { return localStorage.getItem(REMEMBERED_CAMERA_KEY); } catch(e){ return null; } }
 
+  var isPortrait = window.innerHeight > window.innerWidth;
+  function handleOrientationChange(){
+    isPortrait = window.innerHeight > window.innerWidth;
+    updateWarning();
+  }
+  window.addEventListener("resize", handleOrientationChange);
+  window.addEventListener("orientationchange", handleOrientationChange);
+
   function updateWarning(){
-    if (!usingUltraWide){
+    var problems = [];
+    if (isPortrait) problems.push("rotate to landscape");
+    if (!usingUltraWide) problems.push("switch to the ultra-wide lens");
+    else if (possiblyCropped) problems.push("zoom the ultra-wide lens all the way out (this looks cropped)");
+    if (problems.length){
       warningEl.style.display = "block";
-      warningEl.textContent = "Hold the phone in landscape and select the ultra-wide lens — angles above assume both.";
-    } else if (possiblyCropped){
-      warningEl.style.display = "block";
-      warningEl.textContent = "This lens looks zoomed in past its widest setting — angles above may not be accurate. Check the zoom.";
+      warningEl.textContent = "Please " + problems.join(" and ") + " — angles above assume both.";
     } else {
       warningEl.style.display = "none";
     }
