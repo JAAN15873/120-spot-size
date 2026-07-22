@@ -8,85 +8,38 @@
 <meta name="apple-mobile-web-app-title" content="FOV Check">
 <title>ECS/CemScanner™ FOV field check</title>
 <style>
-  :root{
-    --bg:#1c1d1f; --panel:#26282b; --border:#3a3d41; --border-strong:#52565c;
-    --text:#e8e8e6; --text-secondary:#a3a6ab; --accent:#7f9cf5; --accent2:#3ec9a7;
-    --danger:#e2635f; --danger-bg:#3a2426; --warn:#e0b23c; --warn-bg:#3a3320;
-    --left:#4fd6ff; --right:#ff9d4f;
-  }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
   html,body{margin:0; padding:0; width:100%; height:100%; overflow:hidden; background:#000;
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif; color:var(--text);}
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif; color:#e8e8e6;}
   #app{position:fixed; inset:0;}
   #video{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; background:#000;}
   #overlay{position:absolute; inset:0; pointer-events:none;}
-  .gridline{position:absolute; top:0; bottom:0; width:1px; background:var(--accent2);}
-  .gridline .lbl{position:absolute; top:6px; left:4px; font-size:10px; color:var(--accent2); text-shadow:0 0 3px #000;}
-  .coneline{position:absolute; top:0; bottom:0; width:2px; background:#ffd23c; box-shadow:0 0 3px #000;}
-  .centerline{position:absolute; left:0; right:0; height:1px; background:rgba(255,255,255,0.75);}
+  .gridline{position:absolute; top:0; bottom:0; width:1px; background:#3ec9a7;}
+  .gridline .lbl{position:absolute; top:6px; left:4px; font-size:11px; color:#3ec9a7; text-shadow:0 0 3px #000;}
+  .centerline{position:absolute; left:0; right:0; height:1px; background:rgba(255,255,255,0.85);}
 
-  .brand{position:absolute; top:10px; left:10px; font-size:13px; font-weight:700; color:#7f9cf5;
+  .brand{position:absolute; top:10px; left:10px; font-size:11px; font-weight:600; color:#7f9cf5;
     background:rgba(0,0,0,0.45); padding:4px 8px; border-radius:6px;}
-  .readout{position:absolute; top:10px; right:10px; font-size:11px; background:rgba(0,0,0,0.55);
-    padding:6px 9px; border-radius:8px; text-align:right; line-height:1.5;}
-  .warning{position:absolute; top:40px; left:10px; right:10px; font-size:12px; background:rgba(226,99,95,0.9);
-    color:#fff; padding:8px 10px; border-radius:8px;}
 
-  .center-msg{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; padding:20px; text-align:center; z-index:20;}
-  .center-msg .box{background:rgba(20,21,23,0.96); border:1px solid var(--border-strong); border-radius:14px; padding:20px;
-    max-width:340px; max-height:calc(100% - 20px); overflow-y:auto;}
-  .center-msg .box.wide{max-width:360px;}
+  .btn.round{position:absolute; top:8px; right:8px; width:38px; height:38px; border-radius:50%;
+    border:1px solid #7f9cf5; background:rgba(20,21,23,0.6); color:#e8e8e6; font-size:18px;
+    display:flex; align-items:center; justify-content:center; cursor:pointer;}
+  .btn.round:active{background:rgba(51,58,86,0.8);}
+
+  .center-msg{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; padding:20px; text-align:center;}
+  .center-msg .box{background:rgba(20,21,23,0.96); border:1px solid #52565c; border-radius:14px; padding:20px; max-width:320px;}
   .center-msg h2{font-size:16px; margin:0 0 10px;}
-  .center-msg p{font-size:13px; color:var(--text-secondary); line-height:1.5; margin:0 0 10px; text-align:left;}
-  .center-msg ol{font-size:13px; color:var(--text); line-height:1.6; text-align:left; margin:0 0 14px; padding-left:20px;}
-  .center-msg ol li{margin-bottom:6px;}
-  .center-msg .tip{font-size:12px; color:var(--warn); text-align:left; margin:0 0 14px; line-height:1.5;}
-
-  .btn{display:inline-block; padding:10px 16px; border-radius:10px; border:1px solid var(--accent);
-    background:#2a2f45; color:var(--text); font-size:14px; cursor:pointer;}
-  .btn:active{background:#333a56;}
-  .btn.small{padding:6px 10px; font-size:12px;}
-  .btn.danger{border-color:var(--danger); background:var(--danger-bg); color:var(--danger);}
-  .btn.round{width:32px; height:32px; border-radius:50%; padding:0; text-align:center; line-height:1;}
-
-  #bottombar{position:absolute; left:0; right:0; bottom:0; background:rgba(15,16,18,0.85);
-    padding:10px 12px calc(10px + env(safe-area-inset-bottom));}
-  .row{display:flex; align-items:center; gap:8px; margin-bottom:8px;}
-  .row:last-child{margin-bottom:0;}
-  .row label{font-size:12px; color:var(--text-secondary); flex-shrink:0;}
-  input[type=range]{flex:1; accent-color:var(--accent);}
-  input[type=number], input[type=text]{width:64px; text-align:right; font-size:13px; font-weight:600;
-    background:var(--bg); color:var(--text); border:1px solid var(--border-strong); border-radius:6px; padding:5px 6px;}
-  #spotOut{font-size:13px; font-weight:700; color:#ffd23c; min-width:70px; text-align:right;}
-  details{color:var(--text);}
-  summary{font-size:12px; color:var(--text-secondary); cursor:pointer; padding:2px 0;}
-
-  /* Calibration marker layer sits directly on top of the live video/overlay -- no separate
-     video element, so the technician always sees the real scene while dragging markers. */
-  #calibLayer{position:absolute; inset:0; pointer-events:none; z-index:10; display:none;}
-  .marker{position:absolute; top:0; bottom:0; width:3px; touch-action:none; pointer-events:auto;}
-  .marker .line{position:absolute; inset:0;}
-  .marker .grip{position:absolute; top:40%; left:-14px; width:31px; height:44px; border-radius:8px;
-    display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:#111;}
-  .marker.left .line{background:var(--left);} .marker.left .grip{background:var(--left);}
-  .marker.right .line{background:var(--right);} .marker.right .grip{background:var(--right);}
-
-  #calibForm{position:absolute; left:0; right:0; bottom:0; z-index:11; display:none;
-    background:var(--panel); border-top:1px solid var(--border); padding:10px 14px calc(10px + env(safe-area-inset-bottom));}
-  #calibForm .row{margin-bottom:8px;}
-  #calibForm label{width:120px; flex-shrink:0;}
-  #calibResult{font-size:12px; color:var(--text-secondary); margin:6px 0; line-height:1.5;}
-  #calibActions{display:flex; gap:8px; justify-content:flex-end; align-items:center;}
-  #calibActions .spacer{flex:1;}
+  .center-msg p{font-size:13px; color:#a3a6ab; line-height:1.5; margin:0 0 14px;}
+  .btn{display:inline-block; padding:10px 16px; border-radius:10px; border:1px solid #7f9cf5;
+    background:#2a2f45; color:#e8e8e6; font-size:14px; cursor:pointer;}
 </style>
 </head>
 <body>
 <div id="app">
   <video id="video" autoplay playsinline muted></video>
   <div id="overlay"></div>
-  <div class="brand">ECS/CemScanner™ FOV check</div>
-  <div class="readout" id="readout"></div>
-  <div class="warning" id="warning" style="display:none;"></div>
+  <div class="brand">ECS/CemScanner™ · ultra-wide · 120° assumed</div>
+  <button class="btn round" id="fsBtn" title="Full screen">⛶</button>
 
   <div class="center-msg" id="permissionMsg" style="display:none;">
     <div class="box">
@@ -95,223 +48,36 @@
       <button class="btn" id="retryBtn">Try again</button>
     </div>
   </div>
-
-  <!-- Calibration markers, drawn directly over the live camera feed -->
-  <div id="calibLayer">
-    <div class="marker left" id="markL"><div class="line"></div><div class="grip">L</div></div>
-    <div class="marker right" id="markR"><div class="line"></div><div class="grip">R</div></div>
-  </div>
-
-  <!-- Step 1: instructions + diagram, shown before dragging markers -->
-  <div class="center-msg" id="calibIntro" style="display:none;">
-    <div class="box wide">
-      <h2>How to calibrate</h2>
-      <svg viewBox="0 0 300 190" width="100%" style="max-width:280px; margin:0 auto 12px; display:block;">
-        <defs>
-          <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-            <path d="M0,0 L10,5 L0,10 z" fill="#a3a6ab"/>
-          </marker>
-        </defs>
-        <line x1="150" y1="165" x2="58" y2="32" stroke="#4fd6ff" stroke-width="1.5" stroke-dasharray="4 3"/>
-        <line x1="150" y1="165" x2="242" y2="32" stroke="#ff9d4f" stroke-width="1.5" stroke-dasharray="4 3"/>
-        <line x1="60" y1="30" x2="240" y2="30" stroke="#e8e8e6" stroke-width="2"/>
-        <circle cx="60" cy="30" r="6" fill="#4fd6ff"/>
-        <circle cx="240" cy="30" r="6" fill="#ff9d4f"/>
-        <text x="60" y="18" fill="#4fd6ff" font-size="11" text-anchor="middle">L</text>
-        <text x="240" y="18" fill="#ff9d4f" font-size="11" text-anchor="middle">R</text>
-        <line x1="60" y1="50" x2="240" y2="50" stroke="#a3a6ab" stroke-width="1" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
-        <text x="150" y="66" fill="#a3a6ab" font-size="12" text-anchor="middle">width W (measured)</text>
-        <line x1="150" y1="165" x2="150" y2="34" stroke="#a3a6ab" stroke-width="1" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
-        <text x="156" y="105" fill="#a3a6ab" font-size="11">distance D</text>
-        <text x="156" y="118" fill="#a3a6ab" font-size="11">(measured)</text>
-        <circle cx="150" cy="168" r="5" fill="#7f9cf5"/>
-        <text x="150" y="185" fill="#7f9cf5" font-size="11" text-anchor="middle">you, facing the line square-on</text>
-      </svg>
-      <ol>
-        <li>Pick a straight reference on flat ground: a tape measure or rope stretched taut works best. Aim for it to span a wide angle — roughly the size of what you'll actually check (for a 120° cone, that means long: 8–15 m is a good target, not something small and close).</li>
-        <li>Measure its exact length &rarr; that's <b>Width</b>.</li>
-        <li>Stand back facing its midpoint square-on (not at an angle), phone held level &rarr; measure that distance &rarr; that's <b>Distance</b>.</li>
-        <li>Enter both numbers, then drag the cyan (L) and orange (R) lines onto the two ends of the reference on screen.</li>
-        <li>Tap Compute, sanity-check the result, then Save.</li>
-      </ol>
-      <p class="tip">Calibrate with the same lens (camera switch button) you'll use for the real check afterward — switching lenses invalidates the calibration.</p>
-      <div style="display:flex; gap:8px; justify-content:flex-end;">
-        <button class="btn small danger" id="calibIntroCancel">Cancel</button>
-        <button class="btn small" id="calibIntroStart">Start calibrating</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Step 2: live marker dragging + numeric inputs -->
-  <div id="calibForm">
-    <div class="row"><label>Object width (m)</label><input type="text" id="calibWidth" inputmode="decimal" value="10"></div>
-    <div class="row"><label>Distance to it (m)</label><input type="text" id="calibDist" inputmode="decimal" value="5"></div>
-    <div id="calibResult">Drag the cyan (L) and orange (R) lines onto the reference's two ends.</div>
-    <div id="calibActions">
-      <button class="btn small round" id="calibHelp" title="Show instructions">?</button>
-      <div class="spacer"></div>
-      <button class="btn small danger" id="calibCancel">Cancel</button>
-      <button class="btn small" id="calibCompute">Compute</button>
-      <button class="btn small" id="calibSave" style="display:none;">Save</button>
-    </div>
-  </div>
-
-  <div id="bottombar">
-    <div class="row">
-      <label>Cone</label>
-      <input type="range" id="angleSlider" min="10" max="170" step="1" value="120">
-      <span id="angleVal" style="width:36px; text-align:right; font-size:13px; font-weight:700;">120°</span>
-      <button class="btn small" id="calibBtn">Calibrate</button>
-      <button class="btn small" id="camSwitchBtn" title="Try a different camera">🔄</button>
-    </div>
-    <details id="spotDetails">
-      <summary>Spot size calculator</summary>
-      <div class="row" style="margin-top:8px;">
-        <label>Distance (m)</label><input type="text" id="distIn" inputmode="decimal" value="25">
-        <label>Grazing (°)</label><input type="text" id="grazeIn" inputmode="decimal" value="90">
-        <label>Sensor (mrad)</label><input type="text" id="mradIn" inputmode="decimal" value="3">
-      </div>
-      <div class="row"><label>Spot size</label><span id="spotOut">–</span></div>
-    </details>
-  </div>
 </div>
 
 <script>
 (function(){
   "use strict";
 
-  var STORAGE_KEY = "fovcheck_calibration_v1";
+  // Fixed reference grid assuming the ultra-wide's declared FOV (120°, so ±60° from center).
+  // No calibration in this build — see project notes for why (screen can't show more angle
+  // than the physical lens captures, so the previous per-device calibration stopped being
+  // the bottleneck). Rectilinear (tan-based) spacing, consistent with a geometrically
+  // distortion-corrected capture.
+  var ASSUMED_HALF_FOV_RAD = 60 * Math.PI / 180;
+  var GRID_ANGLES = [-60, -30, 0, 30, 60];
 
-  // ---------- pure math (grid/cone/spot formulas mirror skener_fov_120.html) ----------
-
-  // Rectilinear tan-based mapping between an angle from the optical axis and a fraction of
-  // half-screen-width, using an *empirically calibrated* effective half-FOV (no native FOV
-  // API exists on the web, so calibration is not optional here — it IS the model).
-  function fractionForAngle(angleDeg, halfFovRad){
+  function fractionForAngle(angleDeg){
     var rad = angleDeg * Math.PI / 180;
-    var denom = Math.tan(halfFovRad);
-    if (!denom) return 0;
-    return Math.tan(rad) / denom;
-  }
-  function angleForFraction(frac, halfFovRad){
-    return Math.atan(frac * Math.tan(halfFovRad)) * 180 / Math.PI;
-  }
-  // Solve for halfFovRad such that the two calibration markers' angular separation equals
-  // the true (measured) angle. Bisection: the angular-separation function is monotonic in
-  // halfFovRad over the physically valid 0..90deg range.
-  function solveHalfFov(fracLeft, fracRight, trueAngleDeg){
-    var trueRad = trueAngleDeg * Math.PI / 180;
-    function angularSeparation(halfFovRad){
-      return Math.atan(fracRight * Math.tan(halfFovRad)) - Math.atan(fracLeft * Math.tan(halfFovRad));
-    }
-    var lo = 0.5 * Math.PI/180, hi = 89 * Math.PI/180;
-    var fLo = angularSeparation(lo) - trueRad;
-    for (var i=0;i<60;i++){
-      var mid = (lo+hi)/2;
-      var fMid = angularSeparation(mid) - trueRad;
-      if ((fLo <= 0 && fMid <= 0) || (fLo >= 0 && fMid >= 0)) { lo = mid; fLo = fMid; } else { hi = mid; }
-    }
-    return (lo+hi)/2;
-  }
-  function subtendedAngleDeg(widthM, distanceM){
-    return 2 * Math.atan((widthM/2) / distanceM) * 180 / Math.PI;
-  }
-  // Same formula as pyroSpotMm() in skener_fov_120.html.
-  function spotSizeMm(slantRangeM, grazingDeg, mradResolution){
-    if (grazingDeg < 1) return null;
-    var gRad = grazingDeg * Math.PI / 180;
-    return (mradResolution/1000 * slantRangeM / Math.sin(gRad)) * 1000;
+    return Math.tan(rad) / Math.tan(ASSUMED_HALF_FOV_RAD);
   }
 
-  // ---------- calibration persistence ----------
-  function loadCalibration(){
-    try {
-      var raw = localStorage.getItem(STORAGE_KEY);
-      return raw ? JSON.parse(raw) : null;
-    } catch(e){ return null; }
-  }
-  function saveCalibration(halfFovRad){
-    var data = { halfFovRad: halfFovRad, calibratedAt: new Date().toISOString() };
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch(e){}
-    calibration = data;
-  }
-
-  var calibration = loadCalibration();
-
-  // ---------- camera ----------
-  var video = document.getElementById("video");
-  var currentStream = null;
-  var cameras = [];
-  var camIndex = 0;
-
-  function stopStream(){
-    if (currentStream) { currentStream.getTracks().forEach(function(t){ t.stop(); }); currentStream = null; }
-  }
-
-  function startCamera(deviceId){
-    stopStream();
-    var constraints = { audio:false, video: deviceId
-      ? { deviceId:{ exact: deviceId }, width:{ ideal:1920 }, height:{ ideal:1080 } }
-      : { facingMode:{ ideal:"environment" }, width:{ ideal:1920 }, height:{ ideal:1080 } } };
-    return navigator.mediaDevices.getUserMedia(constraints).then(function(stream){
-      currentStream = stream;
-      video.srcObject = stream;
-      document.getElementById("permissionMsg").style.display = "none";
-      return navigator.mediaDevices.enumerateDevices();
-    }).then(function(devices){
-      cameras = devices.filter(function(d){ return d.kind === "videoinput"; });
-    }).catch(function(err){
-      document.getElementById("permissionMsg").style.display = "flex";
-      console.error("Camera error", err);
-    });
-  }
-
-  document.getElementById("retryBtn").addEventListener("click", function(){ startCamera(); });
-  document.getElementById("camSwitchBtn").addEventListener("click", function(){
-    if (cameras.length < 2) { alert("Only one camera was exposed by the browser. If you have several back lenses, iOS may still be picking automatically — try again after a reload."); return; }
-    camIndex = (camIndex + 1) % cameras.length;
-    startCamera(cameras[camIndex].deviceId);
-  });
-
-  // ---------- main overlay render ----------
   var overlay = document.getElementById("overlay");
-  var readout = document.getElementById("readout");
-  var warningEl = document.getElementById("warning");
-  var targetAngle = 120;
-
-  var angleSlider = document.getElementById("angleSlider");
-  var angleVal = document.getElementById("angleVal");
-  angleSlider.addEventListener("input", function(){
-    targetAngle = parseFloat(angleSlider.value);
-    angleVal.textContent = Math.round(targetAngle) + "°";
-    render();
-  });
-
-  function clear(el){ while(el.firstChild) el.removeChild(el.firstChild); }
-
   function render(){
-    clear(overlay);
+    while (overlay.firstChild) overlay.removeChild(overlay.firstChild);
 
     var center = document.createElement("div");
     center.className = "centerline";
     center.style.top = "50%";
     overlay.appendChild(center);
 
-    if (!calibration){
-      readout.textContent = "Not calibrated";
-      warningEl.style.display = "block";
-      warningEl.textContent = "Not calibrated yet — angles below are not shown until you calibrate. Tap \"Calibrate\".";
-      return;
-    }
-
-    var halfFov = calibration.halfFovRad;
-    var effectiveFovDeg = (2 * halfFov * 180 / Math.PI);
-    readout.textContent = "Calibrated FOV ≈ " + effectiveFovDeg.toFixed(1) + "°";
-
-    // 30° gridlines, labelled as unsigned degrees-from-center on each side (0 at center).
-    for (var a = -180; a <= 180; a += 30){
-      var frac = fractionForAngle(a, halfFov);
-      if (Math.abs(frac) > 1) continue;
+    GRID_ANGLES.forEach(function(a){
+      var frac = fractionForAngle(a);
       var g = document.createElement("div");
       g.className = "gridline";
       g.style.left = (50 + frac*50) + "%";
@@ -320,153 +86,66 @@
       lbl.textContent = Math.abs(a) + "°";
       g.appendChild(lbl);
       overlay.appendChild(g);
-    }
-
-    // target cone edges
-    var half = targetAngle / 2;
-    var fracR = fractionForAngle(half, halfFov);
-    var fracL = fractionForAngle(-half, halfFov);
-    var offScreen = Math.abs(fracR) > 1;
-    var clampedR = Math.min(Math.max(fracR, -1), 1);
-    var clampedL = Math.min(Math.max(fracL, -1), 1);
-
-    [clampedL, clampedR].forEach(function(f){
-      var line = document.createElement("div");
-      line.className = "coneline";
-      line.style.left = (50 + f*50) + "%";
-      overlay.appendChild(line);
     });
+  }
+  render();
 
-    if (offScreen){
-      var visibleFull = 2*angleForFraction(1, halfFov);
-      warningEl.style.display = "block";
-      warningEl.textContent = "Target " + Math.round(targetAngle) + "° exceeds this lens's calibrated FOV (visible ≈ " + visibleFull.toFixed(1) + "° total). Object may extend past what's on screen.";
+  // ---------- camera: always try to land on the ultra-wide back lens ----------
+  var video = document.getElementById("video");
+  var currentStream = null;
+
+  function pickUltraWideDeviceId(devices){
+    var match = devices.find(function(d){
+      return d.kind === "videoinput" && /ultra.?wide/i.test(d.label);
+    });
+    return match ? match.deviceId : null;
+  }
+
+  function startCamera(){
+    var firstStream;
+    return navigator.mediaDevices.getUserMedia({
+      audio: false,
+      video: { facingMode: { ideal: "environment" }, width: { ideal: 1920 }, height: { ideal: 1080 } }
+    }).then(function(stream){
+      firstStream = stream;
+      currentStream = stream;
+      video.srcObject = stream;
+      document.getElementById("permissionMsg").style.display = "none";
+      return navigator.mediaDevices.enumerateDevices();
+    }).then(function(devices){
+      var uwId = pickUltraWideDeviceId(devices);
+      if (!uwId) return null;
+      return navigator.mediaDevices.getUserMedia({
+        audio: false,
+        video: { deviceId: { exact: uwId }, width: { ideal: 1920 }, height: { ideal: 1080 } }
+      });
+    }).then(function(uwStream){
+      if (uwStream){
+        firstStream.getTracks().forEach(function(t){ t.stop(); });
+        currentStream = uwStream;
+        video.srcObject = uwStream;
+      }
+    }).catch(function(err){
+      document.getElementById("permissionMsg").style.display = "flex";
+      console.error("Camera error", err);
+    });
+  }
+
+  document.getElementById("retryBtn").addEventListener("click", function(){ startCamera(); });
+
+  // ---------- fullscreen ----------
+  document.getElementById("fsBtn").addEventListener("click", function(){
+    var el = document.documentElement;
+    if (!document.fullscreenElement){
+      var req = el.requestFullscreen || el.webkitRequestFullscreen;
+      if (req) req.call(el).catch(function(){});
     } else {
-      warningEl.style.display = "none";
-    }
-  }
-
-  // ---------- spot size panel ----------
-  function parseNum(s){ var v = parseFloat(String(s).replace(",", ".")); return isFinite(v) ? v : null; }
-  function updateSpot(){
-    var d = parseNum(document.getElementById("distIn").value);
-    var g = parseNum(document.getElementById("grazeIn").value);
-    var m = parseNum(document.getElementById("mradIn").value);
-    var out = document.getElementById("spotOut");
-    if (d==null || g==null || m==null){ out.textContent = "–"; return; }
-    var mm = spotSizeMm(d, g, m);
-    out.textContent = (mm==null) ? "angle too shallow" : (Math.round(mm) + " mm");
-  }
-  ["distIn","grazeIn","mradIn"].forEach(function(id){
-    document.getElementById(id).addEventListener("input", updateSpot);
-  });
-
-  // ---------- calibration flow ----------
-  var app = document.getElementById("app");
-  var bottombar = document.getElementById("bottombar");
-  var calibIntro = document.getElementById("calibIntro");
-  var calibLayer = document.getElementById("calibLayer");
-  var calibForm = document.getElementById("calibForm");
-  var markL = document.getElementById("markL");
-  var markR = document.getElementById("markR");
-  var fracLState = -0.3, fracRState = 0.3;
-  var computedHalfFov = null;
-
-  function positionMarkers(){
-    var w = app.clientWidth;
-    markL.style.left = (w/2 + fracLState*w/2 - 1.5) + "px";
-    markR.style.left = (w/2 + fracRState*w/2 - 1.5) + "px";
-  }
-
-  function makeDraggable(el, isLeft){
-    el.addEventListener("pointerdown", function(ev){
-      el.setPointerCapture(ev.pointerId);
-      function onMove(ev2){
-        var rect = app.getBoundingClientRect();
-        var x = ev2.clientX - rect.left;
-        var frac = (x - rect.width/2) / (rect.width/2);
-        frac = Math.min(Math.max(frac, -1), 1);
-        if (isLeft) fracLState = frac; else fracRState = frac;
-        positionMarkers();
-      }
-      function onUp(ev2){
-        el.releasePointerCapture(ev.pointerId);
-        el.removeEventListener("pointermove", onMove);
-        el.removeEventListener("pointerup", onUp);
-      }
-      el.addEventListener("pointermove", onMove);
-      el.addEventListener("pointerup", onUp);
-    });
-  }
-  makeDraggable(markL, true);
-  makeDraggable(markR, false);
-  window.addEventListener("resize", positionMarkers);
-
-  function openIntro(){ calibIntro.style.display = "flex"; }
-  function closeIntro(){ calibIntro.style.display = "none"; }
-  function enterMarkerStep(){
-    closeIntro();
-    bottombar.style.display = "none";
-    overlay.style.display = "none";
-    calibLayer.style.display = "block";
-    calibForm.style.display = "block";
-    document.getElementById("calibSave").style.display = "none";
-    document.getElementById("calibResult").textContent = "Drag the cyan (L) and orange (R) lines onto the reference's two ends.";
-    setTimeout(positionMarkers, 50);
-  }
-  function exitCalibration(){
-    calibIntro.style.display = "none";
-    calibLayer.style.display = "none";
-    calibForm.style.display = "none";
-    bottombar.style.display = "block";
-    overlay.style.display = "block";
-  }
-
-  document.getElementById("calibBtn").addEventListener("click", openIntro);
-  document.getElementById("calibIntroCancel").addEventListener("click", exitCalibration);
-  document.getElementById("calibIntroStart").addEventListener("click", enterMarkerStep);
-  document.getElementById("calibHelp").addEventListener("click", openIntro);
-  document.getElementById("calibCancel").addEventListener("click", exitCalibration);
-
-  document.getElementById("calibCompute").addEventListener("click", function(){
-    var width = parseNum(document.getElementById("calibWidth").value);
-    var dist = parseNum(document.getElementById("calibDist").value);
-    var resultEl = document.getElementById("calibResult");
-    var saveBtn = document.getElementById("calibSave");
-    if (width==null || dist==null || width<=0 || dist<=0){
-      resultEl.textContent = "Enter a valid width and distance.";
-      saveBtn.style.display = "none";
-      return;
-    }
-    var predictedFracSpan = Math.abs(fracRState - fracLState);
-    if (predictedFracSpan < 0.02){
-      resultEl.textContent = "Markers are too close together — spread them further apart on the reference's edges.";
-      saveBtn.style.display = "none";
-      return;
-    }
-    var trueAngle = subtendedAngleDeg(width, dist);
-    var halfFov = solveHalfFov(fracLState, fracRState, trueAngle);
-    var effFov = 2*halfFov*180/Math.PI;
-    if (!isFinite(effFov) || effFov <= 1 || effFov >= 179){
-      resultEl.textContent = "Result out of plausible range (" + effFov.toFixed(1) + "°). Check inputs and marker placement, then try again.";
-      saveBtn.style.display = "none";
-      return;
-    }
-    computedHalfFov = halfFov;
-    resultEl.textContent = "True angle: " + trueAngle.toFixed(1) + "°. Calibrated effective FOV: " + effFov.toFixed(1) + "°.";
-    saveBtn.style.display = "inline-block";
-  });
-  document.getElementById("calibSave").addEventListener("click", function(){
-    if (computedHalfFov != null){
-      saveCalibration(computedHalfFov);
-      exitCalibration();
-      render();
+      var exit = document.exitFullscreen || document.webkitExitFullscreen;
+      if (exit) exit.call(document);
     }
   });
 
   // ---------- boot ----------
-  updateSpot();
-  render();
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
     document.getElementById("permissionMsg").style.display = "flex";
     document.querySelector("#permissionMsg h2").textContent = "Camera API unavailable";
