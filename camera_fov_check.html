@@ -287,14 +287,9 @@
   });
 
   // ---------- photo capture (burns the same grid the screen shows into the saved image) ----------
-  // Two capture paths, tried in order:
-  // 1) ImageCapture.takePhoto() -- a real still-photo capture, often much higher resolution
-  //    than the live video stream (which stays capped for real-time bandwidth even at the
-  //    3840x2160 we ask for). Not guaranteed to work on iOS Safari, and in principle a lens's
-  //    still-photo mode *could* use a different sensor crop than its video mode -- if the grid
-  //    in a saved photo ever looks like it doesn't match what was on screen, that's why; the
-  //    fallback below is the one guaranteed to be pixel-for-pixel what you saw live.
-  // 2) A frame grabbed straight from the live <video> element.
+  // Grabs a frame straight from the live <video> element -- guaranteed to be pixel-for-pixel
+  // what was on screen, at whatever resolution the video stream negotiated (see the 3840x2160
+  // "ideal" request in openDevice/startCamera).
   function renderPhotoFrom(source, srcW, srcH){
     var containerW = video.clientWidth, containerH = video.clientHeight;
     var containerAspect = containerW / containerH;
@@ -353,17 +348,8 @@
     return renderPhotoFrom(video, video.videoWidth, video.videoHeight);
   }
 
-  function captureHighRes(){
-    if (!window.ImageCapture || !currentTrack) return Promise.reject(new Error("ImageCapture unavailable"));
-    var capture;
-    try { capture = new ImageCapture(currentTrack); } catch(e){ return Promise.reject(e); }
-    return capture.takePhoto()
-      .then(function(blob){ return createImageBitmap(blob); })
-      .then(function(bitmap){ return renderPhotoFrom(bitmap, bitmap.width, bitmap.height); });
-  }
-
   document.getElementById("photoBtn").addEventListener("click", function(){
-    captureHighRes().catch(function(){ return captureFromVideoFrame(); }).then(deliverPhotoBlob);
+    captureFromVideoFrame().then(deliverPhotoBlob);
   });
 
   // ---------- "full screen" ----------
