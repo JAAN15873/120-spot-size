@@ -68,7 +68,7 @@
   .table-wrap thead th{position:sticky; top:0; background:var(--panel);}
   .aligned-table{table-layout:fixed; width:724px;}
 
-  .brand-title{text-align:center; font-size:34px; font-weight:800; color:#4c6fff; letter-spacing:0.5px; margin:0 0 6px;
+  .brand-title{text-align:center; font-size:52px; font-weight:800; color:#4c6fff; letter-spacing:0.5px; margin:0 0 6px;
     width:100vw; position:relative; left:50%; right:50%; margin-left:-50vw; margin-right:-50vw;}
   input[type=text]{width:auto; flex:1; text-align:left; font-size:13px; font-weight:600;
     background:var(--bg); color:var(--text); border:1px solid var(--border-strong); border-radius:6px; padding:6px 8px;}
@@ -102,8 +102,8 @@
   .quote-info-box p{margin:2px 0 !important;}
   .quote-info-box strong{color:#2a4fd7;}
   .benefit-grid{display:grid; grid-template-columns:repeat(5,1fr); gap:8px; margin:8px 0 18px;}
-  .benefit-tile{background:#2a4fd7; color:#fff; border-radius:6px; padding:8px 8px; font-size:11px; font-weight:700; line-height:1.3;}
-  .benefit-tile .num{display:block; font-size:17px; font-weight:800; margin-bottom:3px;}
+  .benefit-tile{background:#eef2fb; border:1px solid #ccd6ef; color:#111 !important; border-radius:6px; padding:10px 8px; font-size:13px !important; font-weight:700; line-height:1.35;}
+  .benefit-tile .num{display:block; font-size:19px; font-weight:800; margin-bottom:4px; color:#2a4fd7;}
   .capability-grid{display:grid; grid-template-columns:1fr 1fr; gap:6px 20px; margin:8px 0 18px;}
   .capability-item h4{margin:0 0 3px; font-size:13px; color:#111;}
   .capability-item p{margin:0 !important; font-size:12px !important; line-height:1.5 !important; color:#333;}
@@ -133,9 +133,13 @@
 </div>
 <div class="wrap">
   <div class="brand-title">ECS/CemScanner™</div>
-  <div class="row no-print" style="max-width:460px; margin:0 auto 16px;">
-    <label style="width:auto; white-space:nowrap; margin-right:4px;" data-i18n="placementStudyForLabel">Placement study for:</label>
-    <input type="text" id="customer-name" placeholder="Site name" data-i18n-placeholder="placeholderSiteName" style="width:100%;">
+  <div class="panel no-print" style="max-width:560px; margin:0 auto 16px;">
+    <div class="row"><label for="customer-name" data-i18n="placementStudyForLabel">Placement study for:</label>
+      <input type="text" id="customer-name" placeholder="Site name" data-i18n-placeholder="placeholderSiteName" style="width:100%;"></div>
+    <div class="row"><label for="customer-contact" data-i18n="labelCustomerContact">Customer contact person</label>
+      <input type="text" id="customer-contact" placeholder="Name, email, phone" data-i18n-placeholder="placeholderContact" style="width:100%;"></div>
+    <div class="row"><label for="fuller-contact" data-i18n="labelFullerContact">Fuller contact person</label>
+      <input type="text" id="fuller-contact" placeholder="Name, email, phone" data-i18n-placeholder="placeholderContact" style="width:100%;"></div>
   </div>
 
   <div class="print-only marketing-block">
@@ -176,6 +180,8 @@
     <p class="marketing-link"><span data-i18n="marketingLinkLabel">Learn more:</span> <a href="https://www.fuller-technologies.com/products/ecs-cemscanner-kiln-shell-monitoring-system">fuller-technologies.com/products/ecs-cemscanner-kiln-shell-monitoring-system</a></p>
     <p class="marketing-copyright" data-i18n="marketingCopyright">FULLER and ECS/CemScanner are trademarks of FULLER Technologies. This document is for general reference only and does not constitute an offer.</p>
   </div>
+
+  <div class="page-break"></div>
 
   <h1 data-i18n="pageTitle">ECS/CemScanner™ coverage &amp; shadow model</h1>
   <p class="sub" data-i18n="pageSub">The scan cone angle is always fixed at 120°. Cooler is the coordinate origin (x=0).</p>
@@ -225,8 +231,6 @@
       <input type="range" id="pec" min="0" max="120" step="1" value="60">
       <input type="number" id="pec-num" min="0" max="120" step="1" value="60"></div>
   </div>
-
-  <div class="page-break"></div>
 
   <div class="zoom-controls no-print">
     <button class="zoom-btn" id="zoom-in" title="Zoom in" data-i18n-title="zoomInTitle">+</button>
@@ -356,14 +360,6 @@
     <p class="note" style="margin-bottom:0;" data-i18n="pyroRatioNote">At the default 1:15 ratio and the 4.5 m distance used by "Place automatically", each pyrometer measures a spot of about 300 mm (30 cm). A finer ratio — e.g. changing the pyrometers to achieve a 20 cm spot — would let more of the measured surface fall under the Brick threshold, potentially pushing the "smaller than Brick" percentage toward 100%.</p>
   </div>
 
-  <div class="panel no-print">
-    <h2 style="margin-top:0;" data-i18n="contactPersonsTitle">Contact persons</h2>
-    <div class="row"><label for="customer-contact" data-i18n="labelCustomerContact">Customer contact person</label>
-      <input type="text" id="customer-contact" placeholder="Name, email, phone" data-i18n-placeholder="placeholderContact" style="width:100%;"></div>
-    <div class="row"><label for="fuller-contact" data-i18n="labelFullerContact">Fuller contact person</label>
-      <input type="text" id="fuller-contact" placeholder="Name, email, phone" data-i18n-placeholder="placeholderContact" style="width:100%;"></div>
-  </div>
-
   <div class="banner yellow no-print" id="print-sandbox-notice" style="margin-top:24px;"></div>
 
   <div id="print-btn-wrap" style="text-align:center; margin-top:24px;">
@@ -456,7 +452,7 @@ en:{
   helpSpotSizes:"Sampled measurement points along the visible kiln length, showing the slant range, grazing angle, and resulting infrared spot size at each point — smaller means finer resolution. Where two scanners overlap, the one giving the smaller spot is shown.",
   helpSettings:'Sensor resolution (mrad) per head model, the pyrometer distance-to-spot ratio, and the brick size used to judge "good enough" resolution. These apply to every calculation on the page and are not included when printing.',
   marketingHowItWorksTitle:"How it works",
-  marketingHowItWorksText:"A high-speed infrared scanner constructs a thermal image of the entire flattened kiln shell surface. The thermal profile shows four superimposed curves — minimum, maximum, average, and worst-case shell temperature — with alarm levels for individual kiln sections, so operators can spot problems long before they become failures.",
+  marketingHowItWorksText:"A high-speed, high-precision infrared scanner constructs a thermal image of the entire kiln shell. State-of-the-art software calculates temperatures and visualizes them for alarms, brick thickness calculation, fan control, trends, and much more. The thermal profile shows four superimposed curves — minimum, maximum, average, and worst-case shell temperature — with alarm levels for individual kiln sections, so operators can spot problems long before they become failures.",
   marketingBenefitsTitle:"Key benefits",
   benefit1Title:"Increase kiln availability",
   benefit2Title:"Lower refractory consumption",
@@ -465,15 +461,15 @@ en:{
   benefit5Title:"Effectively plan overhauls",
   marketingCapabilitiesTitle:"Monitor, protect, and optimise your kiln",
   capabilityTyreSlipTitle:"Tyre slip monitoring",
-  capabilityTyreSlipText:"Continuous, automatic tracking of live ring migration (LRM) between shell and tyres — the simplest, most accurate way to monitor kiln ovality and anticipate constriction before it affects clinker quality.",
+  capabilityTyreSlipText:"Continuous, automatic tracking of live ring migration (LRM) between shell and tyres — the simplest, most accurate way to monitor kiln tyre slip and anticipate issues before they affect kiln health.",
   capabilityFanTitle:"Fan control",
-  capabilityFanText:"Automatically controls cooling fans through the plant PLC based on continuous burning-zone temperature monitoring, avoiding uneconomical fan operation and extending fan service life.",
+  capabilityFanText:"Automatically controls cooling fans through the plant PLC or OPC based on continuous burning-zone temperature monitoring, avoiding uneconomical fan operation and extending kiln and fan life.",
   capabilityBrickTitle:"Brick & coating thickness",
-  capabilityBrickText:'Calculates brick and coating thickness in real time from shell temperature, displayed as a profile or 3D "walk-in-the-kiln" image — typically accurate to within a few millimetres.',
+  capabilityBrickText:'Calculates brick and coating thickness in real time from shell temperature, displayed as a profile or 3D "walk-in-the-kiln" image — extremely useful for preventive maintenance and shutdown planning.',
   capabilityHistoryTitle:"Historical data",
   capabilityHistoryText:"Years of stored data let operators analyse kiln performance over time, search past hot spots, and save snapshots for later review.",
   marketingOptionsTitle:"Customise to your needs",
-  marketingOptionsText:'Beyond the standard infrared scanner head, CemMicro-III processing unit, and user software, the system can be extended with a stereo scanner arrangement for kilns where one head can\'t get a clear view; up to 16 additional infrared pyrometers (PyroScan) for obstructed sections; an integrated scanner camera to check alignment and window cleanliness; kiln camera ("kiln TV"); process trending; and full system diagnostics.',
+  marketingOptionsText:"Beyond the standard infrared scanner head and user software, the system can be extended with a multi-scanner arrangement for kilns where one head can't get a clear view, ensuring full shadow elimination. Up to 16 additional infrared pyrometers (PyroScan) can be added for obstructed sections. An integrated scanner camera checks alignment and window cleanliness, and the system can control up to 32 fans.",
   marketingLinkLabel:"Learn more:",
   marketingCopyright:"FULLER and ECS/CemScanner are trademarks of FULLER Technologies. This document is for general reference only and does not constitute an offer.",
   printCustomerContactLabel:"Customer contact:",
@@ -549,7 +545,7 @@ es:{
   helpSpotSizes:"Puntos de medición muestreados a lo largo de la longitud visible del horno, mostrando la distancia oblicua, el ángulo rasante y el tamaño de spot infrarrojo resultante en cada punto — cuanto menor, mejor resolución. Donde se solapan dos escáneres, se muestra el que da el spot más pequeño.",
   helpSettings:'Resolución del sensor (mrad) por modelo de cabezal, la relación distancia:spot del pirómetro y el tamaño de ladrillo usado para juzgar una resolución "suficientemente buena". Se aplican a todos los cálculos de la página y no se incluyen al imprimir.',
   marketingHowItWorksTitle:"Cómo funciona",
-  marketingHowItWorksText:"Un escáner infrarrojo de alta velocidad construye una imagen térmica de toda la superficie de la carcasa del horno desplegada. El perfil térmico muestra cuatro curvas superpuestas — temperatura mínima, máxima, media y de peor caso de la carcasa — con niveles de alarma para secciones individuales del horno, para que los operadores detecten problemas mucho antes de que se conviertan en averías.",
+  marketingHowItWorksText:"Un escáner infrarrojo de alta velocidad y alta precisión construye una imagen térmica de toda la carcasa del horno. El software de última generación calcula las temperaturas y las visualiza para alarmas, cálculo de espesor de ladrillo, control de ventiladores, tendencias y mucho más. El perfil térmico muestra cuatro curvas superpuestas — temperatura mínima, máxima, media y de peor caso de la carcasa — con niveles de alarma para secciones individuales del horno, para que los operadores detecten problemas mucho antes de que se conviertan en averías.",
   marketingBenefitsTitle:"Beneficios clave",
   benefit1Title:"Aumentar la disponibilidad del horno",
   benefit2Title:"Reducir el consumo de refractario",
@@ -558,15 +554,15 @@ es:{
   benefit5Title:"Planificar eficazmente las revisiones",
   marketingCapabilitiesTitle:"Supervise, proteja y optimice su horno",
   capabilityTyreSlipTitle:"Monitorización de deslizamiento de llantas",
-  capabilityTyreSlipText:"Seguimiento continuo y automático de la migración del anillo vivo (LRM) entre la carcasa y las llantas — la forma más simple y precisa de monitorizar la ovalización del horno y anticipar constricciones antes de que afecten a la calidad del clínker.",
+  capabilityTyreSlipText:"Seguimiento continuo y automático de la migración del anillo vivo (LRM) entre la carcasa y las llantas — la forma más simple y precisa de monitorizar el deslizamiento de las llantas del horno y anticipar problemas antes de que afecten a la salud del horno.",
   capabilityFanTitle:"Control de ventiladores",
-  capabilityFanText:"Controla automáticamente los ventiladores de enfriamiento a través del PLC de la planta según la monitorización continua de la temperatura de la zona de combustión, evitando el funcionamiento antieconómico y alargando su vida útil.",
+  capabilityFanText:"Controla automáticamente los ventiladores de enfriamiento a través del PLC u OPC de la planta según la monitorización continua de la temperatura de la zona de combustión, evitando el funcionamiento antieconómico y prolongando la vida del horno y de los ventiladores.",
   capabilityBrickTitle:"Espesor de ladrillo y capa",
-  capabilityBrickText:'Calcula el espesor del ladrillo y la capa en tiempo real a partir de la temperatura de la carcasa, mostrado como perfil o imagen 3D "walk-in-the-kiln" — normalmente con una precisión de pocos milímetros.',
+  capabilityBrickText:'Calcula el espesor del ladrillo y la capa en tiempo real a partir de la temperatura de la carcasa, mostrado como perfil o imagen 3D "walk-in-the-kiln" — extremadamente útil para el mantenimiento preventivo y la planificación de paradas.',
   capabilityHistoryTitle:"Datos históricos",
   capabilityHistoryText:"Años de datos almacenados permiten a los operadores analizar el rendimiento del horno a lo largo del tiempo, buscar puntos calientes pasados y guardar instantáneas para su posterior revisión.",
   marketingOptionsTitle:"Personalícelo según sus necesidades",
-  marketingOptionsText:'Además del cabezal escáner infrarrojo estándar, la unidad de procesamiento CemMicro-III y el software de usuario, el sistema puede ampliarse con una disposición de escáner estéreo para hornos donde un cabezal no obtiene una visión clara; hasta 16 pirómetros infrarrojos adicionales (PyroScan) para secciones obstruidas; una cámara de escáner integrada para comprobar la alineación y la limpieza de la ventana; cámara de horno ("kiln TV"); tendencias de proceso; y diagnóstico completo del sistema.',
+  marketingOptionsText:"Además del cabezal escáner infrarrojo estándar y el software de usuario, el sistema puede ampliarse con una configuración multiescáner para hornos donde un cabezal no obtiene una visión clara, garantizando la eliminación total de sombras. Se pueden añadir hasta 16 pirómetros infrarrojos adicionales (PyroScan) para secciones obstruidas. Una cámara de escáner integrada comprueba la alineación y la limpieza de la ventana, y el sistema puede controlar hasta 32 ventiladores.",
   marketingLinkLabel:"Más información:",
   marketingCopyright:"FULLER y ECS/CemScanner son marcas registradas de FULLER Technologies. Este documento es de referencia general únicamente y no constituye una oferta.",
   printCustomerContactLabel:"Contacto del cliente:",
@@ -642,7 +638,7 @@ fr:{
   helpSpotSizes:"Points de mesure échantillonnés le long de la longueur visible du four, montrant la distance oblique, l'angle rasant et la taille du spot infrarouge résultante à chaque point — plus petit signifie une meilleure résolution. Là où deux scanners se chevauchent, celui donnant le plus petit spot est affiché.",
   helpSettings:'Résolution du capteur (mrad) par modèle de tête, le rapport distance:spot du pyromètre et la taille de brique utilisée pour juger une résolution "suffisante". Ces réglages s\'appliquent à tous les calculs de la page et ne sont pas inclus à l\'impression.',
   marketingHowItWorksTitle:"Comment ça marche",
-  marketingHowItWorksText:"Un scanner infrarouge à haute vitesse construit une image thermique de toute la surface de la virole du four à plat. Le profil thermique affiche quatre courbes superposées — température minimale, maximale, moyenne et du pire cas de la virole — avec des niveaux d'alarme pour chaque section du four, afin que les opérateurs repèrent les problèmes bien avant qu'ils ne deviennent des pannes.",
+  marketingHowItWorksText:"Un scanner infrarouge à haute vitesse et haute précision construit une image thermique de toute la virole du four. Un logiciel de pointe calcule les températures et les visualise pour les alarmes, le calcul d'épaisseur de brique, le contrôle des ventilateurs, les tendances et bien plus encore. Le profil thermique affiche quatre courbes superposées — température minimale, maximale, moyenne et du pire cas de la virole — avec des niveaux d'alarme pour chaque section du four, afin que les opérateurs repèrent les problèmes bien avant qu'ils ne deviennent des pannes.",
   marketingBenefitsTitle:"Avantages clés",
   benefit1Title:"Augmenter la disponibilité du four",
   benefit2Title:"Réduire la consommation de réfractaire",
@@ -651,15 +647,15 @@ fr:{
   benefit5Title:"Planifier efficacement les révisions",
   marketingCapabilitiesTitle:"Surveillez, protégez et optimisez votre four",
   capabilityTyreSlipTitle:"Surveillance du glissement des bandages",
-  capabilityTyreSlipText:"Suivi continu et automatique de la migration de l'anneau vif (LRM) entre la virole et les bandages — le moyen le plus simple et le plus précis de surveiller l'ovalisation du four et d'anticiper une constriction avant qu'elle n'affecte la qualité du clinker.",
+  capabilityTyreSlipText:"Suivi continu et automatique de la migration de l'anneau vif (LRM) entre la virole et les bandages — le moyen le plus simple et le plus précis de surveiller le glissement des bandages du four et d'anticiper les problèmes avant qu'ils n'affectent la santé du four.",
   capabilityFanTitle:"Contrôle des ventilateurs",
-  capabilityFanText:"Contrôle automatiquement les ventilateurs de refroidissement via l'automate de l'usine selon la surveillance continue de la température de la zone de cuisson, évitant un fonctionnement non économique et prolongeant leur durée de vie.",
+  capabilityFanText:"Contrôle automatiquement les ventilateurs de refroidissement via l'automate (PLC) ou l'OPC de l'usine selon la surveillance continue de la température de la zone de cuisson, évitant un fonctionnement non économique et prolongeant la durée de vie du four et des ventilateurs.",
   capabilityBrickTitle:"Épaisseur de brique et de couche",
-  capabilityBrickText:'Calcule l\'épaisseur de la brique et de la couche en temps réel à partir de la température de la virole, affichée sous forme de profil ou d\'image 3D "walk-in-the-kiln" — généralement précise à quelques millimètres près.',
+  capabilityBrickText:'Calcule l\'épaisseur de la brique et de la couche en temps réel à partir de la température de la virole, affichée sous forme de profil ou d\'image 3D "walk-in-the-kiln" — extrêmement utile pour la maintenance préventive et la planification des arrêts.',
   capabilityHistoryTitle:"Données historiques",
   capabilityHistoryText:"Des années de données stockées permettent aux opérateurs d'analyser la performance du four dans le temps, de rechercher d'anciens points chauds et d'enregistrer des instantanés pour une consultation ultérieure.",
   marketingOptionsTitle:"Personnalisez selon vos besoins",
-  marketingOptionsText:'Au-delà de la tête de scanner infrarouge standard, de l\'unité de traitement CemMicro-III et du logiciel utilisateur, le système peut être étendu avec une configuration de scanner stéréo pour les fours où une seule tête n\'obtient pas une vue claire ; jusqu\'à 16 pyromètres infrarouges supplémentaires (PyroScan) pour les sections obstruées ; une caméra de scanner intégrée pour vérifier l\'alignement et la propreté de la fenêtre ; une caméra de four ("kiln TV") ; le suivi de tendances de process ; et un diagnostic complet du système.',
+  marketingOptionsText:"Au-delà de la tête de scanner infrarouge standard et du logiciel utilisateur, le système peut être étendu avec une configuration multi-scanner pour les fours où une seule tête n'obtient pas une vue claire, garantissant une élimination complète des ombres. Jusqu'à 16 pyromètres infrarouges supplémentaires (PyroScan) peuvent être ajoutés pour les sections obstruées. Une caméra de scanner intégrée vérifie l'alignement et la propreté de la fenêtre, et le système peut contrôler jusqu'à 32 ventilateurs.",
   marketingLinkLabel:"En savoir plus :",
   marketingCopyright:"FULLER et ECS/CemScanner sont des marques de FULLER Technologies. Ce document est fourni à titre de référence générale uniquement et ne constitue pas une offre.",
   printCustomerContactLabel:"Contact client :",
@@ -735,7 +731,7 @@ pt:{
   helpSpotSizes:"Pontos de medição amostrados ao longo do comprimento visível do forno, mostrando a distância oblíqua, o ângulo rasante e o tamanho do spot infravermelho resultante em cada ponto — quanto menor, melhor a resolução. Onde dois scanners se sobrepõem, é mostrado o que dá o spot mais pequeno.",
   helpSettings:'Resolução do sensor (mrad) por modelo de cabeça, a relação distância:spot do pirómetro e o tamanho de tijolo usado para julgar uma resolução "suficientemente boa". Aplicam-se a todos os cálculos da página e não são incluídos na impressão.',
   marketingHowItWorksTitle:"Como funciona",
-  marketingHowItWorksText:"Um scanner infravermelho de alta velocidade constrói uma imagem térmica de toda a superfície da carcaça do forno desdobrada. O perfil térmico mostra quatro curvas sobrepostas — temperatura mínima, máxima, média e de pior caso da carcaça — com níveis de alarme para secções individuais do forno, para que os operadores detetem problemas muito antes de se tornarem avarias.",
+  marketingHowItWorksText:"Um scanner infravermelho de alta velocidade e alta precisão constrói uma imagem térmica de toda a carcaça do forno. Um software de última geração calcula as temperaturas e visualiza-as para alarmes, cálculo de espessura de tijolo, controlo de ventiladores, tendências e muito mais. O perfil térmico mostra quatro curvas sobrepostas — temperatura mínima, máxima, média e de pior caso da carcaça — com níveis de alarme para secções individuais do forno, para que os operadores detetem problemas muito antes de se tornarem avarias.",
   marketingBenefitsTitle:"Principais benefícios",
   benefit1Title:"Aumentar a disponibilidade do forno",
   benefit2Title:"Reduzir o consumo de refratário",
@@ -744,15 +740,15 @@ pt:{
   benefit5Title:"Planear eficazmente as revisões",
   marketingCapabilitiesTitle:"Monitorize, proteja e otimize o seu forno",
   capabilityTyreSlipTitle:"Monitorização de deslizamento de rodas de apoio",
-  capabilityTyreSlipText:"Monitorização contínua e automática da migração do anel vivo (LRM) entre a carcaça e as rodas de apoio — a forma mais simples e precisa de monitorizar a ovalização do forno e antecipar constrições antes de afetarem a qualidade do clínquer.",
+  capabilityTyreSlipText:"Monitorização contínua e automática da migração do anel vivo (LRM) entre a carcaça e as rodas de apoio — a forma mais simples e precisa de monitorizar o deslizamento das rodas de apoio do forno e antecipar problemas antes de afetarem a saúde do forno.",
   capabilityFanTitle:"Controlo de ventiladores",
-  capabilityFanText:"Controla automaticamente os ventiladores de arrefecimento através do PLC da fábrica com base na monitorização contínua da temperatura da zona de queima, evitando funcionamento antieconómico e prolongando a sua vida útil.",
+  capabilityFanText:"Controla automaticamente os ventiladores de arrefecimento através do PLC ou OPC da fábrica com base na monitorização contínua da temperatura da zona de queima, evitando funcionamento antieconómico e prolongando a vida do forno e dos ventiladores.",
   capabilityBrickTitle:"Espessura de tijolo e revestimento",
-  capabilityBrickText:'Calcula a espessura do tijolo e do revestimento em tempo real a partir da temperatura da carcaça, apresentada como perfil ou imagem 3D "walk-in-the-kiln" — normalmente com precisão de poucos milímetros.',
+  capabilityBrickText:'Calcula a espessura do tijolo e do revestimento em tempo real a partir da temperatura da carcaça, apresentada como perfil ou imagem 3D "walk-in-the-kiln" — extremamente útil para manutenção preventiva e planeamento de paragens.',
   capabilityHistoryTitle:"Dados históricos",
   capabilityHistoryText:"Anos de dados armazenados permitem aos operadores analisar o desempenho do forno ao longo do tempo, procurar pontos quentes anteriores e guardar instantâneos para consulta posterior.",
   marketingOptionsTitle:"Personalize às suas necessidades",
-  marketingOptionsText:'Além da cabeça de scanner infravermelho padrão, da unidade de processamento CemMicro-III e do software de utilizador, o sistema pode ser expandido com uma configuração de scanner estéreo para fornos onde uma cabeça não obtém uma visão clara; até 16 pirómetros infravermelhos adicionais (PyroScan) para secções obstruídas; uma câmara de scanner integrada para verificar o alinhamento e a limpeza da janela; câmara de forno ("kiln TV"); tendências de processo; e diagnóstico completo do sistema.',
+  marketingOptionsText:"Além da cabeça de scanner infravermelho padrão e do software de utilizador, o sistema pode ser expandido com uma configuração multi-scanner para fornos onde uma cabeça não obtém uma visão clara, garantindo a eliminação total de sombras. Podem ser adicionados até 16 pirómetros infravermelhos adicionais (PyroScan) para secções obstruídas. Uma câmara de scanner integrada verifica o alinhamento e a limpeza da janela, e o sistema pode controlar até 32 ventiladores.",
   marketingLinkLabel:"Saiba mais:",
   marketingCopyright:"FULLER e ECS/CemScanner são marcas registadas da FULLER Technologies. Este documento é apenas para referência geral e não constitui uma oferta.",
   printCustomerContactLabel:"Contacto do cliente:",
@@ -828,7 +824,7 @@ ar:{
   helpSpotSizes:"نقاط قياس مأخوذة على طول الجزء المرئي من الفرن، تُظهر المسافة المائلة وزاوية السقوط وحجم البقعة الناتج بالأشعة تحت الحمراء عند كل نقطة — كلما صغر الحجم كانت الدقة أفضل. حيثما يتداخل الماسحان، يُعرض الماسح الذي يمنح البقعة الأصغر.",
   helpSettings:'دقة المستشعر (مليراديان) لكل طراز رأس، ونسبة المسافة إلى البقعة للمقياس الحراري، وحجم الطوبة المستخدم للحكم على دقة "كافية". تنطبق هذه الإعدادات على جميع الحسابات في الصفحة ولا تُدرَج عند الطباعة.',
   marketingHowItWorksTitle:"كيف يعمل النظام",
-  marketingHowItWorksText:"يقوم ماسح بالأشعة تحت الحمراء عالي السرعة ببناء صورة حرارية لكامل سطح غلاف الفرن مبسوطًا. يعرض المنحنى الحراري أربعة منحنيات متراكبة — أدنى وأعلى ومتوسط وأسوأ درجة حرارة للغلاف — مع مستويات إنذار لأقسام الفرن المختلفة، ليتمكن المشغّلون من رصد المشاكل قبل أن تتحول إلى أعطال.",
+  marketingHowItWorksText:"يقوم ماسح بالأشعة تحت الحمراء عالي السرعة وعالي الدقة ببناء صورة حرارية لكامل غلاف الفرن. يحسب البرنامج المتطور درجات الحرارة ويعرضها من أجل الإنذارات، وحساب سماكة الطوب، والتحكم بالمراوح، والاتجاهات، وأكثر من ذلك بكثير. يعرض المنحنى الحراري أربعة منحنيات متراكبة — أدنى وأعلى ومتوسط وأسوأ درجة حرارة للغلاف — مع مستويات إنذار لأقسام الفرن المختلفة، ليتمكن المشغّلون من رصد المشاكل قبل أن تتحول إلى أعطال.",
   marketingBenefitsTitle:"الفوائد الرئيسية",
   benefit1Title:"زيادة توفر الفرن",
   benefit2Title:"خفض استهلاك الطوب الحراري",
@@ -837,15 +833,15 @@ ar:{
   benefit5Title:"تخطيط فعّال لأعمال الصيانة الكبرى",
   marketingCapabilitiesTitle:"راقب فرنك واحمِه وحسّن أداءه",
   capabilityTyreSlipTitle:"مراقبة انزلاق الإطارات",
-  capabilityTyreSlipText:"تتبّع مستمر وتلقائي لانزياح الحلقة الحية (LRM) بين الغلاف والإطارات — أبسط وأدق طريقة لمراقبة بيضاوية الفرن وتوقّع الانقباض قبل أن يؤثر على جودة الكلنكر.",
+  capabilityTyreSlipText:"تتبّع مستمر وتلقائي لانزياح الحلقة الحية (LRM) بين الغلاف والإطارات — أبسط وأدق طريقة لمراقبة انزلاق إطارات الفرن وتوقّع المشاكل قبل أن تؤثر على سلامة الفرن.",
   capabilityFanTitle:"التحكم بالمراوح",
-  capabilityFanText:"يتحكم تلقائيًا بمراوح التبريد عبر نظام التحكم المنطقي القابل للبرمجة (PLC) بالمصنع استنادًا إلى المراقبة المستمرة لدرجة حرارة منطقة الحرق، مما يمنع التشغيل غير الاقتصادي للمراوح ويطيل عمرها التشغيلي.",
+  capabilityFanText:"يتحكم تلقائيًا بمراوح التبريد عبر نظام PLC أو OPC بالمصنع استنادًا إلى المراقبة المستمرة لدرجة حرارة منطقة الحرق، مما يمنع التشغيل غير الاقتصادي للمراوح ويطيل عمر الفرن والمراوح.",
   capabilityBrickTitle:"سماكة الطوب والطبقة العازلة",
-  capabilityBrickText:'يحسب سماكة الطوب والطبقة العازلة في الوقت الفعلي من درجة حرارة الغلاف، ويعرضها كمخطط أو صورة ثلاثية الأبعاد "walk-in-the-kiln" — بدقة عادةً في حدود بضعة مليمترات.',
+  capabilityBrickText:'يحسب سماكة الطوب والطبقة العازلة في الوقت الفعلي من درجة حرارة الغلاف، ويعرضها كمخطط أو صورة ثلاثية الأبعاد "walk-in-the-kiln" — مفيد للغاية للصيانة الوقائية وتخطيط التوقفات.',
   capabilityHistoryTitle:"البيانات التاريخية",
   capabilityHistoryText:"تتيح سنوات من البيانات المخزّنة للمشغّلين تحليل أداء الفرن عبر الزمن، والبحث عن النقاط الساخنة السابقة، وحفظ لقطات لمراجعتها لاحقًا.",
   marketingOptionsTitle:"خصّصه حسب احتياجاتك",
-  marketingOptionsText:'إلى جانب رأس الماسح القياسي بالأشعة تحت الحمراء ووحدة المعالجة CemMicro-III وبرنامج المستخدم، يمكن توسيع النظام بترتيب ماسح مزدوج (ستيريو) للأفران التي لا يحصل فيها رأس واحد على رؤية واضحة؛ وحتى 16 مقياسًا حراريًا إضافيًا بالأشعة تحت الحمراء (PyroScan) للأقسام المحجوبة؛ وكاميرا ماسح مدمجة للتحقق من المحاذاة ونظافة النافذة؛ وكاميرا للفرن ("تلفزيون الفرن")؛ وتتبّع الاتجاهات؛ وتشخيص كامل للنظام.',
+  marketingOptionsText:"إلى جانب رأس الماسح القياسي بالأشعة تحت الحمراء وبرنامج المستخدم، يمكن توسيع النظام بترتيب متعدد الماسحات للأفران التي لا يحصل فيها رأس واحد على رؤية واضحة، مما يضمن إزالة كاملة للظلال. يمكن إضافة حتى 16 مقياسًا حراريًا إضافيًا بالأشعة تحت الحمراء (PyroScan) للأقسام المحجوبة. تتحقق كاميرا الماسح المدمجة من المحاذاة ونظافة النافذة، ويمكن للنظام التحكم بحتى 32 مروحة.",
   marketingLinkLabel:"لمعرفة المزيد:",
   marketingCopyright:"FULLER وECS/CemScanner علامتان تجاريتان لشركة FULLER Technologies. هذا المستند لأغراض مرجعية عامة فقط ولا يشكل عرضًا.",
   printCustomerContactLabel:"جهة اتصال العميل:",
