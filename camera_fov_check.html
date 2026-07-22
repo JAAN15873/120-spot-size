@@ -244,18 +244,39 @@
       : Promise.resolve(false);
 
     return direct.then(function(usedRemembered){
-      return refreshDeviceList().then(function(){
-        if (usedRemembered){
+      if (usedRemembered){
+        return refreshDeviceList().then(function(){
           camIndex = cameras.findIndex(function(d){ return d.deviceId === rememberedId; });
           if (camIndex >= 0) return; // already on the right camera, opened directly above
-        }
-        var uwIndex = cameras.findIndex(function(d){ return isUltraWideLabel(d.label); });
-        if (uwIndex >= 0) return switchToIndex(uwIndex);
-        return switchToIndex(0);
-      });
+          return pickBestCamera();
+        });
+      }
+      // No remembered camera (first visit on this phone, or it's gone). enumerateDevices()
+      // before any permission grant returns a minimal, anonymized list -- confirmed directly
+      // on an iPhone 16 Pro: a single device with no label at all, nothing to switch to. So
+      // open some camera first (this is what actually triggers the permission prompt), THEN
+      // enumerate -- only after permission is granted do real labels/deviceIds show up.
+      return navigator.mediaDevices.getUserMedia({
+        audio: false,
+        video: { facingMode: { ideal: "environment" }, width: { ideal: 3840 }, height: { ideal: 2160 } }
+      }).then(function(stream){
+        return applyStream(stream, (stream.getVideoTracks()[0] || {}).label);
+      }).then(pickBestCamera);
     }).catch(function(err){
       document.getElementById("permissionMsg").style.display = "flex";
       console.error("Camera error", err);
+    });
+  }
+
+  // Called once we're guaranteed to have permission (and therefore real labels): re-enumerate
+  // and switch to the ultra-wide lens if one is identifiable, otherwise leave whatever's active.
+  function pickBestCamera(){
+    return refreshDeviceList().then(function(){
+      var uwIndex = cameras.findIndex(function(d){ return isUltraWideLabel(d.label); });
+      if (uwIndex >= 0) return switchToIndex(uwIndex);
+      var activeId = currentTrack && currentTrack.getSettings ? currentTrack.getSettings().deviceId : null;
+      camIndex = activeId ? cameras.findIndex(function(d){ return d.deviceId === activeId; }) : 0;
+      renderDebug();
     });
   }
 
